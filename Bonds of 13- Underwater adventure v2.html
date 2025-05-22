@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Underwater Math Bonds of 13</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Teachers+Pet&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Fredoka', sans-serif;
+      color: white;
+      text-align: center;
+    }
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, #1e3f66 0%, #2a6f91 50%, #4eb3d3 100%);
+      z-index: -2;
+      overflow: hidden;
+    }
+    .bubble-anim {
+      position: absolute;
+      bottom: -100px;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      animation: rise 10s infinite ease-in;
+    }
+    .bubble-anim:nth-child(2) {
+      left: 20%;
+      width: 15px;
+      height: 15px;
+      animation-duration: 8s;
+    }
+    .bubble-anim:nth-child(3) {
+      left: 40%;
+      width: 10px;
+      height: 10px;
+      animation-duration: 12s;
+    }
+    .bubble-anim:nth-child(4) {
+      left: 60%;
+      width: 25px;
+      height: 25px;
+      animation-duration: 9s;
+    }
+    .bubble-anim:nth-child(5) {
+      left: 80%;
+      width: 12px;
+      height: 12px;
+      animation-duration: 11s;
+    }
+    @keyframes rise {
+      0% {
+        transform: translateY(0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateY(-110vh);
+        opacity: 0;
+      }
+    }
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.5rem;
+      animation: float 3s ease-in-out infinite;
+      margin-top: 20px;
+    }
+    #game {
+      margin-top: 30px;
+      position: relative;
+      z-index: 1;
+    }
+    .bubble {
+      background: rgba(255, 255, 255, 0.8);
+      color: #0077be;
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 15px;
+      cursor: pointer;
+      font-family: 'Teachers Pet', cursive;
+      position: relative;
+    }
+    .bubble:hover {
+      transform: scale(1.1);
+    }
+    #timer, #score {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      font-family: 'Fredoka', sans-serif;
+    }
+    #question {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      font-family: 'Teachers Pet', cursive;
+    }
+    #endMessage {
+      font-size: 2rem;
+      margin-top: 30px;
+      animation: fadeIn 2s ease forwards;
+    }
+    #playAgainBtn, #startGameBtn {
+      display: none;
+      margin-top: 20px;
+      font-size: 1.5rem;
+      padding: 10px 20px;
+      border: none;
+      background-color: #ffffffcc;
+      color: #0077be;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Fredoka', sans-serif;
+    }
+    #playAgainBtn:hover, #startGameBtn:hover {
+      background-color: #ffffff;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background">
+    <div class="bubble-anim"></div>
+    <div class="bubble-anim"></div>
+    <div class="bubble-anim"></div>
+    <div class="bubble-anim"></div>
+    <div class="bubble-anim"></div>
+  </div>
+
+  <h1>🌊 Underwater Math: Bonds of 13 🐠</h1>
+  <div id="game">
+    <button id="startGameBtn" onclick="startGame()">▶️ Start Game</button>
+    <div id="question" style="display:none;"></div>
+    <div id="choices" style="display:none;"></div>
+    <div id="timer" style="display:none;">⏱️ Time left: <span id="time">30</span>s</div>
+    <div id="score" style="display:none;">Score: <span id="scoreValue">0</span></div>
+    <div id="endMessage"></div>
+    <button id="playAgainBtn" onclick="startGame()">🔁 Play Again</button>
+  </div>
+
+  <script>
+    const timeDisplay = document.getElementById('time');
+    const scoreDisplay = document.getElementById('scoreValue');
+    const questionDisplay = document.getElementById('question');
+    const choicesDisplay = document.getElementById('choices');
+    const endMessage = document.getElementById('endMessage');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    const timerEl = document.getElementById('timer');
+    const scoreEl = document.getElementById('score');
+    const startGameBtn = document.getElementById('startGameBtn');
+
+    let timeLeft = 30;
+    let score = 0;
+    let timer;
+
+    // Hide game elements until start
+    window.onload = function() {
+      startGameBtn.style.display = 'inline-block';
+      questionDisplay.style.display = 'none';
+      choicesDisplay.style.display = 'none';
+      timerEl.style.display = 'none';
+      scoreEl.style.display = 'none';
+      playAgainBtn.style.display = 'none';
+      endMessage.textContent = '';
+    };
+
+    function startGame() {
+      score = 0;
+      timeLeft = 30;
+      scoreDisplay.textContent = score;
+      endMessage.textContent = '';
+      playAgainBtn.style.display = 'none';
+      startGameBtn.style.display = 'none';
+
+      // Show game elements
+      questionDisplay.style.display = 'block';
+      choicesDisplay.style.display = 'block';
+      timerEl.style.display = 'block';
+      scoreEl.style.display = 'block';
+
+      generateQuestion();
+
+      clearInterval(timer); // always reset timer in case
+      timer = setInterval(() => {
+        timeLeft--;
+        timeDisplay.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function generateQuestion() {
+      const number = Math.floor(Math.random() * 12) + 1;
+      const correctAnswer = 13 - number;
+      questionDisplay.textContent = `${number} + _ = 13`;
+
+      const options = new Set([correctAnswer]);
+      while (options.size < 4) {
+        options.add(Math.floor(Math.random() * 13));
+      }
+
+      const shuffled = Array.from(options).sort(() => Math.random() - 0.5);
+
+      choicesDisplay.innerHTML = '';
+      shuffled.forEach(option => {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.textContent = option;
+        bubble.onclick = () => checkAnswer(option, correctAnswer);
+        choicesDisplay.appendChild(bubble);
+      });
+    }
+
+    function checkAnswer(selected, correct) {
+      if (selected === correct) {
+        score++;
+        scoreDisplay.textContent = score;
+      }
+      generateQuestion();
+    }
+
+    function endGame() {
+      questionDisplay.style.display = 'none';
+      choicesDisplay.style.display = 'none';
+      timerEl.style.display = 'none';
+      scoreEl.style.display = 'none';
+
+      questionDisplay.textContent = '';
+      choicesDisplay.innerHTML = '';
+      endMessage.textContent = `🏁 Time's up! You scored ${score} points! 🐬`;
+      playAgainBtn.style.display = 'inline-block';
+    }
+  </script>
+</body>
+</html>
