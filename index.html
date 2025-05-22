@@ -4,16 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Underwater Math Bonds of 13</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <!-- Google Fonts with explicit weights and fallback chains -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Teachers+Pet&display=swap" rel="stylesheet">
   <style>
-    body {
+    html, body {
       margin: 0;
       padding: 0;
-      overflow: hidden;
-      font-family: 'Fredoka', sans-serif;
+      min-height: 100vh;
+      width: 100vw;
+      max-width: 100vw;
+      overflow-x: hidden;
+      font-size: 16px;
+      background: linear-gradient(to bottom, #1e3f66 0%, #2a6f91 50%, #4eb3d3 100%);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      font-family: 'Fredoka', Arial, 'Helvetica Neue', Helvetica, sans-serif;
       color: white;
       text-align: center;
+      font-weight: 500;
+      background: none;
     }
     .background {
       position: fixed;
@@ -21,66 +33,52 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(to bottom, #1e3f66 0%, #2a6f91 50%, #4eb3d3 100%);
+      background: none;
       z-index: -2;
       overflow: hidden;
     }
     .bubble-anim {
       position: absolute;
       bottom: -100px;
-      width: 20px;
-      height: 20px;
+      width: 6vw;
+      height: 6vw;
+      min-width: 18px;
+      min-height: 18px;
+      max-width: 32px;
+      max-height: 32px;
       background: rgba(255, 255, 255, 0.5);
       border-radius: 50%;
       animation: rise 10s infinite ease-in;
     }
-    .bubble-anim:nth-child(2) {
-      left: 20%;
-      width: 15px;
-      height: 15px;
-      animation-duration: 8s;
-    }
-    .bubble-anim:nth-child(3) {
-      left: 40%;
-      width: 10px;
-      height: 10px;
-      animation-duration: 12s;
-    }
-    .bubble-anim:nth-child(4) {
-      left: 60%;
-      width: 25px;
-      height: 25px;
-      animation-duration: 9s;
-    }
-    .bubble-anim:nth-child(5) {
-      left: 80%;
-      width: 12px;
-      height: 12px;
-      animation-duration: 11s;
-    }
+    .bubble-anim:nth-child(2) { left: 20%; width: 4vw; height: 4vw; min-width: 14px; min-height: 14px; max-width: 24px; max-height: 24px; animation-duration: 8s; }
+    .bubble-anim:nth-child(3) { left: 40%; width: 3vw; height: 3vw; min-width: 10px; min-height: 10px; max-width: 16px; max-height: 16px; animation-duration: 12s; }
+    .bubble-anim:nth-child(4) { left: 60%; width: 8vw; height: 8vw; min-width: 25px; min-height: 25px; max-width: 38px; max-height: 38px; animation-duration: 9s; }
+    .bubble-anim:nth-child(5) { left: 80%; width: 3vw; height: 3vw; min-width: 12px; min-height: 12px; max-width: 16px; max-height: 16px; animation-duration: 11s; }
     @keyframes rise {
-      0% {
-        transform: translateY(0);
-        opacity: 0.5;
-      }
-      100% {
-        transform: translateY(-110vh);
-        opacity: 0;
-      }
+      0% { transform: translateY(0); opacity: 0.5; }
+      100% { transform: translateY(-110vh); opacity: 0; }
     }
     h1 {
-      font-family: 'Fredoka', sans-serif;
+      font-family: 'Fredoka', Arial, Helvetica, sans-serif;
       font-size: 2.5rem;
+      font-weight: 700;
       animation: float 3s ease-in-out infinite;
-      margin-top: 20px;
+      margin-top: 24px;
+      margin-bottom: 14px;
+      letter-spacing: 0.03em;
+      text-shadow: 1px 2px 5px rgba(30,63,102,0.23);
     }
     #game {
-      margin-top: 30px;
-      position: relative;
+      margin: 0 auto;
+      margin-top: 20px;
+      width: 98vw;
+      max-width: 440px;
       z-index: 1;
+      position: relative;
+      background: none;
     }
     .bubble {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.9);
       color: #0077be;
       border-radius: 50%;
       width: 100px;
@@ -88,62 +86,79 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
-      margin: 15px;
+      font-size: 2.1rem;
+      margin: 10px;
       cursor: pointer;
-      font-family: 'Teachers Pet', cursive;
+      font-family: '', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+      font-weight: 400;
       position: relative;
+      box-shadow: 0 2px 8px #0001;
+      transition: transform 0.14s;
+      user-select: none;
+      border: 2px solid #8ed6f3;
     }
-    .bubble:hover {
-      transform: scale(1.1);
-    }
+    .bubble:hover, .bubble:active { transform: scale(1.08);}
     #timer, #score {
+      font-family: 'Fredoka', Arial, Helvetica, sans-serif;
+      font-weight: 700;
       font-size: 1.5rem;
       margin-top: 20px;
-      font-family: 'Fredoka', sans-serif;
     }
     #question {
+      font-family: 'Comic Sans MS', 'Fredoka', sans-serif;
+      font-weight: 400;
       font-size: 2rem;
       margin-bottom: 20px;
-      font-family: 'Teachers Pet', cursive;
     }
     #endMessage {
       font-size: 2rem;
       margin-top: 30px;
       animation: fadeIn 2s ease forwards;
+      min-height: 2em;
+      font-weight: 500;
+      color: #fffbe8;
     }
     #playAgainBtn, #startGameBtn {
       display: none;
       margin-top: 20px;
-      font-size: 1.5rem;
-      padding: 10px 20px;
+      font-size: 1.4rem;
+      padding: 0.7em 1.5em;
       border: none;
       background-color: #ffffffcc;
       color: #0077be;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      font-family: 'Fredoka', sans-serif;
+      font-family: 'Fredoka', Arial, Helvetica, sans-serif;
+      font-weight: 600;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px #0002;
     }
-    #playAgainBtn:hover, #startGameBtn:hover {
+    #playAgainBtn:hover, #playAgainBtn:active, #startGameBtn:hover, #startGameBtn:active {
       background-color: #ffffff;
     }
 
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-    }
+    @keyframes float { 0%, 100% { transform: translateY(0);} 50% { transform: translateY(-10px);}}
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
+    /* Responsive scaling for mobile devices */
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      #question { font-size: 1.4rem; }
+      .bubble {
+        width: 76px;
+        height: 76px;
+        min-width: 48px;
+        min-height: 48px;
+        font-size: 1.2rem;
       }
-      to {
-        opacity: 1;
-      }
+      #timer, #score { font-size: 1.1rem; }
+      #playAgainBtn, #startGameBtn { font-size: 1.1rem; }
+    }
+    @media (max-width: 400px) {
+      h1 { font-size: 1.3rem; }
+      #question { font-size: 1.1rem; }
+      .bubble { font-size: 1.04rem; width: 58px; height: 58px; }
+      #endMessage { font-size: 1.05rem; }
     }
   </style>
 </head>
@@ -209,7 +224,7 @@
 
       generateQuestion();
 
-      clearInterval(timer); // always reset timer in case
+      clearInterval(timer);
       timer = setInterval(() => {
         timeLeft--;
         timeDisplay.textContent = timeLeft;
@@ -227,7 +242,8 @@
 
       const options = new Set([correctAnswer]);
       while (options.size < 4) {
-        options.add(Math.floor(Math.random() * 13));
+        const distractor = Math.floor(Math.random() * 13);
+        if (distractor !== correctAnswer) options.add(distractor);
       }
 
       const shuffled = Array.from(options).sort(() => Math.random() - 0.5);
