@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Safari Bonds of 14!</title>
+  <!-- Fun Heading Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'TeachersPet';
+      src: url('https://cdn.jsdelivr.net/gh/stevenharradine/fonts/TeachersPet.ttf') format('truetype');
+      font-display: swap;
+    }
+    body {
+      background: #def2bc;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    h1 {
+      font-family: 'Luckiest Guy', cursive;
+      color: #3a2704;
+      font-size: 3em;
+      text-shadow: 2px 3px 0 #ffd166;
+      margin: 20px 0 10px 0;
+      letter-spacing: 2px;
+    }
+    .game-box {
+      background: rgba(255,255,255,0.90);
+      border-radius: 24px;
+      padding: 30px;
+      width: 380px;
+      box-shadow: 0 0 12px #b8c26b;
+      text-align: center;
+    }
+    #timer {
+      font-size: 1.5em;
+      background: #ffd166;
+      display: inline-block;
+      border-radius: 12px;
+      padding: 6px 16px;
+      margin-bottom: 12px;
+      font-family: 'Luckiest Guy', cursive;
+      color: #3a2704;
+      letter-spacing: 1px;
+    }
+    #sumholder {
+      font-size: 1.5em;
+      color: #255012;
+      margin: 12px 0;
+      letter-spacing: 2px;
+    }
+    .stones {
+      margin-bottom: 18px;
+    }
+    .stone-btn {
+      font-family: 'TeachersPet', 'Comic Sans MS', cursive, sans-serif;
+      font-size: 2.2em;
+      background: #f4d35e;
+      border: 3px solid #9cb44c;
+      border-radius: 50px;
+      width: 60px; height: 60px;
+      margin: 8px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.13s;
+      box-shadow: 2px 2px 0 #7E722E;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stone-btn.correct {
+      background: #b6e37d;
+      border-color: #2fb300;
+      outline: 2px solid #2fb300;
+      animation: pop 0.3s;
+    }
+    .stone-btn.incorrect {
+      background: #ffb0ae;
+      border-color: #ff1654;
+      animation: shake 0.3s;
+    }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      60% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      30% { transform: translateX(-6px); }
+      70% { transform: translateX(6px); }
+    }
+    .animal {
+      font-size: 2.5em; margin: 0 4px 0 0;
+    }
+    #startBtn, #playAgainBtn {
+      padding: 10px 40px;
+      font-size: 1.5em;
+      border-radius: 12px;
+      margin: 8px 0;
+      border: none;
+      background: linear-gradient(90deg, #92e14b, #f4d35e);
+      color: #3a2704;
+      font-family: 'Luckiest Guy', cursive;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background 0.17s;
+    }
+    #startBtn:hover, #playAgainBtn:hover { background: #ffd166; }
+    #score {
+      font-size:1.1em;
+      margin-bottom:8px; color:#405e05;
+    }
+    #result {
+      font-family: 'Luckiest Guy', cursive;
+      color: #366c05;
+      font-size: 1.5em;
+      margin: 10px;
+    }
+    #funFact {
+      color: #705e10;
+      font-size: 1.1em;
+      font-family: 'Luckiest Guy', cursive;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+<div class="game-box">
+  <h1><span class="animal">🦁</span>Safari Bonds of 14!<span class="animal">🦒</span></h1>
+  <div id="startScreen">
+    <p style="font-size:1.25em">
+      Find the missing number in the sum or difference!<br>
+      Tap the correct number stone.<br><br>
+      <span class="animal">🐘 🦓 🐒</span>
+    </p>
+    <button id="startBtn">Start Play!</button>
+  </div>
+  <div id="gameScreen" style="display:none;">
+    <div id="timer">Time: 60s</div>
+    <div id="score">Score: <span id="scoreVal">0</span></div>
+    <div id="sumholder"></div>
+    <div class="stones" id="stones"></div>
+  </div>
+  <div id="endScreen" style="display:none;">
+    <div id="result"></div>
+    <button id="playAgainBtn">Play Again!</button>
+    <div id="funFact">Did you know? Giraffes can be up to 14 feet tall!</div>
+  </div>
+</div>
+<script>
+  // All bonds of 14, numbers 0–14 only, both orderings for variety
+  let bonds = [];
+  for (let a = 0; a <= 14; a++) {
+    let b = 14 - a;
+    if (b >= 0 && b <= 14) {
+      bonds.push([a, b]);
+    }
+  }
+
+  // Generate questions in various forms, always using ___ for the blank
+  let questionBank = [];
+  bonds.forEach(pair => {
+    let a = pair[0], b = pair[1];
+    // Only unique pairs (a<=b) for addition-style
+    if (a <= b) {
+      // Addition: missing second
+      questionBank.push({q: `${a} + ___ = 14`, answer: b});
+      // Addition: missing first
+      questionBank.push({q: `___ + ${b} = 14`, answer: a});
+      // Sum missing
+      questionBank.push({q: `${a} + ${b} = ___`, answer: 14});
+    }
+    // Subtraction: missing subtrahend
+    questionBank.push({q: `14 - ___ = ${a}`, answer: 14 - a});
+    questionBank.push({q: `14 - ___ = ${b}`, answer: 14 - b});
+    // Subtraction: missing result
+    questionBank.push({q: `14 - ${a} = ___`, answer: 14 - a});
+    questionBank.push({q: `14 - ${b} = ___`, answer: 14 - b});
+    // Reverse subtraction: missing blank
+    questionBank.push({q: `${a} = 14 - ___`, answer: 14 - a});
+    questionBank.push({q: `${b} = 14 - ___`, answer: 14 - b});
+  });
+
+  // Remove accidental question duplicates (by q/answer combo)
+  questionBank = questionBank.filter(
+    (v,i,a) => a.findIndex(t=>(t.q===v.q && t.answer===v.answer))===i
+  );
+
+  // fun facts
+  const funFacts = [
+    "Did you know? Giraffes can be up to 14 feet tall!",
+    "Hippos make bubbles underwater when they talk!",
+    "Lions rest up to 20 hours a day in the hot sun.",
+    "Zebras’ stripes are all unique—no two are the same!",
+    "Elephants use their trunks to give each other hugs."
+  ];
+
+  let timer, timeLeft, score;
+  let lastQuestion = -1;
+  let currentQA = {};
+
+  // DOMs
+  const startBtn = document.getElementById("startBtn");
+  const playAgainBtn = document.getElementById("playAgainBtn");
+  const startScreen = document.getElementById("startScreen");
+  const gameScreen = document.getElementById("gameScreen");
+  const endScreen = document.getElementById("endScreen");
+  const timerEl = document.getElementById("timer");
+  const stonesDiv = document.getElementById("stones");
+  const sumholder = document.getElementById("sumholder");
+  const scoreVal = document.getElementById("scoreVal");
+  const resultDiv = document.getElementById("result");
+  const funFactDiv = document.getElementById("funFact");
+
+  function startGame() {
+    startScreen.style.display = "none";
+    endScreen.style.display = "none";
+    gameScreen.style.display = "block";
+    timeLeft = 60;
+    score = 0;
+    scoreVal.textContent = score;
+    nextQuestion();
+    timerEl.textContent = "Time: "+timeLeft+"s";
+    timer = setInterval(() => {
+      timeLeft--;
+      timerEl.textContent = "Time: "+timeLeft+"s";
+      if(timeLeft<=0) endGame();
+    }, 1000);
+  }
+
+  function endGame() {
+    clearInterval(timer);
+    gameScreen.style.display = "none";
+    endScreen.style.display = "block";
+    resultDiv.textContent = `Well done! You matched ${score} sums!`;
+    funFactDiv.textContent = funFacts[Math.floor(Math.random()*funFacts.length)];
+  }
+
+  function nextQuestion() {
+    stonesDiv.innerHTML = "";
+    let idx;
+    do {
+      idx = Math.floor(Math.random()*questionBank.length);
+    } while(idx === lastQuestion && questionBank.length>1); // Avoid repeat
+    lastQuestion = idx;
+    let q = questionBank[idx];
+    // Always render 0 as "0", never "null"
+    let displayQ = q.q.replace("null", "0").replace("undefined", "0").replace("__", "___");
+    sumholder.textContent = displayQ;
+    currentQA = {answer: q.answer, q: displayQ};
+
+    // Choices: correct answer plus 0-14 distractors (never repeat)
+    let choices = [q.answer];
+    while (choices.length < 5) {
+      let n = Math.floor(Math.random() * 15);
+      if (!choices.includes(n)) choices.push(n);
+    }
+    choices = choices.sort(()=>Math.random()-0.5);
+
+    choices.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.textContent = opt; // will show 0 if that's the answer!
+      btn.className = "stone-btn";
+      btn.onclick = function(){
+        if(opt===q.answer) {
+          btn.classList.add("correct");
+          setTimeout(() => {
+            score++; 
+            scoreVal.textContent = score;
+            animalPop();
+            setTimeout(nextQuestion, 700);
+          }, 350);
+        } else {
+          btn.classList.add("incorrect");
+          setTimeout(()=>{btn.classList.remove("incorrect");}, 350);
+        }
+      };
+      stonesDiv.appendChild(btn);
+    });
+  }
+
+  function animalPop() {
+    let animals = ['🦁','🦒','🐘','🦓','🐒'];
+    let a = animals[Math.floor(Math.random()*animals.length)];
+    sumholder.innerHTML = `<span class="animal">${a}</span> Good job! <span class="animal">${a}</span>`;
+    setTimeout(()=>{
+      sumholder.innerHTML = currentQA.q;
+    }, 450);
+  }
+
+  startBtn.onclick = startGame;
+  playAgainBtn.onclick = startGame;
+</script>
+</body>
+</html>
