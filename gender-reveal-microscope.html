@@ -457,7 +457,7 @@ const resultEl = document.getElementById('result');
 const textLine2 = document.getElementById('textLine2');
 const hiddenText = document.getElementById('hiddenText');
 
-const MAX_ROTATION = 900;   // degrees of turning needed to fully focus (2.5 turns)
+const MAX_ROTATION = 1500;  // degrees of turning needed to fully focus (~4.2 turns)
 const MAX_BLUR = 18;        // px, matches the initial CSS blur
 const SPECIMEN_SCALE = 2.4; // specimen is 240% of the lens
 const TEXT_FX = 0.76, TEXT_FY = 0.24; // where the hidden text sits in the specimen field
@@ -525,7 +525,7 @@ function finishFocus(){
     launchConfetti();
     launchBalloons();
     resultEl.classList.add('show');
-  }, 500);
+  }, 2200);
 }
 
 knob.addEventListener('pointerdown', (e)=>{
@@ -626,7 +626,7 @@ autoLink.addEventListener('click', ()=>{
   const startZoom = zoom;
   const startDeg = progressDeg;
   const remaining = MAX_ROTATION - startDeg;
-  const durationMs = 3000;
+  const durationMs = 4200;
   const startTime = performance.now();
 
   function step(now){
