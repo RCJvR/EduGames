@@ -13,3 +13,10 @@ verify_jwt = false
 # only ever called by a signed-in browser session.
 [functions.payfast-create-checkout]
 verify_jwt = true
+
+# ics-feed is fetched directly by calendar apps (Apple/Google/Outlook
+# subscribing to a webcal:// URL) — a plain GET with no Authorization
+# header at all, so the platform JWT check must be off. It authenticates
+# each request itself against planner_entries.feed_token instead.
+[functions.ics-feed]
+verify_jwt = false

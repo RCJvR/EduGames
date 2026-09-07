@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WRO 2026 Robot Rockstars · Game Mat Planner</title>
-<meta name="description" content="Interactive measurement and path-planning tool for the WRO 2026 RoboMission Elementary game mat.">
+<title>WRO 2026 Heritage Heroes · Game Mat Planner</title>
+<meta name="description" content="Interactive measurement and path-planning tool for the WRO 2026 RoboMission Junior game mat.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://api.fontshare.com">
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800,900&display=swap">
@@ -16,25 +16,41 @@
 
   <nav class="app-nav">
     <div class="nav-left">
-      <div class="app-icon">🎸</div>
-      <span class="app-title">Robot Rockstars — Game Mat Planner</span>
-      <span class="nav-tag">Elementary</span>
+      <div class="app-icon">🏛️</div>
+      <span class="app-title">Heritage Heroes — Game Mat Planner</span>
+      <span class="nav-tag">Junior</span>
     </div>
     <div class="nav-right">
-      <a href="junior.html" class="nav-pill">Junior mat →</a>
+      <a href="elementary.html" class="nav-pill">Elementary mat →</a>
       <a href="index.html" class="nav-pill">Senior mat →</a>
       <a href="../index.html" class="nav-pill">← The Magic Lab</a>
     </div>
   </nav>
 
   <p class="lead">
-    The official WRO RoboMission Elementary game mat measures
+    The official WRO 2026 RoboMission Junior "Heritage Heroes" game mat measures
     <strong>2362 mm × 1143 mm</strong> (General Rules §7.2, ± 5 mm tolerance per
-    dimension). The overlay adds a 50 mm reference grid, edge ruler, and labelled
-    call-outs for every named area in the rules. Use the toolbar to measure
-    distances, plan robot paths, check turn angles, and place a robot footprint.
-    Click <strong>EXPORT CODE</strong> to convert a planned path into starter
-    Python or Word Blocks pseudocode. Coordinates use a top-left origin (0, 0).
+    dimension — the same overall field size as the Elementary and Senior mats).
+    The overlay adds a 50 mm reference grid, edge ruler, and labelled call-outs
+    for every named area in the rules. Use the toolbar to measure distances,
+    plan robot paths, check turn angles, and place a robot footprint. Click
+    <strong>EXPORT CODE</strong> to convert a planned path into starter Python
+    or Word Blocks pseudocode, or <strong>IMPORT CODE</strong> to replay an
+    existing PyBricks route on the mat. Coordinates use a top-left origin (0, 0).
+  </p>
+
+  <!-- Shown until the real Junior mat artwork + zone data are dropped in;
+       assets/zones-junior.js hides it as soon as WRO_ZONES is populated. -->
+  <p class="lead" id="juniorSetupNotice" style="border-left:3px solid #f97316; padding-left:12px;">
+    <strong>Setup needed:</strong> this page is wired up and every mat-independent
+    tool (measure, path, angle, robot footprint, code import/export and route
+    simulation) already works — but it still needs two files from the official
+    WRO 2026 Junior materials, which aren't bundled here:
+    <br>1. the game mat printing file saved as <code>img/gamemat-junior.jpg</code>, and
+    <br>2. the zone call-outs filled into <code>assets/zones-junior.js</code>
+    (that file explains the format and how the other two categories' coordinates were derived).
+    <br>Until the mat image is added the field below renders blank, and colour-based
+    line-follow simulation has no artwork to sample.
   </p>
 
   <div class="toolbar" id="toolbar">
@@ -87,7 +103,7 @@
   </div>
 
   <div class="stage" id="stage" data-tool="none" data-show-grid="true" data-show-zones="true" data-show-ruler="true">
-    <img class="mat" alt="WRO 2026 Robot Rockstars game mat" src="img/gamemat-elementary.jpg">
+    <img class="mat" alt="WRO 2026 Heritage Heroes game mat" src="img/gamemat-junior.jpg">
     <svg class="overlay" id="overlaySvg" viewBox="0 0 2362 1143" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"></svg>
     <svg class="measure" id="measureSvg" viewBox="0 0 2362 1143" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
       <g id="measLayer"></g>
@@ -291,7 +307,7 @@
   </div>
 
   <footer class="site">
-    <span>Background · WRO-2026 Game Mat Elementary printing file (PNG)</span>
+    <span>Background · WRO-2026 Game Mat Junior printing file (PNG)</span>
     <span>Overlay generated for planning use — not an official WRO document</span>
   </footer>
 
@@ -381,7 +397,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="assets/zones-elementary.js"></script>
+<script src="assets/zones-junior.js"></script>
 <script src="assets/history.js"></script>
 <script src="assets/tools.js"></script>
 <script src="assets/codegen.js"></script>

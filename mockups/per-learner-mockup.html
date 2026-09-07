@@ -1,0 +1,373 @@
+<title>One Learner, Five Grades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Manrope:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f5fb; --surface:#ffffff; --surface-2:#fbfaff;
+  --border:#e4e1ee; --border-2:#d8d3e8;
+  --text:#211b2e; --muted:#6f6880; --muted-2:#918aa2;
+  --accent:#ec4899; --accent-soft:rgba(236,72,153,0.10);
+  --green:#0e9f6e;
+  --test:#2563eb; --test-soft:rgba(37,99,235,0.09);
+  --exam:#e11d48; --exam-soft:rgba(225,29,72,0.09);
+  --assign:#7c3aed; --assign-soft:rgba(124,58,237,0.09);
+  --font-display:'Plus Jakarta Sans',sans-serif;
+  --font-body:'Manrope',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#080c1a; --surface:rgba(255,255,255,0.05); --surface-2:rgba(255,255,255,0.03);
+    --border:rgba(255,255,255,0.09); --border-2:rgba(255,255,255,0.14);
+    --text:#e4e8f8; --muted:rgba(210,218,245,0.6); --muted-2:rgba(210,218,245,0.4);
+    --accent:#f472b6; --accent-soft:rgba(244,114,182,0.14);
+    --green:#34e0a1;
+    --test:#7aa8ff; --test-soft:rgba(122,168,255,0.14);
+    --exam:#fb7185; --exam-soft:rgba(251,113,133,0.14);
+    --assign:#c4a4ff; --assign-soft:rgba(196,164,255,0.14);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#080c1a; --surface:rgba(255,255,255,0.05); --surface-2:rgba(255,255,255,0.03);
+  --border:rgba(255,255,255,0.09); --border-2:rgba(255,255,255,0.14);
+  --text:#e4e8f8; --muted:rgba(210,218,245,0.6); --muted-2:rgba(210,218,245,0.4);
+  --accent:#f472b6; --accent-soft:rgba(244,114,182,0.14);
+  --green:#34e0a1;
+  --test:#7aa8ff; --test-soft:rgba(122,168,255,0.14);
+  --exam:#fb7185; --exam-soft:rgba(251,113,133,0.14);
+  --assign:#c4a4ff; --assign-soft:rgba(196,164,255,0.14);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);margin:0;-webkit-font-smoothing:antialiased;}
+main{max-width:1180px;margin:0 auto;padding:36px 28px 64px;}
+
+header.page{margin-bottom:28px;}
+.eyebrow{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+h1{font-family:var(--font-display);font-weight:800;font-size:30px;letter-spacing:-0.02em;margin:0 0 8px;text-wrap:balance;}
+.page-sub{font-size:14.5px;color:var(--muted);max-width:66ch;line-height:1.6;margin:0 0 20px;}
+
+.legend{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:14px 18px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);}
+.legend-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
+.legend-note{font-size:12px;color:var(--muted-2);margin-left:auto;}
+
+nav.grades{display:flex;gap:6px;margin:26px 0 20px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:0;}
+.grade-tab{
+  font-family:var(--font-display);font-weight:700;font-size:13.5px;color:var(--muted);
+  background:transparent;border:none;border-bottom:2px solid transparent;padding:10px 16px 12px;cursor:pointer;
+}
+.grade-tab .n{font-family:var(--font-mono);font-weight:500;font-size:11px;color:var(--muted-2);margin-left:5px;}
+.grade-tab.active{color:var(--text);border-bottom-color:var(--accent);}
+.grade-tab.active .n{color:var(--accent);}
+.grade-tab:hover:not(.active){color:var(--text);}
+
+.grade-panel{display:none;}
+.grade-panel.active{display:block;}
+
+.learner-card{display:flex;gap:16px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:16px;flex-wrap:wrap;}
+.learner-avatar{width:42px;height:42px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:16px;flex-shrink:0;}
+.learner-info{flex:1;min-width:200px;}
+.learner-name{font-family:var(--font-display);font-weight:800;font-size:16px;}
+.learner-grade{font-family:var(--font-mono);font-size:11px;color:var(--muted-2);margin-top:1px;}
+.learner-setup{display:flex;flex-direction:column;gap:6px;}
+.setup-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.setup-label{font-family:var(--font-mono);font-size:10px;color:var(--muted-2);text-transform:uppercase;letter-spacing:0.04em;flex-shrink:0;min-width:78px;}
+.subject-pill{font-size:11px;font-weight:600;color:var(--text);background:var(--surface-2);border:1px solid var(--border-2);border-radius:20px;padding:3px 10px;}
+
+.compare-line{font-size:12.5px;color:var(--muted);background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:22px;}
+.compare-line strong{color:var(--text);}
+.compare-line .arrow{color:var(--accent);font-weight:700;margin:0 4px;}
+
+.stat-row{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap;}
+.stat-tile{flex:1;min-width:120px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.stat-num{font-family:var(--font-mono);font-weight:600;font-size:22px;line-height:1;font-variant-numeric:tabular-nums;}
+.stat-label{font-size:11.5px;color:var(--muted);margin-top:6px;}
+.stat-tile.test .stat-num{color:var(--test);}
+.stat-tile.exam .stat-num{color:var(--exam);}
+.stat-tile.assignment .stat-num{color:var(--assign);}
+
+.week-label{font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--muted);margin:22px 0 10px;display:flex;align-items:baseline;gap:8px;}
+.week-label .range{font-family:var(--font-mono);font-weight:500;font-size:11px;color:var(--muted-2);}
+
+.week-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.day-col{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;min-height:130px;display:flex;flex-direction:column;gap:8px;}
+.day-col.has-items{border-color:var(--border-2);}
+.day-head{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:2px;}
+.day-name{font-family:var(--font-display);font-weight:700;font-size:12.5px;}
+.day-date{font-family:var(--font-mono);font-size:10.5px;color:var(--muted-2);}
+.day-cycle{font-family:var(--font-mono);font-size:9.5px;color:var(--accent);font-weight:600;}
+
+.item-chip{border-left:3px solid; border-radius:0 8px 8px 0;padding:6px 8px;background:var(--surface-2);}
+.item-chip.test{border-color:var(--test);}
+.item-chip.exam{border-color:var(--exam);}
+.item-chip.assignment{border-color:var(--assign);}
+.item-subject{font-size:11.5px;font-weight:700;line-height:1.3;}
+.item-meta{display:flex;align-items:center;gap:6px;margin-top:3px;flex-wrap:wrap;}
+.item-type{font-family:var(--font-mono);font-size:8.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;}
+.item-type.test{color:var(--test);}
+.item-type.exam{color:var(--exam);}
+.item-type.assignment{color:var(--assign);}
+.item-title{font-size:10.5px;color:var(--muted);}
+.item-window{font-family:var(--font-mono);font-size:8.5px;color:var(--muted-2);}
+
+.day-empty{font-size:11px;color:var(--muted-2);font-style:italic;margin-top:auto;padding-top:12px;}
+
+.mock-flag{margin-top:30px;padding-top:16px;border-top:1px dashed var(--border-2);font-size:11.5px;color:var(--muted-2);line-height:1.6;}
+
+.theme-switch{position:fixed;top:18px;right:18px;z-index:50;}
+.theme-switch button{all:unset;cursor:pointer;display:block;width:52px;height:28px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border-2);position:relative;box-shadow:0 2px 8px rgba(20,10,40,0.10);}
+.theme-switch .thumb{position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;transition:left 0.18s ease;}
+.theme-switch button.is-dark .thumb{left:28px;}
+
+@media (max-width:760px){
+  .week-grid{grid-template-columns:repeat(2,1fr);}
+  .stat-row{gap:8px;}
+  .learner-card{flex-direction:column;align-items:flex-start;}
+}
+</style>
+
+<div class="theme-switch" title="Toggle light / dark">
+  <button id="theme-toggle" aria-label="Toggle color theme"><span class="thumb" id="theme-thumb">🌙</span></button>
+</div>
+
+<main>
+  <header class="page">
+    <div class="eyebrow">Time Turner — Assessment Calendar</div>
+    <h1>One learner, five grades</h1>
+    <p class="page-sub">Same 24 August – 4 September 2026 cycle as before, but now through one example learner's own eyes in each grade — after their home-language pair, Creative Arts choice (Gr 8–9), or elective subjects (Gr 10–12) are applied. Names are illustrative, not real students; the assessment data behind them is real.</p>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:var(--test);"></span>Test</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--exam);"></span>Exam</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--assign);"></span>Assignment</div>
+      <div class="legend-note">A task spanning several days shows once, dated to when it opens</div>
+    </div>
+  </header>
+
+  <nav class="grades" id="gradeTabs"></nav>
+
+  <div id="gradePanels"></div>
+
+  <div class="mock-flag">Mockup for internal review — filtered from the same real 24 August – 4 September 2026 assessment records already live in Time Turner, not sample data. Each learner's calendar reflects the Home Language / Creative Arts / elective-subject choices now built into the app.</div>
+</main>
+
+<script>
+const WEEK1 = [
+  { date: '2026-08-24', day: 1, name: 'Mon' },
+  { date: '2026-08-25', day: 2, name: 'Tue' },
+  { date: '2026-08-26', day: 3, name: 'Wed' },
+  { date: '2026-08-27', day: 4, name: 'Thu' },
+  { date: '2026-08-28', day: 5, name: 'Fri' }
+];
+const WEEK2 = [
+  { date: '2026-08-31', day: 6, name: 'Mon' },
+  { date: '2026-09-01', day: 7, name: 'Tue' },
+  { date: '2026-09-02', day: 8, name: 'Wed' },
+  { date: '2026-09-03', day: 9, name: 'Thu' },
+  { date: '2026-09-04', day: 10, name: 'Fri' }
+];
+
+// Pre-grouped, pre-filtered per learner (windows already merged; see
+// the whole-grade mockup for the raw per-day data these come from).
+const LEARNERS = {
+  8: {
+    name: 'Amahle', grade: 8, gradeTotal: 18,
+    setup: [
+      { label: 'Language', tags: ['Afrikaans Home Language', 'English First Additional Language'] },
+      { label: 'Creative Arts', tags: ['Visual Arts'] }
+    ],
+    items: [
+      { startDate: '2026-08-24', endDate: '2026-08-24', subject: 'Dramatic Arts', type: 'assignment', title: 'Radio Drama Upload' },
+      { startDate: '2026-08-24', endDate: '2026-08-27', subject: 'History', type: 'assignment', title: 'Task 2' },
+      { startDate: '2026-08-24', endDate: '2026-08-28', subject: 'Life Sciences', type: 'assignment', title: 'Practical' },
+      { startDate: '2026-08-25', endDate: '2026-08-25', subject: 'Dramatic Arts', type: 'test', title: 'Dramatic Arts' },
+      { startDate: '2026-08-25', endDate: '2026-08-28', subject: 'Dramatic Arts', type: 'assignment', title: 'Radio Drama' },
+      { startDate: '2026-08-26', endDate: '2026-08-26', subject: 'Business Studies', type: 'assignment', title: 'Grade 8 Banango Workshop' },
+      { startDate: '2026-08-27', endDate: '2026-08-27', subject: 'Visual Arts', type: 'test', title: 'Visual Arts' },
+      { startDate: '2026-08-31', endDate: '2026-09-04', subject: 'English First Additional Language', type: 'assignment', title: 'Film Study Group Discussion' },
+      { startDate: '2026-08-31', endDate: '2026-09-04', subject: 'Coding and Robotics', type: 'assignment', title: 'Mini-PAT assessment week' },
+      { startDate: '2026-08-31', endDate: '2026-09-03', subject: 'Afrikaans Home Language', type: 'assignment', title: 'Informele gesprek' },
+      { startDate: '2026-09-01', endDate: '2026-09-01', subject: 'Coding and Robotics', type: 'test', title: 'Coding and Robotics' },
+      { startDate: '2026-09-03', endDate: '2026-09-03', subject: 'Life Sciences', type: 'test', title: 'Life Sciences' },
+      { startDate: '2026-09-04', endDate: '2026-09-04', subject: 'Visual Arts', type: 'assignment', title: 'Artwork (Last day to submit)' }
+    ]
+  },
+  9: {
+    name: 'Kagiso', grade: 9, gradeTotal: 16,
+    setup: [
+      { label: 'Language', tags: ['Afrikaans Home Language', 'English First Additional Language'] },
+      { label: 'Creative Arts', tags: ['Music'] }
+    ],
+    items: [
+      { startDate: '2026-08-24', endDate: '2026-08-24', subject: 'Music', type: 'assignment', title: 'Assessment Task due' },
+      { startDate: '2026-08-24', endDate: '2026-09-04', subject: 'Dramatic Arts', type: 'assignment', title: 'Performance Week' },
+      { startDate: '2026-08-24', endDate: '2026-08-24', subject: 'English First Additional Language', type: 'assignment', title: 'Film Discussions start' },
+      { startDate: '2026-08-25', endDate: '2026-08-25', subject: 'Dramatic Arts', type: 'test', title: 'Dramatic Arts' },
+      { startDate: '2026-08-26', endDate: '2026-09-04', subject: 'Physical Sciences', type: 'assignment', title: 'Practical week' },
+      { startDate: '2026-08-26', endDate: '2026-08-28', subject: 'Afrikaans Home Language', type: 'assignment', title: 'GTA Voorbereide mondeling' },
+      { startDate: '2026-08-27', endDate: '2026-08-27', subject: 'Coding and Robotics', type: 'test', title: 'Coding and Robotics' },
+      { startDate: '2026-08-31', endDate: '2026-09-04', subject: 'Coding and Robotics', type: 'assignment', title: 'Mini-PAT assessment week' },
+      { startDate: '2026-08-31', endDate: '2026-08-31', subject: 'Music', type: 'assignment', title: 'Test' },
+      { startDate: '2026-09-01', endDate: '2026-09-01', subject: 'Geography', type: 'test', title: 'Geography' },
+      { startDate: '2026-09-03', endDate: '2026-09-03', subject: 'English First Additional Language', type: 'assignment', title: 'Prepared Reading starts' },
+      { startDate: '2026-09-03', endDate: '2026-09-03', subject: 'Mathematics', type: 'test', title: 'Mathematics' },
+      { startDate: '2026-09-04', endDate: '2026-09-04', subject: 'Afrikaans Home Language', type: 'assignment', title: 'GTA Luistertoets' }
+    ]
+  },
+  10: {
+    name: 'Zanele', grade: 10, gradeTotal: 22,
+    setup: [{ label: 'Subjects', tags: ['English Home Language', 'Afrikaans First Additional Language', 'Mathematics', 'Life Sciences', 'Geography', 'Economics', 'Life Orientation'] }],
+    items: [
+      { startDate: '2026-08-24', endDate: '2026-08-24', subject: 'Life Sciences', type: 'assignment', title: 'Essay workshop (after school)' },
+      { startDate: '2026-08-25', endDate: '2026-08-25', subject: 'Economics', type: 'test', title: 'Economics' },
+      { startDate: '2026-08-25', endDate: '2026-08-25', subject: 'English Home Language', type: 'assignment', title: 'Film discussion' },
+      { startDate: '2026-08-28', endDate: '2026-08-28', subject: 'Life Sciences', type: 'assignment', title: 'Essay (CNN)' },
+      { startDate: '2026-08-28', endDate: '2026-08-28', subject: 'Geography', type: 'assignment', title: 'Mapwork in class' },
+      { startDate: '2026-08-31', endDate: '2026-09-04', subject: 'Economics', type: 'assignment', title: 'Project' },
+      { startDate: '2026-08-31', endDate: '2026-08-31', subject: 'Life Sciences', type: 'assignment', title: 'Essay (NB)' },
+      { startDate: '2026-09-01', endDate: '2026-09-01', subject: 'Geography', type: 'test', title: 'Geography' },
+      { startDate: '2026-09-03', endDate: '2026-09-03', subject: 'Life Sciences', type: 'test', title: 'Life Sciences' },
+      { startDate: '2026-09-04', endDate: '2026-09-04', subject: 'Life Sciences', type: 'assignment', title: 'Essay (CT)' }
+    ]
+  },
+  11: {
+    name: 'Liam', grade: 11, gradeTotal: 19,
+    setup: [{ label: 'Subjects', tags: ['English Home Language', 'Afrikaans First Additional Language', 'Physical Sciences', 'Information Technology', 'Accounting', 'Life Orientation'] }],
+    items: [
+      { startDate: '2026-08-24', endDate: '2026-08-24', subject: 'Physical Sciences', type: 'assignment', title: 'Practical (CG)' },
+      { startDate: '2026-08-25', endDate: '2026-08-25', subject: 'Information Technology', type: 'test', title: 'Information Technology' },
+      { startDate: '2026-08-26', endDate: '2026-08-26', subject: 'Physical Sciences', type: 'assignment', title: 'Practical (EsB)' },
+      { startDate: '2026-08-28', endDate: '2026-08-28', subject: 'Physical Sciences', type: 'assignment', title: 'Practical (NB)' },
+      { startDate: '2026-08-31', endDate: '2026-08-31', subject: 'Physical Sciences', type: 'assignment', title: 'Prac Writeup' },
+      { startDate: '2026-09-01', endDate: '2026-09-02', subject: 'Accounting', type: 'assignment', title: 'Project' },
+      { startDate: '2026-09-01', endDate: '2026-09-01', subject: 'Physical Sciences', type: 'test', title: 'Physical Sciences' },
+      { startDate: '2026-09-03', endDate: '2026-09-03', subject: 'Information Technology', type: 'assignment', title: 'Theory Test' }
+    ]
+  },
+  12: {
+    name: 'Naledi', grade: 12, gradeTotal: 19,
+    setup: [{ label: 'Subjects', tags: ['English Home Language', 'Afrikaans First Additional Language', 'Mathematics', 'Life Sciences', 'Geography', 'History', 'Life Orientation'] }],
+    items: [
+      { startDate: '2026-08-27', endDate: '2026-08-27', subject: 'Life Sciences', type: 'test', title: 'P1' },
+      { startDate: '2026-08-28', endDate: '2026-08-28', subject: 'History', type: 'test', title: 'History' },
+      { startDate: '2026-08-31', endDate: '2026-08-31', subject: 'Mathematics', type: 'test', title: 'P1' },
+      { startDate: '2026-09-01', endDate: '2026-09-01', subject: 'Geography', type: 'test', title: 'P1' },
+      { startDate: '2026-09-02', endDate: '2026-09-02', subject: 'History', type: 'test', title: 'P2' },
+      { startDate: '2026-09-03', endDate: '2026-09-03', subject: 'English Home Language', type: 'test', title: 'P1' },
+      { startDate: '2026-09-04', endDate: '2026-09-04', subject: 'Afrikaans First Additional Language', type: 'test', title: 'P1' }
+    ]
+  }
+};
+
+function fmtDate(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+}
+function fmtRange(startIso, endIso) {
+  return `${fmtDate(startIso)}–${fmtDate(endIso)}`;
+}
+function initials(name) {
+  return name.slice(0, 2).toUpperCase();
+}
+
+function dayCell(dayInfo, items) {
+  const cellItems = items.filter(it => it.startDate === dayInfo.date);
+  const chips = cellItems.map(it => `
+    <div class="item-chip ${it.type}">
+      <div class="item-subject">${it.subject}</div>
+      <div class="item-meta">
+        <span class="item-type ${it.type}">${it.type}</span>
+        <span class="item-title">${it.title}</span>
+        ${it.endDate !== it.startDate ? `<span class="item-window">${fmtRange(it.startDate, it.endDate)}</span>` : ''}
+      </div>
+    </div>`).join('');
+  return `
+    <div class="day-col ${cellItems.length ? 'has-items' : ''}">
+      <div class="day-head">
+        <span class="day-name">${dayInfo.name}<div class="day-cycle">Day ${dayInfo.day}</div></span>
+        <span class="day-date">${fmtDate(dayInfo.date)}</span>
+      </div>
+      ${chips || '<div class="day-empty">Nothing due</div>'}
+    </div>`;
+}
+
+function counts(items) {
+  const c = { test: 0, exam: 0, assignment: 0 };
+  items.forEach(it => { c[it.type] = (c[it.type] || 0) + 1; });
+  return c;
+}
+
+const grades = [8, 9, 10, 11, 12];
+const tabsEl = document.getElementById('gradeTabs');
+const panelsEl = document.getElementById('gradePanels');
+
+tabsEl.innerHTML = grades.map((g, i) => {
+  const l = LEARNERS[g];
+  return `<button class="grade-tab${i === 0 ? ' active' : ''}" data-grade="${g}">${l.name}<span class="n">Gr ${g} · ${l.items.length}</span></button>`;
+}).join('');
+
+panelsEl.innerHTML = grades.map((g, i) => {
+  const l = LEARNERS[g];
+  const c = counts(l.items);
+  return `
+    <section class="grade-panel${i === 0 ? ' active' : ''}" data-grade="${g}">
+      <div class="learner-card">
+        <div class="learner-avatar">${initials(l.name)}</div>
+        <div class="learner-info">
+          <div class="learner-name">${l.name}</div>
+          <div class="learner-grade">Grade ${l.grade} · example learner</div>
+        </div>
+        <div class="learner-setup">
+          ${l.setup.map(s => `<div class="setup-row"><span class="setup-label">${s.label}</span>${s.tags.map(t => `<span class="subject-pill">${t}</span>`).join('')}</div>`).join('')}
+        </div>
+      </div>
+
+      <div class="compare-line">Whole Grade ${l.grade} calendar this cycle: <strong>${l.gradeTotal} tasks</strong><span class="arrow">→</span>${l.name}'s own calendar: <strong>${l.items.length} tasks</strong></div>
+
+      <div class="stat-row">
+        <div class="stat-tile"><div class="stat-num">${l.items.length}</div><div class="stat-label">Total this cycle</div></div>
+        <div class="stat-tile test"><div class="stat-num">${c.test}</div><div class="stat-label">Tests</div></div>
+        <div class="stat-tile exam"><div class="stat-num">${c.exam}</div><div class="stat-label">Exams</div></div>
+        <div class="stat-tile assignment"><div class="stat-num">${c.assignment}</div><div class="stat-label">Assignments</div></div>
+      </div>
+
+      <div class="week-label">Week 1 <span class="range">Days 1–5 · 24–28 Aug</span></div>
+      <div class="week-grid">${WEEK1.map(d => dayCell(d, l.items)).join('')}</div>
+
+      <div class="week-label">Week 2 <span class="range">Days 6–10 · 31 Aug–4 Sept</span></div>
+      <div class="week-grid">${WEEK2.map(d => dayCell(d, l.items)).join('')}</div>
+    </section>`;
+}).join('');
+
+tabsEl.addEventListener('click', (e) => {
+  const btn = e.target.closest('.grade-tab');
+  if (!btn) return;
+  const grade = btn.dataset.grade;
+  document.querySelectorAll('.grade-tab').forEach(b => b.classList.toggle('active', b.dataset.grade === grade));
+  document.querySelectorAll('.grade-panel').forEach(p => p.classList.toggle('active', p.dataset.grade === grade));
+});
+
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById('theme-toggle');
+  const thumb = document.getElementById('theme-thumb');
+  function systemPrefersDark() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+  function isDark(theme) { return theme === 'dark' || (!theme && systemPrefersDark()); }
+  function apply(theme) {
+    if (theme) root.setAttribute('data-theme', theme); else root.removeAttribute('data-theme');
+    const dark = isDark(theme);
+    btn.classList.toggle('is-dark', dark);
+    thumb.textContent = dark ? '🌙' : '☀️';
+  }
+  let saved = null;
+  try { saved = localStorage.getItem('tt-theme'); } catch (e) {}
+  apply(saved);
+  btn.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme') || (systemPrefersDark() ? 'dark' : 'light');
+    const next = current === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('tt-theme', next); } catch (e) {}
+    apply(next);
+  });
+})();
+</script>

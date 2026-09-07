@@ -377,6 +377,13 @@
     .card-oracle .card-title { color: #e4bcff; }
     .btn-oracle { background: linear-gradient(135deg,#9333ea,#c026d3); color: #fff; }
 
+    /* Time Turner — pink */
+    .card-turner::before  { background: radial-gradient(ellipse at 0% 0%, rgba(236,72,153,0.15), transparent 65%); }
+    .card-turner:hover    { border-color: rgba(236,72,153,0.50); }
+    .card-turner .card-icon{ background: linear-gradient(135deg,rgba(236,72,153,0.30),rgba(17,217,143,0.14)); border:1px solid rgba(236,72,153,0.30); }
+    .card-turner .card-title { color: #f9a8d4; }
+    .btn-turner { background: linear-gradient(135deg,#db2777,#ec4899); color: #fff; }
+
     /* Model Mage — teal */
     .card-model::before  { background: radial-gradient(ellipse at 0% 0%, rgba(20,184,166,0.15), transparent 65%); }
     .card-model:hover    { border-color: rgba(20,184,166,0.50); }
@@ -710,6 +717,26 @@
           <div class="card-btn btn-oracle">
             <i data-lucide="sparkles" style="width:15px;height:15px;"></i>
             Enter AI Oracle
+          </div>
+        </a>
+
+        <!-- Time Turner — pink (utility, not a subject) -->
+        <a href="time-turner.html" class="card card-turner">
+          <div class="card-free-badge">✦ Free forever</div>
+          <div class="card-grade">Every grade</div>
+          <div class="card-head">
+            <div class="card-icon" style="font-size:22px;line-height:1;">⏳</div>
+            <div class="card-title">Time Turner</div>
+          </div>
+          <p class="card-desc">A weekly time-management planner. Map out school, homework, activities, meals, chores and rest, then print a plan built around what the week's actually missing.</p>
+          <div class="card-tags">
+            <span class="tag">Planning</span>
+            <span class="tag">Study habits</span>
+            <span class="tag">Printable</span>
+          </div>
+          <div class="card-btn btn-turner">
+            <i data-lucide="calendar-clock" style="width:15px;height:15px;"></i>
+            Open Time Turner
           </div>
         </a>
 

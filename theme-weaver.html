@@ -1,0 +1,532 @@
+<!doctype html>
+<!-- © 2026 Ruhan Janse van Rensburg. All rights reserved. -->
+<html lang="en">
+<head>
+<script>document.documentElement.style.visibility='hidden';</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080c1a">
+<title>Theme Weaver — The Magic Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+<link rel="stylesheet" href="auth-modal.css">
+<style>
+:root{
+  --bg:#080c1a; --bg2:#0d1226;
+  --surface:rgba(255,255,255,0.048); --surface2:rgba(255,255,255,0.032);
+  --border:rgba(255,255,255,0.085); --border2:rgba(255,255,255,0.055);
+  --text:#e4e8f8; --text2:rgba(210,218,245,0.65); --muted:rgba(210,218,245,0.38);
+  --accent-1:#7c6dfa; --accent-2:#11d98f; --accent-3:#f5a623;
+  --font:"Cabinet Grotesk",sans-serif; --mono:"JetBrains Mono",monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--text);
+  min-height:100vh;-webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 5% 3%, rgba(124,109,250,0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 96% 6%, rgba(17,217,143,0.10) 0%, transparent 55%);
+}
+a{color:inherit;}
+.hidden{display:none !important;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;flex-wrap:wrap;gap:10px;}
+.nav-logo{font-weight:900;font-size:16px;letter-spacing:-0.03em;color:var(--text2);text-decoration:none;}
+.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.nav-pill{
+  display:inline-flex;align-items:center;padding:8px 14px;border-radius:99px;
+  background:var(--surface);border:1px solid var(--border);color:var(--text2);
+  font-size:12.5px;font-weight:700;text-decoration:none;cursor:pointer;transition:all 150ms;
+}
+.nav-pill:hover{background:var(--surface2);border-color:var(--border2);}
+
+main{max-width:920px;margin:0 auto;padding:8px 24px 80px;}
+
+.hero{text-align:center;margin:28px auto 36px;max-width:560px;}
+.hero-icon{font-size:38px;margin-bottom:10px;}
+.hero-title{
+  font-weight:900;font-size:32px;letter-spacing:-0.03em;margin-bottom:10px;
+  background:linear-gradient(120deg,#fff 0%,#c4baff 50%,#6ee7b7 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{font-size:14.5px;color:var(--muted);line-height:1.65;}
+
+.tabs{display:flex;gap:8px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;}
+.tab-btn{
+  padding:9px 18px;border-radius:99px;background:var(--surface);border:1px solid var(--border);
+  color:var(--text2);font-family:var(--font);font-size:13px;font-weight:800;cursor:pointer;transition:all 150ms;
+}
+.tab-btn.active{background:linear-gradient(135deg,rgba(124,109,250,0.28),rgba(17,217,143,0.22));border-color:rgba(124,109,250,0.4);color:#fff;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadeIn 200ms ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+.section-title{font-weight:800;font-size:15px;letter-spacing:-0.01em;margin:26px 0 12px;display:flex;align-items:center;gap:8px;color:var(--text);}
+.section-title:first-child{margin-top:0;}
+.section-sub{font-size:12.5px;color:var(--muted);margin:-8px 0 14px;}
+
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin-bottom:12px;
+}
+
+/* Upcoming (combined) calendar */
+.upcoming-item{
+  display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);
+}
+.upcoming-item:last-child{border-bottom:none;padding-bottom:0;}
+.upcoming-date{
+  font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent-2);white-space:nowrap;
+  padding:5px 10px;border-radius:8px;background:rgba(17,217,143,0.12);border:1px solid rgba(17,217,143,0.25);flex-shrink:0;
+}
+.upcoming-date.overdue{color:#fca5a5;background:rgba(248,113,113,0.12);border-color:rgba(248,113,113,0.28);}
+.upcoming-date.none{color:var(--muted);background:rgba(255,255,255,0.05);border-color:var(--border);}
+.upcoming-body{flex:1;min-width:0;}
+.upcoming-title{font-weight:700;font-size:13.5px;margin-bottom:3px;}
+.upcoming-meta{font-size:11.5px;color:var(--muted);}
+.subject-tag{
+  display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;
+  background:rgba(124,109,250,0.14);border:1px solid rgba(124,109,250,0.28);color:#c4baff;margin:2px 4px 0 0;
+}
+.type-tag{text-transform:capitalize;}
+
+/* Theme cards */
+.theme-card{cursor:pointer;}
+.theme-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.theme-name{font-weight:800;font-size:16px;letter-spacing:-0.01em;}
+.theme-badge{font-family:var(--mono);font-size:10.5px;color:var(--muted);white-space:nowrap;}
+.theme-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-top:6px;}
+.theme-items{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:none;}
+.theme-items.open{display:block;}
+
+/* Onboarding */
+.resource-card{padding:16px 18px;}
+.resource-title{font-weight:700;font-size:13.5px;margin-bottom:4px;}
+.resource-body{font-size:13px;color:var(--text2);line-height:1.6;}
+.resource-link{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:700;color:var(--accent-2);text-decoration:none;}
+.checklist-item{display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--border);}
+.checklist-item:last-child{border-bottom:none;}
+.checklist-item input{width:18px;height:18px;accent-color:var(--accent-2);flex-shrink:0;cursor:pointer;}
+.checklist-item label{font-size:13.5px;cursor:pointer;flex:1;}
+.checklist-item.done label{color:var(--muted);text-decoration:line-through;}
+
+.empty-hint{font-size:13px;color:var(--muted);text-align:center;padding:22px 10px;}
+
+/* Teacher admin */
+.admin-panel{margin-top:36px;padding-top:22px;border-top:1px dashed var(--border2);}
+.admin-badge{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;font-weight:700;
+  color:var(--accent-3);background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.28);
+  padding:4px 10px;border-radius:99px;margin-bottom:14px;
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.form-input,.form-select,.form-textarea{
+  width:100%;padding:11px 13px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);
+  border-radius:10px;color:var(--text);font-family:var(--font);font-size:13.5px;outline:none;transition:border-color 150ms;
+}
+.form-textarea{resize:vertical;min-height:56px;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:rgba(124,109,250,0.5);}
+.form-input::placeholder{color:var(--muted);}
+.btn-primary{
+  padding:11px 20px;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#7c6dfa,#11d98f);color:#0a0e1c;
+  font-family:var(--font);font-size:13px;font-weight:800;letter-spacing:-0.01em;transition:all 160ms;
+}
+.btn-primary:hover{transform:translateY(-1px);}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.btn-ghost{
+  padding:8px 14px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);
+  font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:all 150ms;
+}
+.btn-ghost:hover{color:#fca5a5;border-color:rgba(248,113,113,0.3);}
+.admin-list-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.admin-list-row:last-child{border-bottom:none;}
+.admin-list-title{font-size:13px;font-weight:700;}
+.admin-list-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.msg{font-size:12.5px;font-weight:600;margin-top:8px;}
+.msg.err{color:#fca5a5;}
+.msg.ok{color:#6ee7b7;}
+
+@media (max-width:640px){
+  .form-row{grid-template-columns:1fr;}
+  nav{padding:14px 18px;}
+  main{padding:8px 16px 60px;}
+  .hero-title{font-size:26px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">✨ The Magic Lab</a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-pill">← All Tools</a>
+    <button class="nav-pill ml-auth-btn" data-ml-auth onclick="window.MagicLabModal?.open()"><i data-lucide="lock" style="width:13px;height:13px;vertical-align:-2px;margin-right:5px;"></i>Sign In</button>
+  </div>
+</nav>
+
+<main>
+  <div class="hero">
+    <div class="hero-icon">🧵</div>
+    <div class="hero-title">Theme Weaver</div>
+    <div class="hero-sub">Everything your theme-based learning term ties together — shared assessments across subjects, one combined calendar, and a survival guide for anyone new to the school.</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="upcoming">This Week</button>
+    <button class="tab-btn" data-tab="themes">Themes</button>
+    <button class="tab-btn" data-tab="onboarding">New Here?</button>
+  </div>
+
+  <!-- ── This Week: combined cross-subject calendar ── -->
+  <div class="tab-panel active" id="panel-upcoming">
+    <div class="section-title"><i data-lucide="calendar-clock" style="width:16px;height:16px;color:var(--accent-2);"></i>Coming up, across every subject</div>
+    <div class="section-sub">One list instead of six subjects' worth of separate reminders — this is every shared theme assessment, content piece, and activity, soonest first.</div>
+    <div class="card" id="upcoming-list"><div class="empty-hint">Loading…</div></div>
+  </div>
+
+  <!-- ── Themes ── -->
+  <div class="tab-panel" id="panel-themes">
+    <div class="section-title"><i data-lucide="layers" style="width:16px;height:16px;color:var(--accent-1);"></i>Active themes</div>
+    <div class="section-sub">Tap a theme to see which subjects are weaving into it and what's shared.</div>
+    <div id="themes-list"><div class="empty-hint">Loading…</div></div>
+  </div>
+
+  <!-- ── Onboarding / New Here ── -->
+  <div class="tab-panel" id="panel-onboarding">
+    <div class="section-title"><i data-lucide="compass" style="width:16px;height:16px;color:var(--accent-3);"></i>Campus logistics</div>
+    <div id="onboarding-logistics"><div class="empty-hint">Loading…</div></div>
+
+    <div class="section-title"><i data-lucide="users" style="width:16px;height:16px;color:var(--accent-3);"></i>Extracurriculars</div>
+    <div id="onboarding-extracurricular"><div class="empty-hint">Loading…</div></div>
+
+    <div class="section-title"><i data-lucide="help-circle" style="width:16px;height:16px;color:var(--accent-3);"></i>Frequently asked</div>
+    <div id="onboarding-faq"><div class="empty-hint">Loading…</div></div>
+
+    <div class="section-title"><i data-lucide="check-square" style="width:16px;height:16px;color:var(--accent-3);"></i>Settling-in checklist</div>
+    <div class="section-sub">Ticks are saved on this device only.</div>
+    <div class="card" id="onboarding-checklist"><div class="empty-hint">Loading…</div></div>
+  </div>
+
+  <!-- ── Teacher admin panel ── -->
+  <div class="admin-panel hidden" id="admin-panel">
+    <div class="admin-badge"><i data-lucide="shield" style="width:12px;height:12px;"></i>Teacher tools — visible only to staff</div>
+
+    <div class="section-title">New theme</div>
+    <div class="card">
+      <div class="form-row">
+        <input class="form-input" id="af-theme-name" placeholder="Theme name, e.g. Exploration">
+        <input class="form-input" id="af-theme-term" placeholder="Term, e.g. Term 1 2026">
+      </div>
+      <div class="form-row">
+        <input class="form-input" id="af-theme-grade" type="number" min="8" max="12" placeholder="Grade (optional — leave blank for all)">
+      </div>
+      <textarea class="form-textarea" id="af-theme-desc" placeholder="Short description of the theme"></textarea>
+      <div style="margin-top:10px;"><button class="btn-primary" id="af-theme-submit">Create theme</button></div>
+      <div class="msg" id="af-theme-msg"></div>
+    </div>
+
+    <div class="section-title">Add a shared item to a theme</div>
+    <div class="card">
+      <select class="form-select" id="ai-theme-select" style="margin-bottom:10px;"><option value="">Choose a theme…</option></select>
+      <div class="form-row">
+        <input class="form-input" id="ai-item-subjects" list="subject-options" placeholder="Subjects, comma-separated — e.g. Geography, Physical Sciences">
+        <select class="form-select" id="ai-item-type">
+          <option value="assessment">Assessment</option>
+          <option value="content">Shared content</option>
+          <option value="activity">Activity</option>
+        </select>
+      </div>
+      <input class="form-input" id="ai-item-title" placeholder="Title, e.g. Soil quality & pH investigation" style="margin-bottom:10px;">
+      <textarea class="form-textarea" id="ai-item-desc" placeholder="Description (optional)"></textarea>
+      <div class="form-row" style="margin-top:10px;">
+        <input class="form-input" id="ai-item-due" type="date">
+      </div>
+      <button class="btn-primary" id="ai-item-submit">Add item</button>
+      <div class="msg" id="ai-item-msg"></div>
+    </div>
+
+    <div class="section-title">Add an onboarding resource</div>
+    <div class="card">
+      <div class="form-row">
+        <select class="form-select" id="ar-category">
+          <option value="logistics">Campus logistics</option>
+          <option value="extracurricular">Extracurricular</option>
+          <option value="faq">FAQ</option>
+          <option value="checklist">Checklist item</option>
+        </select>
+        <input class="form-input" id="ar-grade" type="number" min="8" max="12" placeholder="Grade (optional)">
+      </div>
+      <input class="form-input" id="ar-title" placeholder="Title" style="margin-bottom:10px;">
+      <textarea class="form-textarea" id="ar-body" placeholder="Body text (optional)"></textarea>
+      <input class="form-input" id="ar-link" placeholder="Link (optional)" style="margin-top:10px;">
+      <div style="margin-top:10px;"><button class="btn-primary" id="ar-submit">Add resource</button></div>
+      <div class="msg" id="ar-msg"></div>
+    </div>
+  </div>
+
+  <datalist id="subject-options">
+    <option value="Afrikaans EAT">
+    <option value="Afrikaans HT">
+    <option value="Business Studies">
+    <option value="Coding and Robotics">
+    <option value="Dramatic Arts">
+    <option value="English FAL">
+    <option value="English HL">
+    <option value="Geography">
+    <option value="Life Orientation">
+    <option value="Mathematics">
+    <option value="Natural Sciences">
+    <option value="Physical Sciences">
+    <option value="Visual Arts">
+  </datalist>
+
+</main>
+
+<script src="auth.js"></script>
+<script src="require-auth.js"></script>
+<script src="theme-weaver.js"></script>
+<script defer src="auth-modal.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => window.lucide?.createIcons());
+
+let _grade = null;
+let _isTeacher = false;
+
+document.addEventListener('magiclab:themeweaver:ready', init);
+
+async function init() {
+  const auth = window.MagicLabAuth;
+  const profile = auth.getProfile();
+  _grade = profile?.grade || null;
+  _isTeacher = auth.isTeacher();
+
+  _wireTabs();
+  _wireAdminForms();
+  if (_isTeacher) document.getElementById('admin-panel').classList.remove('hidden');
+
+  await Promise.all([
+    _loadUpcoming(),
+    _loadThemes(),
+    _loadOnboarding()
+  ]);
+  window.lucide?.createIcons();
+}
+
+function _wireTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+}
+
+function _esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function _fmtDate(d) {
+  if (!d) return null;
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+}
+
+function _dateClass(d) {
+  if (!d) return 'none';
+  const today = new Date(); today.setHours(0,0,0,0);
+  return new Date(d + 'T00:00:00') < today ? 'overdue' : '';
+}
+
+// ── This Week ────────────────────────────────────────────────
+async function _loadUpcoming() {
+  const items = await window.MagicLabThemeWeaver.getUpcomingItems(_grade);
+  const box = document.getElementById('upcoming-list');
+  if (!items.length) { box.innerHTML = '<div class="empty-hint">No shared items scheduled yet — check back once your teachers add to a theme.</div>'; return; }
+
+  box.innerHTML = items.map(item => `
+    <div class="upcoming-item">
+      <div class="upcoming-date ${_dateClass(item.due_date)}">${_fmtDate(item.due_date) || 'No date'}</div>
+      <div class="upcoming-body">
+        <div class="upcoming-title">${_esc(item.title)}</div>
+        <div class="upcoming-meta">
+          <span class="type-tag">${_esc(item.type)}</span> · ${_esc(item.theme?.name || '')}
+          ${(item.subjects || []).map(s => `<span class="subject-tag">${_esc(s)}</span>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ── Themes ───────────────────────────────────────────────────
+async function _loadThemes() {
+  const themes = await window.MagicLabThemeWeaver.getActiveThemes(_grade);
+  const box = document.getElementById('themes-list');
+  const select = document.getElementById('ai-theme-select');
+
+  if (!themes.length) {
+    box.innerHTML = '<div class="empty-hint">No active themes yet.</div>';
+  } else {
+    box.innerHTML = themes.map(t => `
+      <div class="card theme-card" data-theme-id="${t.id}">
+        <div class="theme-card-head">
+          <div class="theme-name">${_esc(t.name)}</div>
+          <div class="theme-badge">${_esc(t.term || '')}${t.grade ? ' · Gr ' + t.grade : ''}</div>
+        </div>
+        ${t.description ? `<div class="theme-desc">${_esc(t.description)}</div>` : ''}
+        <div class="theme-items" data-items-for="${t.id}"><div class="empty-hint">Loading…</div></div>
+      </div>`).join('');
+
+    box.querySelectorAll('.theme-card').forEach(card => {
+      card.addEventListener('click', async (e) => {
+        if (e.target.closest('a,button,input')) return;
+        const itemsBox = card.querySelector('.theme-items');
+        const wasOpen = itemsBox.classList.contains('open');
+        document.querySelectorAll('.theme-items.open').forEach(el => el.classList.remove('open'));
+        if (wasOpen) return;
+        itemsBox.classList.add('open');
+        if (itemsBox.dataset.loaded) return;
+        const { data } = await window.MagicLabThemeWeaver.getTheme(card.dataset.themeId);
+        itemsBox.dataset.loaded = '1';
+        itemsBox.innerHTML = (data?.items?.length)
+          ? data.items.map(item => `
+              <div class="upcoming-item">
+                <div class="upcoming-date ${_dateClass(item.due_date)}">${_fmtDate(item.due_date) || 'No date'}</div>
+                <div class="upcoming-body">
+                  <div class="upcoming-title">${_esc(item.title)}</div>
+                  ${item.description ? `<div class="upcoming-meta">${_esc(item.description)}</div>` : ''}
+                  <div class="upcoming-meta" style="margin-top:4px;">
+                    <span class="type-tag">${_esc(item.type)}</span>
+                    ${(item.subjects || []).map(s => `<span class="subject-tag">${_esc(s)}</span>`).join('')}
+                  </div>
+                </div>
+              </div>`).join('')
+          : '<div class="empty-hint">Nothing shared under this theme yet.</div>';
+      });
+    });
+  }
+
+  if (select) select.innerHTML = '<option value="">Choose a theme…</option>' + themes.map(t => `<option value="${t.id}">${_esc(t.name)}</option>`).join('');
+}
+
+// ── Onboarding ───────────────────────────────────────────────
+async function _loadOnboarding() {
+  const [logistics, extracurricular, faq, checklist] = await Promise.all([
+    window.MagicLabThemeWeaver.getOnboardingResources('logistics', _grade),
+    window.MagicLabThemeWeaver.getOnboardingResources('extracurricular', _grade),
+    window.MagicLabThemeWeaver.getOnboardingResources('faq', _grade),
+    window.MagicLabThemeWeaver.getOnboardingResources('checklist', _grade)
+  ]);
+
+  _renderResourceList('onboarding-logistics', logistics);
+  _renderResourceList('onboarding-extracurricular', extracurricular);
+  _renderResourceList('onboarding-faq', faq);
+  _renderChecklist(checklist);
+}
+
+function _renderResourceList(elId, resources) {
+  const box = document.getElementById(elId);
+  box.innerHTML = resources.length
+    ? resources.map(r => `
+        <div class="card resource-card">
+          <div class="resource-title">${_esc(r.title)}</div>
+          ${r.body ? `<div class="resource-body">${_esc(r.body)}</div>` : ''}
+          ${r.link ? `<a class="resource-link" href="${_esc(r.link)}" target="_blank" rel="noopener">Open link →</a>` : ''}
+        </div>`).join('')
+    : '<div class="empty-hint">Nothing here yet.</div>';
+}
+
+function _checklistStorageKey(id) { return 'ml-theme-weaver-checklist-' + id; }
+
+function _renderChecklist(items) {
+  const box = document.getElementById('onboarding-checklist');
+  if (!items.length) { box.innerHTML = '<div class="empty-hint">Nothing here yet.</div>'; return; }
+
+  box.innerHTML = items.map(r => {
+    let done = false;
+    try { done = localStorage.getItem(_checklistStorageKey(r.id)) === '1'; } catch (e) {}
+    return `
+      <div class="checklist-item ${done ? 'done' : ''}" data-id="${r.id}">
+        <input type="checkbox" id="cl-${r.id}" ${done ? 'checked' : ''}>
+        <label for="cl-${r.id}">${_esc(r.title)}</label>
+      </div>`;
+  }).join('');
+
+  box.querySelectorAll('input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const row = cb.closest('.checklist-item');
+      try {
+        if (cb.checked) localStorage.setItem(_checklistStorageKey(row.dataset.id), '1');
+        else localStorage.removeItem(_checklistStorageKey(row.dataset.id));
+      } catch (e) {}
+      row.classList.toggle('done', cb.checked);
+    });
+  });
+}
+
+// ── Teacher admin forms ─────────────────────────────────────
+function _wireAdminForms() {
+  document.getElementById('af-theme-submit').addEventListener('click', async () => {
+    const name = document.getElementById('af-theme-name').value.trim();
+    const term = document.getElementById('af-theme-term').value.trim() || null;
+    const gradeVal = document.getElementById('af-theme-grade').value;
+    const description = document.getElementById('af-theme-desc').value.trim() || null;
+    const msg = document.getElementById('af-theme-msg');
+    if (!name) { msg.textContent = 'Theme name is required.'; msg.className = 'msg err'; return; }
+
+    const { error } = await window.MagicLabThemeWeaver.createTheme({ name, description, term, grade: gradeVal ? Number(gradeVal) : null });
+    if (error) { msg.textContent = error.message; msg.className = 'msg err'; return; }
+    msg.textContent = 'Theme created.'; msg.className = 'msg ok';
+    document.getElementById('af-theme-name').value = '';
+    document.getElementById('af-theme-term').value = '';
+    document.getElementById('af-theme-grade').value = '';
+    document.getElementById('af-theme-desc').value = '';
+    await _loadThemes();
+    await _loadUpcoming();
+  });
+
+  document.getElementById('ai-item-submit').addEventListener('click', async () => {
+    const themeId = document.getElementById('ai-theme-select').value;
+    const subjects = document.getElementById('ai-item-subjects').value.split(',').map(s => s.trim()).filter(Boolean);
+    const type = document.getElementById('ai-item-type').value;
+    const title = document.getElementById('ai-item-title').value.trim();
+    const description = document.getElementById('ai-item-desc').value.trim() || null;
+    const dueDate = document.getElementById('ai-item-due').value || null;
+    const msg = document.getElementById('ai-item-msg');
+    if (!themeId) { msg.textContent = 'Choose a theme first.'; msg.className = 'msg err'; return; }
+    if (!title) { msg.textContent = 'Title is required.'; msg.className = 'msg err'; return; }
+
+    const { error } = await window.MagicLabThemeWeaver.addThemeItem({ themeId, subjects, type, title, description, dueDate });
+    if (error) { msg.textContent = error.message; msg.className = 'msg err'; return; }
+    msg.textContent = 'Added.'; msg.className = 'msg ok';
+    document.getElementById('ai-item-subjects').value = '';
+    document.getElementById('ai-item-title').value = '';
+    document.getElementById('ai-item-desc').value = '';
+    document.getElementById('ai-item-due').value = '';
+    document.querySelectorAll(`.theme-items[data-items-for="${themeId}"]`).forEach(el => delete el.dataset.loaded);
+    await _loadUpcoming();
+  });
+
+  document.getElementById('ar-submit').addEventListener('click', async () => {
+    const category = document.getElementById('ar-category').value;
+    const gradeVal = document.getElementById('ar-grade').value;
+    const title = document.getElementById('ar-title').value.trim();
+    const body = document.getElementById('ar-body').value.trim() || null;
+    const link = document.getElementById('ar-link').value.trim() || null;
+    const msg = document.getElementById('ar-msg');
+    if (!title) { msg.textContent = 'Title is required.'; msg.className = 'msg err'; return; }
+
+    const { error } = await window.MagicLabThemeWeaver.addOnboardingResource({ category, grade: gradeVal ? Number(gradeVal) : null, title, body, link });
+    if (error) { msg.textContent = error.message; msg.className = 'msg err'; return; }
+    msg.textContent = 'Added.'; msg.className = 'msg ok';
+    document.getElementById('ar-title').value = '';
+    document.getElementById('ar-body').value = '';
+    document.getElementById('ar-link').value = '';
+    await _loadOnboarding();
+  });
+}
+</script>
+<script src="/contact-button.js" defer></script>
+</body>
+</html>

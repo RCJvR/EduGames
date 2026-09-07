@@ -1,0 +1,434 @@
+<title>A Learner's Time Turner Week</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Manrope:wght@400;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f5fb; --surface:#ffffff; --surface-2:#fbfaff;
+  --border:#e4e1ee; --border-2:#d8d3e8;
+  --text:#211b2e; --muted:#6f6880; --muted-2:#918aa2;
+  --accent:#ec4899; --accent-soft:rgba(236,72,153,0.10);
+  --school:#2563eb; --school-soft:rgba(37,99,235,0.10);
+  --homework:#7c3aed; --homework-soft:rgba(124,58,237,0.10);
+  --extra:#16a34a; --extra-soft:rgba(22,163,74,0.10);
+  --meals:#d97706; --meals-soft:rgba(217,119,6,0.10);
+  --family:#0d9488; --family-soft:rgba(13,148,136,0.10);
+  --chores:#64748b; --chores-soft:rgba(100,116,139,0.10);
+  --rest:#4338ca; --rest-soft:rgba(67,56,202,0.10);
+  --free:#ec4899; --free-soft:rgba(236,72,153,0.10);
+  --font-display:'Plus Jakarta Sans',sans-serif;
+  --font-body:'Manrope',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#080c1a; --surface:rgba(255,255,255,0.05); --surface-2:rgba(255,255,255,0.03);
+    --border:rgba(255,255,255,0.09); --border-2:rgba(255,255,255,0.14);
+    --text:#e4e8f8; --muted:rgba(210,218,245,0.6); --muted-2:rgba(210,218,245,0.4);
+    --accent:#f472b6; --accent-soft:rgba(244,114,182,0.14);
+    --school:#7aa8ff; --school-soft:rgba(122,168,255,0.14);
+    --homework:#c4a4ff; --homework-soft:rgba(196,164,255,0.14);
+    --extra:#4ade80; --extra-soft:rgba(74,222,128,0.14);
+    --meals:#fbbf24; --meals-soft:rgba(251,191,36,0.14);
+    --family:#2dd4bf; --family-soft:rgba(45,212,191,0.14);
+    --chores:#94a3b8; --chores-soft:rgba(148,163,184,0.14);
+    --rest:#a5b4fc; --rest-soft:rgba(165,180,252,0.14);
+    --free:#f472b6; --free-soft:rgba(244,114,182,0.14);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#080c1a; --surface:rgba(255,255,255,0.05); --surface-2:rgba(255,255,255,0.03);
+  --border:rgba(255,255,255,0.09); --border-2:rgba(255,255,255,0.14);
+  --text:#e4e8f8; --muted:rgba(210,218,245,0.6); --muted-2:rgba(210,218,245,0.4);
+  --accent:#f472b6; --accent-soft:rgba(244,114,182,0.14);
+  --school:#7aa8ff; --school-soft:rgba(122,168,255,0.14);
+  --homework:#c4a4ff; --homework-soft:rgba(196,164,255,0.14);
+  --extra:#4ade80; --extra-soft:rgba(74,222,128,0.14);
+  --meals:#fbbf24; --meals-soft:rgba(251,191,36,0.14);
+  --family:#2dd4bf; --family-soft:rgba(45,212,191,0.14);
+  --chores:#94a3b8; --chores-soft:rgba(148,163,184,0.14);
+  --rest:#a5b4fc; --rest-soft:rgba(165,180,252,0.14);
+  --free:#f472b6; --free-soft:rgba(244,114,182,0.14);
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);margin:0;-webkit-font-smoothing:antialiased;}
+main{max-width:1240px;margin:0 auto;padding:36px 28px 64px;}
+
+header.page{margin-bottom:22px;}
+.eyebrow{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+h1{font-family:var(--font-display);font-weight:800;font-size:30px;letter-spacing:-0.02em;margin:0 0 8px;text-wrap:balance;}
+.page-sub{font-size:14.5px;color:var(--muted);max-width:68ch;line-height:1.6;margin:0 0 14px;}
+.source-note{font-size:12px;color:var(--muted-2);background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;max-width:80ch;line-height:1.6;margin-bottom:18px;}
+.source-note strong{color:var(--muted);}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:14px 18px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;margin-bottom:24px;}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);}
+.legend-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
+
+.learner-card{display:flex;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:24px;flex-wrap:wrap;}
+.learner-avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:14px;flex-shrink:0;}
+.learner-name{font-family:var(--font-display);font-weight:800;font-size:15px;}
+.learner-meta{font-family:var(--font-mono);font-size:11px;color:var(--muted-2);margin-top:1px;}
+
+.week-block{margin-bottom:36px;}
+.week-title{font-family:var(--font-display);font-weight:700;font-size:14px;color:var(--muted);margin-bottom:12px;display:flex;align-items:baseline;gap:8px;}
+.week-title .range{font-family:var(--font-mono);font-weight:500;font-size:11px;color:var(--muted-2);}
+
+.week-row{display:flex;overflow-x:auto;border:1px solid var(--border);border-radius:14px;background:var(--surface);padding:12px;gap:0;}
+.gutter{position:sticky;left:12px;flex:0 0 46px;position:relative;}
+.gutter-label{position:absolute;transform:translateY(-50%);font-family:var(--font-mono);font-size:9.5px;color:var(--muted-2);white-space:nowrap;}
+
+.day-col-wrap{flex:1;min-width:140px;display:flex;flex-direction:column;}
+.day-head{height:80px;padding:0 6px 8px;text-align:center;border-bottom:1px solid var(--border);margin-bottom:6px;box-sizing:border-box;}
+.day-name{font-family:var(--font-display);font-weight:700;font-size:12.5px;}
+.day-date{font-family:var(--font-mono);font-size:10px;color:var(--muted-2);}
+.day-cycle{font-family:var(--font-mono);font-size:9px;color:var(--accent);font-weight:600;margin-top:1px;}
+.day-due{margin-top:3px;}
+.day-due-item{font-size:9px;color:var(--accent);font-weight:700;line-height:1.35;}
+
+.day-col{position:relative;height:600px;margin:0 5px;border-radius:8px;background-image:repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 1px, transparent 1px, transparent 40px);}
+
+.block{position:absolute;left:2px;right:2px;border-radius:6px;border-left:3px solid;padding:3px 6px;overflow:hidden;}
+.block-label{font-size:9.5px;font-weight:700;line-height:1.2;}
+.block-sub{font-size:8px;color:var(--muted);line-height:1.2;margin-top:1px;font-family:var(--font-mono);}
+.block.school{background:var(--school-soft);border-color:var(--school);}
+.block.school .block-label{color:var(--text);}
+.block.homework{background:var(--homework-soft);border-color:var(--homework);}
+.block.extracurricular{background:var(--extra-soft);border-color:var(--extra);}
+.block.meals{background:var(--meals-soft);border-color:var(--meals);}
+.block.family{background:var(--family-soft);border-color:var(--family);}
+.block.chores{background:var(--chores-soft);border-color:var(--chores);}
+.block.rest{background:var(--rest-soft);border-color:var(--rest);}
+.block.free{background:var(--free-soft);border-color:var(--free);}
+
+.mock-flag{margin-top:12px;padding-top:16px;border-top:1px dashed var(--border-2);font-size:11.5px;color:var(--muted-2);line-height:1.6;}
+
+.theme-switch{position:fixed;top:18px;right:18px;z-index:50;}
+.theme-switch button{all:unset;cursor:pointer;display:block;width:52px;height:28px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border-2);position:relative;box-shadow:0 2px 8px rgba(20,10,40,0.10);}
+.theme-switch .thumb{position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;transition:left 0.18s ease;}
+.theme-switch button.is-dark .thumb{left:28px;}
+
+@media (max-width:900px){
+  .day-col-wrap{min-width:120px;}
+}
+</style>
+
+<div class="theme-switch" title="Toggle light / dark">
+  <button id="theme-toggle" aria-label="Toggle color theme"><span class="thumb" id="theme-thumb">🌙</span></button>
+</div>
+
+<main>
+  <header class="page">
+    <div class="eyebrow">Time Turner — Personal Planner</div>
+    <h1>A learner's Time Turner week</h1>
+    <p class="page-sub">The same two-week planner every Time Turner student sees, populated with a real 10-day rotating timetable instead of typed-in class times — school blocks come straight from the timetable below; everything else (homework, sport, chores, family time, rest) is what a student would add themselves.</p>
+    <div class="source-note"><strong>Source:</strong> Curro Durbanville High School, Grade 8A1, Term 3 2026 (uploaded timetable, generated 20/7/2026). Period codes decoded using the school's own subject names already on record in Time Turner (e.g. BUS01 → Business Studies, LSC01 → Life Sciences; AFR03 → Afrikaans Huistaal, ENG01 → English First Additional Language). This cycle falls within a test series. The six periods never change — the same Period 1–6 timetable repeats every day regardless. What changes on Tuesdays and Thursdays (Days 2, 4, 7, 9) is the break pattern and an added test period: Periods 1–3, break, Periods 4–6, break, then a test period appended at the end of the day (illustrative length), rather than Monday/Wednesday/Friday's breaks after Period 2 and Period 4. The test period's subject is Amahle's actual due assessment that day from the calendar (Dramatic Arts, Visual Arts, Coding and Robotics, Life Sciences) — it doesn't replace any of the six regular periods. Mapped onto 24 Aug – 4 Sept 2026 so due dates line up with the "One Learner, Five Grades" assessment mockup.</div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:var(--school);"></span>School</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--homework);"></span>Homework</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--extra);"></span>Extracurricular</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--meals);"></span>Meals</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--family);"></span>Family</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--chores);"></span>Chores</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--rest);"></span>Rest</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--free);"></span>Free time</div>
+    </div>
+  </header>
+
+  <div class="learner-card">
+    <div class="learner-avatar">AM</div>
+    <div>
+      <div class="learner-name">Amahle</div>
+      <div class="learner-meta">Grade 8A1 · English FAL + Afrikaans HL · Visual Arts &amp; Dramatic Arts · example learner</div>
+    </div>
+  </div>
+
+  <div id="weeks"></div>
+
+  <div class="mock-flag">Mockup for internal review — school blocks are real periods from an uploaded class timetable; homework blocks are timed against Amahle's real assessment due dates from the same cycle. Personal-life blocks (sport, chores, family, rest) are illustrative.</div>
+</main>
+
+<script>
+const DAY_START_MIN = 6 * 60;   // 06:00
+const DAY_END_MIN = 21 * 60;    // 21:00
+const TOTAL_MIN = DAY_END_MIN - DAY_START_MIN;
+const COL_HEIGHT = 600;
+
+function toMin(hhmm) { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; }
+function topPx(hhmm) { return (toMin(hhmm) - DAY_START_MIN) / TOTAL_MIN * COL_HEIGHT; }
+function heightPx(start, end) { return (toMin(end) - toMin(start)) / TOTAL_MIN * COL_HEIGHT; }
+function fmt12(hhmm) {
+  const [h, m] = hhmm.split(':').map(Number);
+  const period = h < 12 ? 'am' : 'pm';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}${m ? ':' + String(m).padStart(2, '0') : ''}${period}`;
+}
+
+const DAYS = [
+  { day: 1, date: '2026-08-24', name: 'Mon', due: [] },
+  { day: 2, date: '2026-08-25', name: 'Tue', due: ['Dramatic Arts test'] },
+  { day: 3, date: '2026-08-26', name: 'Wed', due: ['Business Studies due'] },
+  { day: 4, date: '2026-08-27', name: 'Thu', due: ['Visual Arts test', 'History due'] },
+  { day: 5, date: '2026-08-28', name: 'Fri', due: ['Radio Drama due', 'Life Sci. due'] },
+  { day: 6, date: '2026-08-31', name: 'Mon', due: ['Afrikaans due'] },
+  { day: 7, date: '2026-09-01', name: 'Tue', due: ['Coding test'] },
+  { day: 8, date: '2026-09-02', name: 'Wed', due: [] },
+  { day: 9, date: '2026-09-03', name: 'Thu', due: ['Life Sci. test'] },
+  { day: 10, date: '2026-09-04', name: 'Fri', due: ['Role Play due', 'Artwork due', 'Mini-PAT due'] }
+];
+
+// [start, end, category, label, sub]
+const BLOCKS = {
+  1: [
+    ['06:30', '07:15', 'meals', 'Breakfast', ''],
+    ['07:45', '08:40', 'school', 'Afrikaans HL', 'Green 4 · JdK'],
+    ['08:40', '09:35', 'school', 'Mathematics', 'PSC 1 · CG'],
+    ['09:35', '09:55', 'meals', 'Break', ''],
+    ['09:55', '10:50', 'school', 'English FAL', 'Blue 3 · KN'],
+    ['10:50', '11:45', 'school', 'Coding and Robotics', 'IT 2 · RR'],
+    ['11:45', '12:15', 'meals', 'Lunch', ''],
+    ['12:15', '13:10', 'school', 'Business Studies', 'Orange 7 · MS'],
+    ['13:10', '14:05', 'school', 'History', 'Orange 1 · NJ'],
+    ['14:30', '15:30', 'extracurricular', 'Soccer practice', ''],
+    ['15:30', '16:30', 'homework', 'Life Sciences', 'Practical write-up'],
+    ['16:30', '17:00', 'chores', 'Chores', ''],
+    ['17:00', '17:45', 'family', 'Family time', ''],
+    ['17:45', '18:15', 'meals', 'Dinner', ''],
+    ['18:15', '19:30', 'free', 'Free time', ''],
+    ['19:30', '21:00', 'rest', 'Wind down', '']
+  ],
+  2: [
+    ['06:30', '07:15', 'meals', 'Breakfast', ''],
+    ['07:45', '08:40', 'school', 'Mathematics', 'PSC 1 · CG'],
+    ['08:40', '09:35', 'school', 'Visual Arts', 'AV'],
+    ['09:35', '10:30', 'school', 'History', 'Orange 3 · NJ'],
+    ['10:30', '10:50', 'meals', 'Break', ''],
+    ['10:50', '11:45', 'school', 'English FAL', 'Blue 3 · KN'],
+    ['11:45', '12:40', 'school', 'Business Studies', 'Orange 7 · MS'],
+    ['12:40', '13:35', 'school', 'Afrikaans HL', 'Green 4 · JdK'],
+    ['13:35', '14:05', 'meals', 'Break', ''],
+    ['14:05', '15:05', 'school', 'Dramatic Arts (test)', 'Test period'],
+    ['15:05', '15:30', 'free', 'Decompress after test', ''],
+    ['15:30', '16:15', 'homework', 'History', 'Task 2'],
+    ['16:15', '16:45', 'chores', 'Chores', ''],
+    ['16:45', '17:30', 'family', 'Family time', ''],
+    ['17:30', '18:00', 'meals', 'Dinner', ''],
+    ['18:00', '19:30', 'free', 'Free time', ''],
+    ['19:30', '21:00', 'rest', 'Wind down', '']
+  ],
+  3: [
+    ['06:30', '07:15', 'meals', 'Breakfast', ''],
+    ['07:45', '08:40', 'school', 'Life Orientation', 'Orange 3 · NJ'],
+    ['08:40', '09:35', 'school', 'Dramatic Arts', 'Drama Studio · RG'],
+    ['09:35', '09:55', 'meals', 'Break', ''],
+    ['09:55', '10:50', 'school', 'Life Sciences', 'STEAM D1 · MW'],
+    ['10:50', '11:45', 'school', 'English FAL', 'Blue 3 · KN'],
+    ['11:45', '12:15', 'meals', 'Lunch', ''],
+    ['12:15', '13:10', 'school', 'Mathematics', 'PSC 1 · CG'],
+    ['13:10', '14:05', 'school', 'Afrikaans HL', 'Green 4 · JdK'],
+    ['14:30', '15:30', 'extracurricular', 'Robotics club', ''],
+    ['15:30', '16:30', 'homework', 'Visual Arts', 'Test revision'],
+    ['16:30', '17:00', 'chores', 'Chores', ''],
+    ['17:00', '17:45', 'family', 'Family time', ''],
+    ['17:45', '18:15', 'meals', 'Dinner', ''],
+    ['18:15', '19:30', 'free', 'Free time', ''],
+    ['19:30', '21:00', 'rest', 'Wind down', '']
+  ],
+  4: [
+    ['06:30', '07:15', 'meals', 'Breakfast', ''],
+    ['07:45', '08:40', 'school', 'Afrikaans HL', 'Green 4 · JdK'],
+    ['08:40', '09:35', 'school', 'Business Studies', 'Orange 7 · MS'],
+    ['09:35', '10:30', 'school', 'Life Sciences', 'LSC 2 · MW'],
+    ['10:30', '10:50', 'meals', 'Break', ''],
+    ['10:50', '11:45', 'school', 'English FAL', 'Blue 3 · KN'],
+    ['11:45', '12:40', 'school', 'Life Orientation', 'Orange 5 · NJ'],
+    ['12:40', '13:35', 'school', 'Mathematics', 'PSC 1 · CG'],
+    ['13:35', '14:05', 'meals', 'Break', ''],
+    ['14:05', '15:05', 'school', 'Visual Arts (test)', 'Test period'],
+    ['15:05', '15:30', 'free', 'Decompress after test', ''],
+    ['15:30', '16:15', 'homework', 'Afrikaans', 'Revise vocab'],
+    ['16:15', '16:45', 'chores', 'Chores', ''],
+    ['16:45', '17:30', 'family', 'Family time', ''],
+    ['17:30', '18:00', 'meals', 'Dinner', ''],
+    ['18:00', '19:30', 'free', 'Free time', ''],
+    ['19:30', '21:00', 'rest', 'Wind down', '']
+  ],
+  5: [
+    ['06:30', '07:15', 'meals', 'Breakfast', ''],
+    ['07:45', '08:30', 'school', 'English FAL', 'Blue 3 · KN'],
+    ['08:30', '09:15', 'school', 'Afrikaans HL', 'Green 4 · JdK'],
+    ['09:15', '09:35', 'meals', 'Break', ''],
+    ['09:35', '10:20', 'school', 'Mathematics', 'PSC 1 · CG'],
+    ['10:20', '11:05', 'school', 'Dramatic Arts', 'Dance Studio · RG'],
+    ['11:05', '11:25', 'meals', 'Break', ''],
+    ['11:25', '12:10', 'school', 'History', 'Orange 5 · NJ'],
+    ['12:10', '12:55', 'school', 'Coding and Robotics', 'IT 2 · RR'],
+    ['12:55', '13:25', 'meals', 'Lunch', ''],
+    ['13:25', '14:55', 'extracurricular', 'Cricket practice', ''],
+    ['14:55', '16:25', 'free', 'Free time', ''],
+    ['16:25', '16:55', 'chores', 'Chores', ''],
+    ['16:55', '17:55', 'family', 'Family time', ''],
+    ['17:55', '18:25', 'meals', 'Dinner', ''],
+    ['18:25', '20:25', 'free', 'Movie night', ''],
+    ['20:25', '21:00', 'rest', 'Wind down', '']
+  ],
+  6: [
+    ['06:30', '07:15', 'meals', 'Breakfast', ''],
+    ['07:45', '08:40', 'school', 'Mathematics', 'PSC 1 · CG'],
+    ['08:40', '09:35', 'school', 'Visual Arts', 'AV'],
+    ['09:35', '09:55', 'meals', 'Break', ''],
+    ['09:55', '10:50', 'school', 'Coding and Robotics', 'IT 2 · RR'],
+    ['10:50', '11:45', 'school', 'Life Sciences', 'STEAM D1 · MW'],
+    ['11:45', '12:15', 'meals', 'Lunch', ''],
+    ['12:15', '13:10', 'school', 'English FAL', 'Blue 3 · KN'],
+    ['13:10', '14:05', 'school', 'Afrikaans HL', 'Green 4 · JdK'],
+    ['14:30', '15:30', 'extracurricular', 'Soccer practice', ''],
+    ['15:30', '16:30', 'homework', 'Coding and Robotics', 'Mini-PAT progress'],
+    ['16:30', '17:00', 'chores', 'Chores', ''],
+    ['17:00', '17:45', 'family', 'Family time', ''],
+    ['17:45', '18:15', 'meals', 'Dinner', ''],
+    ['18:15', '19:30', 'free', 'Free time', ''],
+    ['19:30', '21:00', 'rest', 'Wind down', '']
+  ],
+  7: [
+    ['06:30', '07:15', 'meals', 'Breakfast', ''],
+    ['07:45', '08:40', 'school', 'Mathematics', 'PSC 1 · CG'],
+    ['08:40', '09:35', 'school', 'Business Studies', 'Orange 7 · MS'],
+    ['09:35', '10:30', 'school', 'History', 'Orange 7 · NJ'],
+    ['10:30', '10:50', 'meals', 'Break', ''],
+    ['10:50', '11:45', 'school', 'Afrikaans HL', 'Green 4 · JdK'],
+    ['11:45', '12:40', 'school', 'English FAL', 'Blue 3 · KN'],
+    ['12:40', '13:35', 'school', 'Life Sciences', 'LSC 2 · MW'],
+    ['13:35', '14:05', 'meals', 'Break', ''],
+    ['14:05', '15:05', 'school', 'Coding and Robotics (test)', 'Test period'],
+    ['15:05', '15:30', 'free', 'Decompress after test', ''],
+    ['15:30', '16:15', 'homework', 'Life Sciences', 'Test revision'],
+    ['16:15', '16:45', 'chores', 'Chores', ''],
+    ['16:45', '17:30', 'family', 'Family time', ''],
+    ['17:30', '18:00', 'meals', 'Dinner', ''],
+    ['18:00', '19:30', 'free', 'Free time', ''],
+    ['19:30', '21:00', 'rest', 'Wind down', '']
+  ],
+  8: [
+    ['06:30', '07:15', 'meals', 'Breakfast', ''],
+    ['07:45', '08:40', 'school', 'Afrikaans HL', 'Green 4 · JdK'],
+    ['08:40', '09:35', 'school', 'Mathematics', 'PSC 1 · CG'],
+    ['09:35', '09:55', 'meals', 'Break', ''],
+    ['09:55', '10:50', 'school', 'English FAL', 'Blue 3 · KN'],
+    ['10:50', '11:45', 'school', 'Coding and Robotics', 'IT 2 · RR'],
+    ['11:45', '12:15', 'meals', 'Lunch', ''],
+    ['12:15', '13:10', 'school', 'History', 'Orange 7 · NJ'],
+    ['13:10', '14:05', 'school', 'Dramatic Arts', 'Dance Studio · RG'],
+    ['14:30', '15:30', 'extracurricular', 'Robotics club', ''],
+    ['15:30', '16:30', 'homework', 'Life Sciences', 'Test revision'],
+    ['16:30', '17:00', 'chores', 'Chores', ''],
+    ['17:00', '17:45', 'family', 'Family time', ''],
+    ['17:45', '18:15', 'meals', 'Dinner', ''],
+    ['18:15', '19:30', 'free', 'Free time', ''],
+    ['19:30', '21:00', 'rest', 'Wind down', '']
+  ],
+  9: [
+    ['06:30', '07:15', 'meals', 'Breakfast', ''],
+    ['07:45', '08:40', 'school', 'Mathematics', 'PSC 1 · CG'],
+    ['08:40', '09:35', 'school', 'Life Sciences', 'STEAM D2 · MW'],
+    ['09:35', '10:30', 'school', 'History', 'Orange 8 · NJ'],
+    ['10:30', '10:50', 'meals', 'Break', ''],
+    ['10:50', '11:45', 'school', 'Coding and Robotics', 'IT 2 · RR'],
+    ['11:45', '12:40', 'school', 'Afrikaans HL', 'Green 4 · JdK'],
+    ['12:40', '13:35', 'school', 'English FAL', 'Blue 3 · KN'],
+    ['13:35', '14:05', 'meals', 'Break', ''],
+    ['14:05', '15:05', 'school', 'Life Sciences (test)', 'Test period'],
+    ['15:05', '15:30', 'free', 'Decompress after test', ''],
+    ['15:30', '16:15', 'homework', 'English FAL', 'Role Play practice'],
+    ['16:15', '16:45', 'chores', 'Chores', ''],
+    ['16:45', '17:30', 'family', 'Family time', ''],
+    ['17:30', '18:00', 'meals', 'Dinner', ''],
+    ['18:00', '19:30', 'free', 'Free time', ''],
+    ['19:30', '21:00', 'rest', 'Wind down', '']
+  ],
+  10: [
+    ['06:30', '07:15', 'meals', 'Breakfast', ''],
+    ['07:45', '08:30', 'school', 'English FAL', 'Blue 3 · KN'],
+    ['08:30', '09:15', 'school', 'Life Orientation', 'Orange 5 · NJ'],
+    ['09:15', '09:35', 'meals', 'Break', ''],
+    ['09:35', '10:20', 'school', 'Business Studies', 'Orange 7 · MS'],
+    ['10:20', '11:05', 'school', 'Mathematics', 'PSC 1 · CG'],
+    ['11:05', '11:25', 'meals', 'Break', ''],
+    ['11:25', '12:10', 'school', 'Afrikaans HL', 'Green 4 · JdK'],
+    ['12:10', '12:55', 'school', 'Visual Arts', 'AV'],
+    ['12:55', '13:25', 'meals', 'Lunch', ''],
+    ['13:25', '14:55', 'extracurricular', 'Family outing', ''],
+    ['14:55', '16:25', 'free', 'Free time', ''],
+    ['16:25', '16:55', 'chores', 'Chores', ''],
+    ['16:55', '17:55', 'family', 'Family time', ''],
+    ['17:55', '18:25', 'meals', 'Dinner', ''],
+    ['18:25', '20:25', 'free', 'Free time', ''],
+    ['20:25', '21:00', 'rest', 'Wind down', '']
+  ]
+};
+
+function dayColumn(d) {
+  const blocks = BLOCKS[d.day].map(([start, end, cat, label, sub]) => `
+    <div class="block ${cat}" style="top:${topPx(start)}px;height:${heightPx(start, end)}px;">
+      <div class="block-label">${label}</div>
+      ${sub ? `<div class="block-sub">${sub}</div>` : ''}
+    </div>`).join('');
+  return `
+    <div class="day-col-wrap">
+      <div class="day-head">
+        <div class="day-name">${d.name} <span class="day-cycle">Day ${d.day}</span></div>
+        <div class="day-date">${new Date(d.date + 'T00:00:00').toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' })}</div>
+        ${d.due.length ? `<div class="day-due">${d.due.map(x => `<div class="day-due-item">${x}</div>`).join('')}</div>` : ''}
+      </div>
+      <div class="day-col">${blocks}</div>
+    </div>`;
+}
+
+const HEAD_OFFSET = 86; // fixed .day-head height (80px) + its margin-bottom (6px)
+
+function gutter() {
+  const labels = [];
+  for (let m = DAY_START_MIN; m <= DAY_END_MIN; m += 60) {
+    const h = String(Math.floor(m / 60)).padStart(2, '0');
+    labels.push(`<div class="gutter-label" style="top:${(m - DAY_START_MIN) / TOTAL_MIN * COL_HEIGHT + HEAD_OFFSET}px;">${h}:00</div>`);
+  }
+  return `<div class="gutter" style="height:${COL_HEIGHT + HEAD_OFFSET}px;">${labels.join('')}</div>`;
+}
+
+const weeksEl = document.getElementById('weeks');
+const WEEK1 = DAYS.slice(0, 5), WEEK2 = DAYS.slice(5, 10);
+
+weeksEl.innerHTML = `
+  <div class="week-block">
+    <div class="week-title">Week 1 <span class="range">Days 1–5 · 24–28 Aug 2026</span></div>
+    <div class="week-row">${gutter()}${WEEK1.map(dayColumn).join('')}</div>
+  </div>
+  <div class="week-block">
+    <div class="week-title">Week 2 <span class="range">Days 6–10 · 31 Aug–4 Sept 2026</span></div>
+    <div class="week-row">${gutter()}${WEEK2.map(dayColumn).join('')}</div>
+  </div>`;
+
+(function () {
+  const root = document.documentElement;
+  const btn = document.getElementById('theme-toggle');
+  const thumb = document.getElementById('theme-thumb');
+  function systemPrefersDark() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+  function isDark(theme) { return theme === 'dark' || (!theme && systemPrefersDark()); }
+  function apply(theme) {
+    if (theme) root.setAttribute('data-theme', theme); else root.removeAttribute('data-theme');
+    const dark = isDark(theme);
+    btn.classList.toggle('is-dark', dark);
+    thumb.textContent = dark ? '🌙' : '☀️';
+  }
+  let saved = null;
+  try { saved = localStorage.getItem('tt-theme'); } catch (e) {}
+  apply(saved);
+  btn.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme') || (systemPrefersDark() ? 'dark' : 'light');
+    const next = current === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('tt-theme', next); } catch (e) {}
+    apply(next);
+  });
+})();
+</script>
