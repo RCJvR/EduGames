@@ -128,8 +128,21 @@
 
   .microbe{ position:absolute; animation: driftCell var(--dur,15s) ease-in-out infinite; animation-delay: var(--delay,0s); }
   @keyframes driftCell{
-    0%,100%{ transform: translate(0,0) rotate(var(--rot,0deg)); }
-    50%{ transform: translate(2.5%,-3%) rotate(calc(var(--rot,0deg) + 6deg)); }
+    0%{ transform: translate(0,0) rotate(var(--rot,0deg)); }
+    20%{ transform: translate(6%,-8%) rotate(calc(var(--rot,0deg) + 14deg)); }
+    45%{ transform: translate(-5%,-5%) rotate(calc(var(--rot,0deg) - 9deg)); }
+    70%{ transform: translate(-7%,6%) rotate(calc(var(--rot,0deg) + 6deg)); }
+    100%{ transform: translate(0,0) rotate(var(--rot,0deg)); }
+  }
+  /* bacteria dart around a bit more energetically than the slower-drifting amoebas */
+  .microbe.rod{ animation-name: swimRod; }
+  @keyframes swimRod{
+    0%{ transform: translate(0,0) rotate(var(--rot,0deg)); }
+    15%{ transform: translate(9%,4%) rotate(calc(var(--rot,0deg) + 16deg)); }
+    35%{ transform: translate(14%,-3%) rotate(calc(var(--rot,0deg) - 12deg)); }
+    55%{ transform: translate(5%,-9%) rotate(calc(var(--rot,0deg) + 10deg)); }
+    80%{ transform: translate(-4%,-3%) rotate(calc(var(--rot,0deg) - 6deg)); }
+    100%{ transform: translate(0,0) rotate(var(--rot,0deg)); }
   }
   .amoeba{
     border-radius: 58% 42% 63% 37% / 47% 58% 42% 53%;
@@ -359,7 +372,7 @@
           <div class="microbe amoeba" style="width:11%; height:11%; left:35%; top:8%; --dur:13s; --delay:-3s; background: radial-gradient(circle at 35% 30%, #c9f2e6, #7fd9c4 75%, transparent 100%);">
             <div class="nucleus" style="background: radial-gradient(circle, #2f9e8f, #1f7568);"></div>
           </div>
-          <div class="microbe rod" style="width:16%; height:5%; left:52%; top:12%; --dur:18s; --rot:20deg; transform: rotate(20deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
+          <div class="microbe rod" style="width:16%; height:5%; left:52%; top:12%; --dur:8s; --rot:20deg; transform: rotate(20deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
           <div class="microbe coccus-pair" style="left:18%; top:44%;">
             <div class="coccus" style="width:22px; height:22px; left:0; top:0; background: radial-gradient(circle at 35% 30%, #ffd6ec, #ff9fcf 75%, transparent 100%);"></div>
             <div class="coccus" style="width:18px; height:18px; left:16px; top:10px; background: radial-gradient(circle at 35% 30%, #ffd6ec, #ff9fcf 75%, transparent 100%);"></div>
@@ -367,7 +380,7 @@
           <div class="microbe amoeba" style="width:17%; height:17%; left:58%; top:55%; --dur:15s; --delay:-6s; --rot:8deg; background: radial-gradient(circle at 35% 30%, #ecdcff, #b7a3f2 75%, transparent 100%);">
             <div class="nucleus" style="background: radial-gradient(circle, #7c5fc4, #5a3d9e);"></div>
           </div>
-          <div class="microbe rod" style="width:15%; height:4.5%; left:14%; top:68%; --dur:14s; --rot:-15deg; transform: rotate(-15deg); background: linear-gradient(120deg, #bfe3c8, #7fcf9a);"></div>
+          <div class="microbe rod" style="width:15%; height:4.5%; left:14%; top:68%; --dur:7s; --rot:-15deg; transform: rotate(-15deg); background: linear-gradient(120deg, #bfe3c8, #7fcf9a);"></div>
           <div class="microbe amoeba" style="width:13%; height:13%; left:85%; top:58%; --dur:17s; --delay:-2s; background: radial-gradient(circle at 35% 30%, #d3f4dd, #96d9ac 75%, transparent 100%);">
             <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
           </div>
@@ -390,7 +403,7 @@
           <div class="microbe amoeba" style="width:15%; height:15%; left:52%; top:33%; --dur:17s; --delay:-4s; background: radial-gradient(circle at 35% 30%, #c9f2e6, #7fd9c4 75%, transparent 100%);">
             <div class="nucleus" style="background: radial-gradient(circle, #2f9e8f, #1f7568);"></div>
           </div>
-          <div class="microbe rod" style="width:14%; height:4.5%; left:38%; top:46%; --dur:13s; --rot:32deg; transform: rotate(32deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
+          <div class="microbe rod" style="width:14%; height:4.5%; left:38%; top:46%; --dur:6.5s; --rot:32deg; transform: rotate(32deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
           <div class="microbe coccus-pair" style="left:62%; top:64%;">
             <div class="coccus" style="width:20px; height:20px; left:0; top:0; background: radial-gradient(circle at 35% 30%, #ffd6ec, #ff9fcf 75%, transparent 100%);"></div>
             <div class="coccus" style="width:16px; height:16px; left:15px; top:9px; background: radial-gradient(circle at 35% 30%, #ffd6ec, #ff9fcf 75%, transparent 100%);"></div>
@@ -403,9 +416,46 @@
           <div class="microbe amoeba" style="width:14%; height:14%; left:66%; top:16%; --dur:14s; --rot:5deg; background: radial-gradient(circle at 35% 30%, #e2f5d8, #b3e08c 75%, transparent 100%);">
             <div class="nucleus" style="background: radial-gradient(circle, #6ba844, #4f8730);"></div>
           </div>
-          <div class="microbe rod" style="width:13%; height:4%; left:80%; top:33%; --dur:15s; --rot:45deg; transform: rotate(45deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
+          <div class="microbe rod" style="width:13%; height:4%; left:80%; top:33%; --dur:7.5s; --rot:45deg; transform: rotate(45deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
           <div class="microbe amoeba" style="width:10%; height:10%; left:88%; top:22%; --dur:13s; --delay:-5s; background: radial-gradient(circle at 35% 30%, #d8f2e0, #7fcf9a 75%, transparent 100%);">
             <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
+          </div>
+
+          <!-- a lot more cells and swimming bacteria, to make the slide feel busy and alive -->
+          <div class="microbe amoeba" style="width:8%; height:8%; left:22%; top:6%; --dur:11s; --delay:-1s; --rot:10deg; background: radial-gradient(circle at 35% 30%, #e2f5d8, #b3e08c 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #6ba844, #4f8730);"></div>
+          </div>
+          <div class="microbe rod" style="width:12%; height:3.5%; left:4%; top:34%; --dur:6.8s; --rot:-30deg; transform: rotate(-30deg); background: linear-gradient(120deg, #c9f2e6, #7fd9c4);"></div>
+          <div class="microbe amoeba" style="width:10%; height:10%; left:70%; top:70%; --dur:14s; --delay:-7s; --rot:-8deg; background: radial-gradient(circle at 35% 30%, #ecdcff, #b7a3f2 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #7c5fc4, #5a3d9e);"></div>
+          </div>
+          <div class="microbe coccus-pair" style="left:8%; top:80%;">
+            <div class="coccus" style="width:16px; height:16px; left:0; top:0; background: radial-gradient(circle at 35% 30%, #ffe9c2, #ffcf7a 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:13px; height:13px; left:12px; top:9px; background: radial-gradient(circle at 35% 30%, #ffe9c2, #ffcf7a 75%, transparent 100%);"></div>
+          </div>
+          <div class="microbe rod" style="width:11%; height:3.5%; left:60%; top:4%; --dur:7.2s; --rot:60deg; transform: rotate(60deg); background: linear-gradient(120deg, #d8f2e0, #7fcf9a);"></div>
+          <div class="microbe amoeba" style="width:7%; height:7%; left:48%; top:88%; --dur:10s; --delay:-3s; background: radial-gradient(circle at 35% 30%, #c9f2e6, #7fd9c4 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #2f9e8f, #1f7568);"></div>
+          </div>
+          <div class="microbe amoeba" style="width:9%; height:9%; left:94%; top:44%; --dur:13s; --delay:-9s; --rot:6deg; background: radial-gradient(circle at 35% 30%, #ffe9c2, #ffcf7a 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #d99a2b, #b57a17);"></div>
+          </div>
+          <div class="microbe rod" style="width:10%; height:3%; left:28%; top:80%; --dur:6.2s; --rot:-50deg; transform: rotate(-50deg); background: linear-gradient(120deg, #ecdcff, #b7a3f2);"></div>
+          <div class="microbe coccus-pair" style="left:92%; top:70%;">
+            <div class="coccus" style="width:18px; height:18px; left:0; top:0; background: radial-gradient(circle at 35% 30%, #d8ecff, #a8d4ff 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:14px; height:14px; left:-11px; top:10px; background: radial-gradient(circle at 35% 30%, #d8ecff, #a8d4ff 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:12px; height:12px; left:10px; top:11px; background: radial-gradient(circle at 35% 30%, #d8ecff, #a8d4ff 75%, transparent 100%);"></div>
+          </div>
+          <div class="microbe amoeba" style="width:12%; height:12%; left:2%; top:2%; --dur:15s; --delay:-4s; --rot:-3deg; background: radial-gradient(circle at 35% 30%, #d3f4dd, #96d9ac 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
+          </div>
+          <div class="microbe rod" style="width:13%; height:4%; left:70%; top:90%; --dur:7.8s; --rot:12deg; transform: rotate(12deg); background: linear-gradient(120deg, #ffd6ec, #ff9fcf);"></div>
+          <div class="microbe amoeba" style="width:8%; height:8%; left:96%; top:88%; --dur:11.5s; --delay:-6s; background: radial-gradient(circle at 35% 30%, #e2f5d8, #b3e08c 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #6ba844, #4f8730);"></div>
+          </div>
+          <div class="microbe coccus-pair" style="left:30%; top:16%;">
+            <div class="coccus" style="width:14px; height:14px; left:0; top:0; background: radial-gradient(circle at 35% 30%, #ffd6ec, #ff9fcf 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:11px; height:11px; left:11px; top:8px; background: radial-gradient(circle at 35% 30%, #ffd6ec, #ff9fcf 75%, transparent 100%);"></div>
           </div>
 
           <div class="hidden-text" id="hiddenText">
