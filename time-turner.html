@@ -387,6 +387,8 @@ main{max-width:920px;margin:0 auto;padding:8px 24px 80px;}
 
     <div class="section-title">Add one assessment</div>
     <div class="card">
+      <button class="btn-primary" id="aa-toggle" type="button"><i data-lucide="plus" style="width:14px;height:14px;"></i>Add one assessment</button>
+      <div id="aa-form" class="hidden" style="margin-top:16px;">
       <div class="form-row">
         <div>
           <label class="form-label" for="aa-grade">Grade</label>
@@ -420,6 +422,7 @@ main{max-width:920px;margin:0 auto;padding:8px 24px 80px;}
       </div>
       <textarea class="form-textarea" id="aa-desc" placeholder="Description (optional)"></textarea>
       <div style="margin-top:10px;"><button class="btn-primary" id="aa-submit"><i data-lucide="plus" style="width:14px;height:14px;"></i>Add assessment</button></div>
+      </div>
       <div class="msg" id="aa-msg"></div>
     </div>
 
