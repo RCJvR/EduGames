@@ -129,14 +129,25 @@
 
   .reel-window{
     position:absolute; inset: 10%;
-    display:flex; align-items:center; justify-content:center;
+    overflow: hidden;
     z-index:1;
     transition: opacity .25s ease;
   }
   .present.opened .reel-window{
     opacity: 0;
   }
+  .reel-track{
+    display:flex;
+    flex-direction: column;
+    width: 100%;
+    height: 200%;
+    transform: translateY(0%);
+  }
   .reel-label{
+    width: 100%;
+    height: 50%;
+    flex-shrink: 0;
+    display:flex; align-items:center; justify-content:center;
     font-size: clamp(1.1rem, 4.4vw, 1.9rem);
     font-weight: 800;
     white-space: nowrap;
@@ -244,7 +255,10 @@
       <div class="bow">🎀</div>
       <div class="box-body">
         <div class="reel-window">
-          <span class="reel-label mystery" id="reelLabel">❔ ❔ ❔</span>
+          <div class="reel-track" id="reelTrack">
+            <span class="reel-label mystery" id="reelSlotA">❔ ❔ ❔</span>
+            <span class="reel-label mystery" id="reelSlotB">❔ ❔ ❔</span>
+          </div>
         </div>
       </div>
     </div>
@@ -280,7 +294,9 @@
 
 // ---------- the roller / suspense logic ----------
 const revealBtn = document.getElementById('revealBtn');
-const reelLabel = document.getElementById('reelLabel');
+const reelTrack = document.getElementById('reelTrack');
+const reelSlotA = document.getElementById('reelSlotA');
+const reelSlotB = document.getElementById('reelSlotB');
 const present = document.getElementById('present');
 const hint = document.getElementById('hint');
 const resultEl = document.getElementById('result');
@@ -291,9 +307,27 @@ const STATES = [
 ];
 const MYSTERY = { text: '❔ ❔ ❔', cls: 'mystery' };
 
-function setLabel(state){
-  reelLabel.textContent = state.text;
-  reelLabel.className = 'reel-label ' + state.cls;
+function paintSlot(el, state){
+  el.textContent = state.text;
+  el.className = 'reel-label ' + state.cls;
+}
+
+// Vertical slot-reel effect: slotB is painted with the incoming value and
+// slides up into view from below while slotA slides out the top; once the
+// slide finishes, slotA is silently repainted with that same value and the
+// track snaps back to rest — so the next roll always starts from the same
+// position, giving the illusion of one continuous reel.
+function rollTo(state, duration){
+  paintSlot(reelSlotB, state);
+  reelTrack.style.transition = `transform ${duration}ms cubic-bezier(.3,.55,.35,1)`;
+  reelTrack.style.transform = 'translateY(-50%)';
+
+  setTimeout(()=>{
+    reelTrack.style.transition = 'none';
+    paintSlot(reelSlotA, state);
+    reelTrack.style.transform = 'translateY(0%)';
+    void reelTrack.offsetWidth; // force reflow before the next roll's transition applies
+  }, duration);
 }
 
 let running = false;
@@ -319,17 +353,21 @@ function spin(){
   let stateIdx = 0;
 
   function tick(){
-    setLabel(STATES[stateIdx % 2]);
+    const rollDuration = Math.max(45, Math.min(delays[step] * 0.85, 260));
+    rollTo(STATES[stateIdx % 2], rollDuration);
     stateIdx++;
     step++;
 
     if(step >= delays.length){
-      // brief suspense: duck back to the mystery placeholder, then reveal —
-      // the box itself stays on the mystery placeholder; the big banner
-      // below is the only place "BOY" ever appears, to keep focus there.
-      setLabel(MYSTERY);
-      hint.textContent = '';
-      setTimeout(finishReveal, 3000);
+      // brief suspense: hold on the final toggle, roll back to the mystery
+      // placeholder, then reveal — the box itself stays on the mystery
+      // placeholder; the big banner below is the only place "BOY" ever
+      // appears, to keep focus there.
+      setTimeout(()=>{
+        rollTo(MYSTERY, 260);
+        hint.textContent = '';
+        setTimeout(finishReveal, 3000);
+      }, delays[step - 1]);
       return;
     }
 
