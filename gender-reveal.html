@@ -131,6 +131,10 @@
     position:absolute; inset: 10%;
     display:flex; align-items:center; justify-content:center;
     z-index:1;
+    transition: opacity .25s ease;
+  }
+  .present.opened .reel-window{
+    opacity: 0;
   }
   .reel-label{
     font-size: clamp(1.1rem, 4.4vw, 1.9rem);
@@ -320,13 +324,12 @@ function spin(){
     step++;
 
     if(step >= delays.length){
-      // brief suspense: duck back to the mystery placeholder, then reveal BOY
+      // brief suspense: duck back to the mystery placeholder, then reveal —
+      // the box itself stays on the mystery placeholder; the big banner
+      // below is the only place "BOY" ever appears, to keep focus there.
       setLabel(MYSTERY);
       hint.textContent = '';
-      setTimeout(()=>{
-        setLabel(STATES[0]);
-        finishReveal();
-      }, 3000);
+      setTimeout(finishReveal, 3000);
       return;
     }
 
