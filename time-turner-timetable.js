@@ -242,7 +242,21 @@
     window.lucide?.createIcons();
   }
 
+  function wireAdminToggle() {
+    const toggle = document.getElementById('tt-admin-toggle');
+    const panel = document.getElementById('tt-admin-form');
+    if (!toggle || !panel) return;
+    toggle.addEventListener('click', () => {
+      const nowHidden = panel.classList.toggle('hidden');
+      toggle.innerHTML = nowHidden
+        ? '<i data-lucide="upload" style="width:14px;height:14px;"></i>Upload a class timetable'
+        : '<i data-lucide="minus" style="width:14px;height:14px;"></i>Close';
+      window.lucide?.createIcons();
+    });
+  }
+
   async function wireAdminUpload() {
+    wireAdminToggle();
     const classSelect = document.getElementById('tt-admin-class');
     const fileInput = document.getElementById('tt-admin-file');
     const textArea = document.getElementById('tt-admin-text');

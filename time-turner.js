@@ -1093,8 +1093,22 @@
     });
   }
 
+  function wireEntriesToggle() {
+    const toggle = document.getElementById('entries-toggle');
+    const list = document.getElementById('entries-list');
+    if (!toggle || !list) return;
+    toggle.addEventListener('click', () => {
+      const nowHidden = list.classList.toggle('hidden');
+      toggle.innerHTML = nowHidden
+        ? '<i data-lucide="list" style="width:14px;height:14px;"></i>Show everything you\'ve added'
+        : '<i data-lucide="minus" style="width:14px;height:14px;"></i>Hide';
+      window.lucide?.createIcons();
+    });
+  }
+
   function wireForm() {
     wireAddBlockToggle();
+    wireEntriesToggle();
     const catSelect = document.getElementById('af-category');
     catSelect.innerHTML = Object.entries(CATEGORIES).map(([key, c]) => `<option value="${key}">${c.emoji} ${esc(c.label)}</option>`).join('');
 
