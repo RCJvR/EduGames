@@ -42,16 +42,16 @@
   }
 
   h1{
-    font-size: clamp(1.4rem, 4.6vw, 2.4rem);
+    font-size: clamp(1.3rem, 4.2vw, 2.2rem);
     color: var(--ink);
     margin: 0 0 4px;
     text-shadow: 0 2px 0 #fff;
   }
   .subtitle{
     color: #6d6389;
-    font-size: clamp(.85rem, 2vw, 1.05rem);
+    font-size: clamp(.82rem, 1.9vw, 1rem);
     margin: 0 0 20px;
-    max-width: 480px;
+    max-width: 500px;
   }
 
   /* --- Microscope view --- */
@@ -76,6 +76,7 @@
     border-radius: 50%;
     border: 2px solid rgba(255,255,255,.08);
     pointer-events:none;
+    z-index: 3;
   }
   .lens-glass{
     width:100%; height:100%;
@@ -83,43 +84,94 @@
     overflow:hidden;
     position: relative;
     background: #cfe9d8;
+    cursor: grab;
+    touch-action: none;
   }
+  .lens-glass:active{ cursor: grabbing; }
+
+  /* specimen is a large draggable field the visible lens only shows a slice of */
   .specimen{
-    position:absolute; inset: -12%;
+    position:absolute;
+    left:50%; top:50%;
+    width: 240%; height: 240%;
+    transform: translate(-50%, -50%);
     filter: blur(18px);
-    will-change: filter;
+    will-change: filter, transform;
     transition: filter .05s linear;
   }
   .specimen.snap{
     transition: filter .6s cubic-bezier(.3,.6,.35,1);
   }
-  .cell{
-    position:absolute;
-    border-radius: 50%;
-    mix-blend-mode: multiply;
-    opacity: .8;
+
+  .microbe{ position:absolute; animation: driftCell var(--dur,15s) ease-in-out infinite; animation-delay: var(--delay,0s); }
+  @keyframes driftCell{
+    0%,100%{ transform: translate(0,0) rotate(var(--rot,0deg)); }
+    50%{ transform: translate(2.5%,-3%) rotate(calc(var(--rot,0deg) + 6deg)); }
   }
+  .amoeba{
+    border-radius: 58% 42% 63% 37% / 47% 58% 42% 53%;
+    opacity: .82;
+    box-shadow: inset 0 0 12px rgba(0,0,0,.06);
+  }
+  .amoeba .nucleus{
+    position:absolute; width:38%; height:38%; left:27%; top:24%;
+    border-radius:50%;
+    opacity:.85;
+  }
+  .amoeba .nucleus::after{
+    content:''; position:absolute; width:34%; height:34%; left:30%; top:30%;
+    border-radius:50%; background: rgba(255,255,255,.55);
+  }
+  .rod{
+    border-radius: 999px;
+    opacity: .78;
+  }
+  .rod::before, .rod::after{
+    content:''; position:absolute; top:50%; width:26%; height:10%;
+    background: inherit; border-radius: 999px; opacity:.6;
+  }
+  .rod::before{ left:-20%; transform: translateY(-50%) rotate(18deg); }
+  .rod::after{ right:-20%; transform: translateY(-50%) rotate(-18deg); }
+  .coccus-pair{ display:block; }
+  .coccus{
+    position:absolute; border-radius:50%; opacity:.8;
+  }
+
   .hidden-text{
-    position:absolute; inset:0;
+    position:absolute;
+    left: 76%; top: 24%;
+    width: 42%;
+    transform: translate(-50%,-50%);
     display:flex; align-items:center; justify-content:center;
     flex-direction: column;
     line-height: 0.95;
     font-weight: 900;
-    color: var(--blue-deep);
-    font-size: clamp(1.3rem, 6.5vw, 2.1rem);
     letter-spacing: 1px;
-    text-shadow: 0 0 1px rgba(255,255,255,.6);
+    text-shadow: 0 0 1px rgba(255,255,255,.7);
   }
-  .hidden-text span{ display:block; }
+  .hidden-text .glow{
+    position:absolute; inset: -60%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.65), rgba(255,255,255,0) 68%);
+    z-index: -1;
+    animation: glowPulse 3.2s ease-in-out infinite;
+  }
+  @keyframes glowPulse{
+    0%,100%{ opacity:.55; }
+    50%{ opacity: .9; }
+  }
+  .hidden-text .line1{ display:block; color: var(--ink); font-size: clamp(1.1rem, 5.4vw, 1.7rem); }
+  .hidden-text .line2{ display:block; color: var(--blue-deep); font-size: clamp(1.3rem, 6.5vw, 2.1rem); }
 
   .vignette{
     position:absolute; inset:0;
     border-radius:50%;
     background: radial-gradient(circle, rgba(0,0,0,0) 58%, rgba(0,0,0,.55) 100%);
     pointer-events:none;
+    z-index: 2;
   }
   .crosshair-h, .crosshair-v{
-    position:absolute; background: rgba(20,30,20,.28); pointer-events:none;
+    position:absolute; background: rgba(20,30,20,.28); pointer-events:none; z-index: 2;
   }
   .crosshair-h{ left:6%; right:6%; top:50%; height:1px; transform: translateY(-50%); }
   .crosshair-v{ top:6%; bottom:6%; left:50%; width:1px; transform: translateX(-50%); }
@@ -170,7 +222,7 @@
   }
 
   .hint{
-    margin-top: 18px;
+    margin-top: 16px;
     color: #8880a3;
     font-size: .85rem;
     min-height: 1.2em;
@@ -242,19 +294,72 @@
 
 <div class="stage">
   <h1>Let's take a closer look... 🔬</h1>
-  <p class="subtitle">Turn the focus knob until the picture becomes clear!</p>
+  <p class="subtitle">Drag inside the lens to explore the slide, then turn the focus knob to bring what you find into view!</p>
 
   <div class="scope-area">
     <div class="eyepiece">
-      <div class="lens-glass">
+      <div class="lens-glass" id="lensGlass">
         <div class="specimen" id="specimen">
-          <div class="cell" style="width:34%; height:34%; left:6%; top:10%; background: radial-gradient(circle, #bfe3c8, #7fcf9a 70%, transparent 100%);"></div>
-          <div class="cell" style="width:26%; height:26%; left:58%; top:6%; background: radial-gradient(circle, #cfe6ff, #8ecbff 70%, transparent 100%);"></div>
-          <div class="cell" style="width:22%; height:22%; left:8%; top:56%; background: radial-gradient(circle, #d8f2e0, #9adcb1 70%, transparent 100%);"></div>
-          <div class="cell" style="width:30%; height:30%; left:62%; top:54%; background: radial-gradient(circle, #e5d9ff, #b7a3f2 70%, transparent 100%);"></div>
-          <div class="cell" style="width:18%; height:18%; left:40%; top:66%; background: radial-gradient(circle, #cdeeff, #86c9ef 70%, transparent 100%);"></div>
-          <div class="cell" style="width:16%; height:16%; left:36%; top:4%; background: radial-gradient(circle, #d3f4dd, #96d9ac 70%, transparent 100%);"></div>
-          <div class="hidden-text"><span>IT'S A</span><span>BOY!</span></div>
+          <div class="microbe amoeba" style="width:15%; height:15%; left:10%; top:15%; --dur:16s; --rot:-4deg; background: radial-gradient(circle at 35% 30%, #d8f2e0, #7fcf9a 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
+          </div>
+          <div class="microbe amoeba" style="width:11%; height:11%; left:35%; top:8%; --dur:13s; --delay:-3s; background: radial-gradient(circle at 35% 30%, #cfe6ff, #8ecbff 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #3f8fd6, #2564a1);"></div>
+          </div>
+          <div class="microbe rod" style="width:16%; height:5%; left:52%; top:12%; --dur:18s; --rot:20deg; transform: rotate(20deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
+          <div class="microbe coccus-pair" style="left:18%; top:44%;">
+            <div class="coccus" style="width:22px; height:22px; left:0; top:0; background: radial-gradient(circle at 35% 30%, #ffd6ec, #ff9fcf 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:18px; height:18px; left:16px; top:10px; background: radial-gradient(circle at 35% 30%, #ffd6ec, #ff9fcf 75%, transparent 100%);"></div>
+          </div>
+          <div class="microbe amoeba" style="width:17%; height:17%; left:58%; top:55%; --dur:15s; --delay:-6s; --rot:8deg; background: radial-gradient(circle at 35% 30%, #ecdcff, #b7a3f2 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #7c5fc4, #5a3d9e);"></div>
+          </div>
+          <div class="microbe rod" style="width:15%; height:4.5%; left:14%; top:68%; --dur:14s; --rot:-15deg; transform: rotate(-15deg); background: linear-gradient(120deg, #bfe3c8, #7fcf9a);"></div>
+          <div class="microbe amoeba" style="width:13%; height:13%; left:85%; top:58%; --dur:17s; --delay:-2s; background: radial-gradient(circle at 35% 30%, #d3f4dd, #96d9ac 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
+          </div>
+          <div class="microbe coccus-pair" style="left:44%; top:78%;">
+            <div class="coccus" style="width:20px; height:20px; left:0; top:0; background: radial-gradient(circle at 35% 30%, #cdeeff, #86c9ef 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:16px; height:16px; left:-13px; top:12px; background: radial-gradient(circle at 35% 30%, #cdeeff, #86c9ef 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:14px; height:14px; left:12px; top:14px; background: radial-gradient(circle at 35% 30%, #cdeeff, #86c9ef 75%, transparent 100%);"></div>
+          </div>
+          <div class="microbe amoeba" style="width:9%; height:9%; left:6%; top:90%; --dur:12s; background: radial-gradient(circle at 35% 30%, #ffe9c2, #ffcf7a 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #d99a2b, #b57a17);"></div>
+          </div>
+          <div class="microbe amoeba" style="width:12%; height:12%; left:90%; top:8%; --dur:16s; --delay:-4s; --rot:-6deg; background: radial-gradient(circle at 35% 30%, #cfe6ff, #8ecbff 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #3f8fd6, #2564a1);"></div>
+          </div>
+
+          <!-- extra microbes so the default centered view (before any panning) still looks like a full slide -->
+          <div class="microbe amoeba" style="width:13%; height:13%; left:32%; top:58%; --dur:15s; --rot:3deg; background: radial-gradient(circle at 35% 30%, #d8f2e0, #7fcf9a 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
+          </div>
+          <div class="microbe amoeba" style="width:15%; height:15%; left:52%; top:33%; --dur:17s; --delay:-4s; background: radial-gradient(circle at 35% 30%, #cfe6ff, #8ecbff 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #3f8fd6, #2564a1);"></div>
+          </div>
+          <div class="microbe rod" style="width:14%; height:4.5%; left:38%; top:46%; --dur:13s; --rot:32deg; transform: rotate(32deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
+          <div class="microbe coccus-pair" style="left:62%; top:64%;">
+            <div class="coccus" style="width:20px; height:20px; left:0; top:0; background: radial-gradient(circle at 35% 30%, #ffd6ec, #ff9fcf 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:16px; height:16px; left:15px; top:9px; background: radial-gradient(circle at 35% 30%, #ffd6ec, #ff9fcf 75%, transparent 100%);"></div>
+          </div>
+          <div class="microbe amoeba" style="width:11%; height:11%; left:44%; top:28%; --dur:14s; --delay:-2s; background: radial-gradient(circle at 35% 30%, #d3f4dd, #96d9ac 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
+          </div>
+
+          <!-- microbes clustered near the hidden text, to camouflage it while blurry -->
+          <div class="microbe amoeba" style="width:14%; height:14%; left:66%; top:16%; --dur:14s; --rot:5deg; background: radial-gradient(circle at 35% 30%, #d8ecff, #a8d4ff 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #5fa8e8, #3a7fc4);"></div>
+          </div>
+          <div class="microbe rod" style="width:13%; height:4%; left:80%; top:33%; --dur:15s; --rot:45deg; transform: rotate(45deg); background: linear-gradient(120deg, #cfe6ff, #8ecbff);"></div>
+          <div class="microbe amoeba" style="width:10%; height:10%; left:88%; top:22%; --dur:13s; --delay:-5s; background: radial-gradient(circle at 35% 30%, #e5f4ff, #bcdfff 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #5fa8e8, #3a7fc4);"></div>
+          </div>
+
+          <div class="hidden-text" id="hiddenText">
+            <span class="glow"></span>
+            <span class="line1">IT'S A</span>
+            <span class="line2" id="textLine2">BOY?</span>
+          </div>
         </div>
         <div class="crosshair-h"></div>
         <div class="crosshair-v"></div>
@@ -273,8 +378,8 @@
     </div>
   </div>
 
-  <div class="hint" id="hint">Click and drag the knob in a circle to focus the lens</div>
-  <div class="auto-link" id="autoLink">Trouble with the knob? Tap here to auto-focus</div>
+  <div class="hint" id="hint">Drag inside the microscope to explore, then turn the knob to focus</div>
+  <div class="auto-link" id="autoLink">Stuck? Tap here to reveal it for you</div>
 </div>
 
 <div id="result">
@@ -299,29 +404,54 @@
   }
 })();
 
-// ---------- focus-knob interaction ----------
+// ---------- shared state ----------
 const knob = document.getElementById('knob');
 const knobRing = document.getElementById('knobRing');
 const knobNotch = document.getElementById('knobNotch');
 const specimen = document.getElementById('specimen');
+const lensGlass = document.getElementById('lensGlass');
 const hint = document.getElementById('hint');
 const autoLink = document.getElementById('autoLink');
 const resultEl = document.getElementById('result');
+const textLine2 = document.getElementById('textLine2');
 
 const MAX_ROTATION = 900;   // degrees of turning needed to fully focus (2.5 turns)
 const MAX_BLUR = 18;        // px, matches the initial CSS blur
+const SPECIMEN_SCALE = 2.4; // specimen is 240% of the lens
+const TEXT_FX = 0.76, TEXT_FY = 0.24; // where the hidden text sits in the specimen field
 
-let progressDeg = 0;        // 0..MAX_ROTATION
+let progressDeg = 0;
+let done = false;
+
+// ---------- BOY/GIRL flicker while focusing ----------
+let flickerTimer = null;
+let flickerIsBoy = true;
+function setLine2(isBoy){
+  textLine2.textContent = isBoy ? 'BOY?' : 'GIRL?';
+  textLine2.style.color = isBoy ? 'var(--blue-deep)' : 'var(--pink-deep)';
+}
+function startFlicker(){
+  if(flickerTimer || done) return;
+  flickerTimer = setInterval(()=>{
+    flickerIsBoy = !flickerIsBoy;
+    setLine2(flickerIsBoy);
+  }, 220);
+}
+function stopFlickerLockBoy(){
+  if(flickerTimer){ clearInterval(flickerTimer); flickerTimer = null; }
+  setLine2(true);
+  textLine2.textContent = 'BOY!';
+}
+
+// ---------- focus knob rotation ----------
 let dragging = false;
 let lastAngle = 0;
-let done = false;
 
 function angleFromEvent(e, rect){
   const cx = rect.left + rect.width/2;
   const cy = rect.top + rect.height/2;
   return Math.atan2(e.clientY - cy, e.clientX - cx) * 180 / Math.PI;
 }
-
 function shortestDelta(from, to){
   let d = to - from;
   while(d > 180) d -= 360;
@@ -335,14 +465,12 @@ function applyProgress(){
   specimen.style.filter = `blur(${blur}px)`;
   knobRing.style.setProperty('--progress', Math.round(pct*100));
   knobNotch.style.transform = `translateX(-50%) rotate(${progressDeg % 360}deg)`;
-
-  if(pct >= 1 && !done){
-    finishFocus();
-  }
+  if(pct >= 1 && !done){ finishFocus(); }
 }
 
 function finishFocus(){
   done = true;
+  stopFlickerLockBoy();
   specimen.classList.add('snap');
   specimen.style.filter = 'blur(0px)';
   knobRing.classList.add('done');
@@ -360,12 +488,12 @@ function finishFocus(){
 knob.addEventListener('pointerdown', (e)=>{
   if(done) return;
   dragging = true;
-  knob.setPointerCapture(e.pointerId);
+  try{ knob.setPointerCapture(e.pointerId); }catch(err){}
   const rect = knob.getBoundingClientRect();
   lastAngle = angleFromEvent(e, rect);
   hint.textContent = 'Keep turning...';
+  startFlicker();
 });
-
 knob.addEventListener('pointermove', (e)=>{
   if(!dragging || done) return;
   const rect = knob.getBoundingClientRect();
@@ -375,27 +503,71 @@ knob.addEventListener('pointermove', (e)=>{
   progressDeg = Math.max(0, Math.min(MAX_ROTATION, progressDeg + Math.abs(delta)));
   applyProgress();
 });
+function stopKnobDrag(){ dragging = false; }
+knob.addEventListener('pointerup', stopKnobDrag);
+knob.addEventListener('pointercancel', stopKnobDrag);
 
-function stopDrag(){ dragging = false; }
-knob.addEventListener('pointerup', stopDrag);
-knob.addEventListener('pointercancel', stopDrag);
+// ---------- drag-to-pan the specimen slide ----------
+let panX = 0, panY = 0;
+let lensPx = 0, specimenPx = 0, maxOffset = 0;
+let panDragging = false, panLastX = 0, panLastY = 0;
 
+function measureLens(){
+  lensPx = lensGlass.getBoundingClientRect().width;
+  specimenPx = lensPx * SPECIMEN_SCALE;
+  maxOffset = (specimenPx - lensPx) / 2;
+  panX = Math.max(-maxOffset, Math.min(maxOffset, panX));
+  panY = Math.max(-maxOffset, Math.min(maxOffset, panY));
+}
+function applyPan(){
+  specimen.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px))`;
+}
+measureLens();
+applyPan();
+window.addEventListener('resize', measureLens);
+
+lensGlass.addEventListener('pointerdown', (e)=>{
+  panDragging = true;
+  try{ lensGlass.setPointerCapture(e.pointerId); }catch(err){}
+  panLastX = e.clientX; panLastY = e.clientY;
+});
+lensGlass.addEventListener('pointermove', (e)=>{
+  if(!panDragging) return;
+  const dx = e.clientX - panLastX, dy = e.clientY - panLastY;
+  panLastX = e.clientX; panLastY = e.clientY;
+  panX = Math.max(-maxOffset, Math.min(maxOffset, panX + dx));
+  panY = Math.max(-maxOffset, Math.min(maxOffset, panY + dy));
+  applyPan();
+});
+function stopPanDrag(){ panDragging = false; }
+lensGlass.addEventListener('pointerup', stopPanDrag);
+lensGlass.addEventListener('pointercancel', stopPanDrag);
+
+// ---------- combined fallback: pan to the text and auto-focus ----------
 autoLink.addEventListener('click', ()=>{
   if(done) return;
   autoLink.hidden = true;
-  hint.textContent = 'Auto-focusing...';
+  hint.textContent = 'Revealing...';
+  startFlicker();
+  measureLens();
+
+  const targetPanX = Math.max(-maxOffset, Math.min(maxOffset, (0.5 - TEXT_FX) * specimenPx));
+  const targetPanY = Math.max(-maxOffset, Math.min(maxOffset, (0.5 - TEXT_FY) * specimenPx));
+  const startPanX = panX, startPanY = panY;
   const startDeg = progressDeg;
   const remaining = MAX_ROTATION - startDeg;
-  const durationMs = 2600;
+  const durationMs = 2800;
   const startTime = performance.now();
+
   function step(now){
     const t = Math.min(1, (now - startTime) / durationMs);
     const eased = 1 - Math.pow(1 - t, 2);
+    panX = startPanX + (targetPanX - startPanX) * eased;
+    panY = startPanY + (targetPanY - startPanY) * eased;
+    applyPan();
     progressDeg = startDeg + remaining * eased;
     applyProgress();
-    if(t < 1 && !done){
-      requestAnimationFrame(step);
-    }
+    if(t < 1 && !done){ requestAnimationFrame(step); }
   }
   requestAnimationFrame(step);
 });
