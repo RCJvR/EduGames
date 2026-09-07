@@ -12,7 +12,9 @@
     --blue: #7ec8ff;
     --blue-deep: #3fa9ff;
     --gold: #ffd76a;
-    --ink: #3a3355;
+    --leaf: #7fd9a8;
+    --leaf-deep: #2f9e63;
+    --ink: #33422e;
     --steel: #aab4c2;
     --steel-dark: #5c6674;
   }
@@ -21,7 +23,7 @@
     margin:0; padding:0; height:100%;
     font-family: 'Segoe UI', Verdana, Tahoma, sans-serif;
     overflow: hidden;
-    background: linear-gradient(160deg, #eaf6ff 0%, #eae2ff 45%, #ffe3f1 100%);
+    background: linear-gradient(160deg, #eafcf0 0%, #eef7e2 45%, #fdf6e3 100%);
     -webkit-user-select:none; user-select:none;
   }
   #sky{ position: fixed; inset:0; z-index:0; overflow:hidden; }
@@ -48,7 +50,7 @@
     text-shadow: 0 2px 0 #fff;
   }
   .subtitle{
-    color: #6d6389;
+    color: #63775f;
     font-size: clamp(.82rem, 1.9vw, 1rem);
     margin: 0 0 20px;
     max-width: 500px;
@@ -89,7 +91,12 @@
   }
   .lens-glass:active{ cursor: grabbing; }
 
-  /* specimen is a large draggable field the visible lens only shows a slice of */
+  /* zoom-wrap scales the whole slide in/out; specimen is a large draggable
+     field within it that the lens only ever shows a slice of */
+  .zoom-wrap{
+    position:absolute; inset:0;
+    will-change: transform;
+  }
   .specimen{
     position:absolute;
     left:50%; top:50%;
@@ -148,6 +155,7 @@
     font-weight: 900;
     letter-spacing: 1px;
     text-shadow: 0 0 1px rgba(255,255,255,.7);
+    transition: opacity .35s ease;
   }
   .hidden-text .glow{
     position:absolute; inset: -60%;
@@ -186,13 +194,13 @@
     height: min(24vw, 120px);
     border-radius:50%;
     padding: 8px;
-    background: conic-gradient(var(--blue-deep) calc(var(--progress, 0) * 1%), #e3e8f0 0);
-    box-shadow: 0 6px 16px rgba(90,60,140,.18);
+    background: conic-gradient(var(--leaf-deep) calc(var(--progress, 0) * 1%), #e3e8f0 0);
+    box-shadow: 0 6px 16px rgba(60,110,80,.18);
     display:flex; align-items:center; justify-content:center;
     transition: box-shadow .2s ease;
   }
   .knob-ring.done{
-    box-shadow: 0 0 0 4px rgba(63,169,255,.35), 0 6px 16px rgba(90,60,140,.18);
+    box-shadow: 0 0 0 4px rgba(47,158,99,.35), 0 6px 16px rgba(60,110,80,.18);
   }
   .knob{
     width: 100%; height:100%;
@@ -206,7 +214,7 @@
   .knob:active{ cursor: grabbing; }
   .knob-notch{
     position:absolute; top:10%; left:50%; width:6px; height:22%;
-    background: var(--pink-deep);
+    background: var(--gold);
     border-radius: 3px;
     transform: translateX(-50%);
     box-shadow: 0 1px 3px rgba(0,0,0,.3);
@@ -218,17 +226,39 @@
   }
   .knob-label{
     font-size: .78rem; font-weight:700; letter-spacing: 1.5px;
-    color: #7a7398;
+    color: #6d8073;
+  }
+
+  .zoom-controls{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    margin-top: 10px;
+  }
+  .zoom-btn{
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #fff, #dcefe2);
+    color: var(--leaf-deep);
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(60,110,80,.25);
+  }
+  .zoom-btn:active{ transform: scale(.92); }
+  .zoom-label{
+    font-size: .72rem; font-weight:700; letter-spacing: 1.5px;
+    color: #6d8073;
   }
 
   .hint{
-    margin-top: 16px;
-    color: #8880a3;
+    margin-top: 14px;
+    color: #6d8073;
     font-size: .85rem;
     min-height: 1.2em;
   }
   .auto-link{
-    color: var(--blue-deep);
+    color: var(--leaf-deep);
     text-decoration: underline;
     cursor: pointer;
     font-size: .8rem;
@@ -294,17 +324,18 @@
 
 <div class="stage">
   <h1>Let's take a closer look... 🔬</h1>
-  <p class="subtitle">Drag inside the lens to explore the slide, then turn the focus knob to bring what you find into view!</p>
+  <p class="subtitle">Zoom out to spot the hidden slide, zoom in and drag to line it up, then turn the focus knob to bring it clear!</p>
 
   <div class="scope-area">
     <div class="eyepiece">
       <div class="lens-glass" id="lensGlass">
+        <div class="zoom-wrap" id="zoomWrap">
         <div class="specimen" id="specimen">
           <div class="microbe amoeba" style="width:15%; height:15%; left:10%; top:15%; --dur:16s; --rot:-4deg; background: radial-gradient(circle at 35% 30%, #d8f2e0, #7fcf9a 75%, transparent 100%);">
             <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
           </div>
-          <div class="microbe amoeba" style="width:11%; height:11%; left:35%; top:8%; --dur:13s; --delay:-3s; background: radial-gradient(circle at 35% 30%, #cfe6ff, #8ecbff 75%, transparent 100%);">
-            <div class="nucleus" style="background: radial-gradient(circle, #3f8fd6, #2564a1);"></div>
+          <div class="microbe amoeba" style="width:11%; height:11%; left:35%; top:8%; --dur:13s; --delay:-3s; background: radial-gradient(circle at 35% 30%, #c9f2e6, #7fd9c4 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #2f9e8f, #1f7568);"></div>
           </div>
           <div class="microbe rod" style="width:16%; height:5%; left:52%; top:12%; --dur:18s; --rot:20deg; transform: rotate(20deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
           <div class="microbe coccus-pair" style="left:18%; top:44%;">
@@ -319,23 +350,23 @@
             <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
           </div>
           <div class="microbe coccus-pair" style="left:44%; top:78%;">
-            <div class="coccus" style="width:20px; height:20px; left:0; top:0; background: radial-gradient(circle at 35% 30%, #cdeeff, #86c9ef 75%, transparent 100%);"></div>
-            <div class="coccus" style="width:16px; height:16px; left:-13px; top:12px; background: radial-gradient(circle at 35% 30%, #cdeeff, #86c9ef 75%, transparent 100%);"></div>
-            <div class="coccus" style="width:14px; height:14px; left:12px; top:14px; background: radial-gradient(circle at 35% 30%, #cdeeff, #86c9ef 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:20px; height:20px; left:0; top:0; background: radial-gradient(circle at 35% 30%, #e2f5d8, #b3e08c 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:16px; height:16px; left:-13px; top:12px; background: radial-gradient(circle at 35% 30%, #e2f5d8, #b3e08c 75%, transparent 100%);"></div>
+            <div class="coccus" style="width:14px; height:14px; left:12px; top:14px; background: radial-gradient(circle at 35% 30%, #e2f5d8, #b3e08c 75%, transparent 100%);"></div>
           </div>
           <div class="microbe amoeba" style="width:9%; height:9%; left:6%; top:90%; --dur:12s; background: radial-gradient(circle at 35% 30%, #ffe9c2, #ffcf7a 75%, transparent 100%);">
             <div class="nucleus" style="background: radial-gradient(circle, #d99a2b, #b57a17);"></div>
           </div>
-          <div class="microbe amoeba" style="width:12%; height:12%; left:90%; top:8%; --dur:16s; --delay:-4s; --rot:-6deg; background: radial-gradient(circle at 35% 30%, #cfe6ff, #8ecbff 75%, transparent 100%);">
-            <div class="nucleus" style="background: radial-gradient(circle, #3f8fd6, #2564a1);"></div>
+          <div class="microbe amoeba" style="width:12%; height:12%; left:90%; top:8%; --dur:16s; --delay:-4s; --rot:-6deg; background: radial-gradient(circle at 35% 30%, #ecdcff, #b7a3f2 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #7c5fc4, #5a3d9e);"></div>
           </div>
 
           <!-- extra microbes so the default centered view (before any panning) still looks like a full slide -->
           <div class="microbe amoeba" style="width:13%; height:13%; left:32%; top:58%; --dur:15s; --rot:3deg; background: radial-gradient(circle at 35% 30%, #d8f2e0, #7fcf9a 75%, transparent 100%);">
             <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
           </div>
-          <div class="microbe amoeba" style="width:15%; height:15%; left:52%; top:33%; --dur:17s; --delay:-4s; background: radial-gradient(circle at 35% 30%, #cfe6ff, #8ecbff 75%, transparent 100%);">
-            <div class="nucleus" style="background: radial-gradient(circle, #3f8fd6, #2564a1);"></div>
+          <div class="microbe amoeba" style="width:15%; height:15%; left:52%; top:33%; --dur:17s; --delay:-4s; background: radial-gradient(circle at 35% 30%, #c9f2e6, #7fd9c4 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #2f9e8f, #1f7568);"></div>
           </div>
           <div class="microbe rod" style="width:14%; height:4.5%; left:38%; top:46%; --dur:13s; --rot:32deg; transform: rotate(32deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
           <div class="microbe coccus-pair" style="left:62%; top:64%;">
@@ -347,12 +378,12 @@
           </div>
 
           <!-- microbes clustered near the hidden text, to camouflage it while blurry -->
-          <div class="microbe amoeba" style="width:14%; height:14%; left:66%; top:16%; --dur:14s; --rot:5deg; background: radial-gradient(circle at 35% 30%, #d8ecff, #a8d4ff 75%, transparent 100%);">
-            <div class="nucleus" style="background: radial-gradient(circle, #5fa8e8, #3a7fc4);"></div>
+          <div class="microbe amoeba" style="width:14%; height:14%; left:66%; top:16%; --dur:14s; --rot:5deg; background: radial-gradient(circle at 35% 30%, #e2f5d8, #b3e08c 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #6ba844, #4f8730);"></div>
           </div>
-          <div class="microbe rod" style="width:13%; height:4%; left:80%; top:33%; --dur:15s; --rot:45deg; transform: rotate(45deg); background: linear-gradient(120deg, #cfe6ff, #8ecbff);"></div>
-          <div class="microbe amoeba" style="width:10%; height:10%; left:88%; top:22%; --dur:13s; --delay:-5s; background: radial-gradient(circle at 35% 30%, #e5f4ff, #bcdfff 75%, transparent 100%);">
-            <div class="nucleus" style="background: radial-gradient(circle, #5fa8e8, #3a7fc4);"></div>
+          <div class="microbe rod" style="width:13%; height:4%; left:80%; top:33%; --dur:15s; --rot:45deg; transform: rotate(45deg); background: linear-gradient(120deg, #ffe08a, #e8b94f);"></div>
+          <div class="microbe amoeba" style="width:10%; height:10%; left:88%; top:22%; --dur:13s; --delay:-5s; background: radial-gradient(circle at 35% 30%, #d8f2e0, #7fcf9a 75%, transparent 100%);">
+            <div class="nucleus" style="background: radial-gradient(circle, #4f9d6c, #2f7a4c);"></div>
           </div>
 
           <div class="hidden-text" id="hiddenText">
@@ -360,6 +391,7 @@
             <span class="line1">IT'S A</span>
             <span class="line2" id="textLine2">BOY?</span>
           </div>
+        </div>
         </div>
         <div class="crosshair-h"></div>
         <div class="crosshair-v"></div>
@@ -378,7 +410,13 @@
     </div>
   </div>
 
-  <div class="hint" id="hint">Drag inside the microscope to explore, then turn the knob to focus</div>
+  <div class="zoom-controls">
+    <button class="zoom-btn" id="zoomOutBtn" type="button" aria-label="Zoom out">&minus;</button>
+    <span class="zoom-label">ZOOM</span>
+    <button class="zoom-btn" id="zoomInBtn" type="button" aria-label="Zoom in">+</button>
+  </div>
+
+  <div class="hint" id="hint">Zoom out to scan the slide, drag to line up what you find, then turn the knob to focus</div>
   <div class="auto-link" id="autoLink">Stuck? Tap here to reveal it for you</div>
 </div>
 
@@ -410,15 +448,21 @@ const knobRing = document.getElementById('knobRing');
 const knobNotch = document.getElementById('knobNotch');
 const specimen = document.getElementById('specimen');
 const lensGlass = document.getElementById('lensGlass');
+const zoomWrap = document.getElementById('zoomWrap');
+const zoomInBtn = document.getElementById('zoomInBtn');
+const zoomOutBtn = document.getElementById('zoomOutBtn');
 const hint = document.getElementById('hint');
 const autoLink = document.getElementById('autoLink');
 const resultEl = document.getElementById('result');
 const textLine2 = document.getElementById('textLine2');
+const hiddenText = document.getElementById('hiddenText');
 
 const MAX_ROTATION = 900;   // degrees of turning needed to fully focus (2.5 turns)
 const MAX_BLUR = 18;        // px, matches the initial CSS blur
 const SPECIMEN_SCALE = 2.4; // specimen is 240% of the lens
 const TEXT_FX = 0.76, TEXT_FY = 0.24; // where the hidden text sits in the specimen field
+const ZOOM_MIN = 1 / SPECIMEN_SCALE; // fully zoomed out: the whole slide fits in the lens
+const ZOOM_MAX = 1;                  // fully zoomed in: the original close-up crop
 
 let progressDeg = 0;
 let done = false;
@@ -436,11 +480,6 @@ function startFlicker(){
     flickerIsBoy = !flickerIsBoy;
     setLine2(flickerIsBoy);
   }, 220);
-}
-function stopFlickerLockBoy(){
-  if(flickerTimer){ clearInterval(flickerTimer); flickerTimer = null; }
-  setLine2(true);
-  textLine2.textContent = 'BOY!';
 }
 
 // ---------- focus knob rotation ----------
@@ -470,7 +509,9 @@ function applyProgress(){
 
 function finishFocus(){
   done = true;
-  stopFlickerLockBoy();
+  // Keep the BOY?/GIRL? flicker running right up to the pop-up — the lens
+  // never gets to settle on a readable answer, so the reveal only ever
+  // happens in the banner, not under the microscope.
   specimen.classList.add('snap');
   specimen.style.filter = 'blur(0px)';
   knobRing.classList.add('done');
@@ -479,6 +520,8 @@ function finishFocus(){
   knob.style.pointerEvents = 'none';
 
   setTimeout(()=>{
+    if(flickerTimer){ clearInterval(flickerTimer); flickerTimer = null; }
+    hiddenText.style.opacity = '0';
     launchConfetti();
     launchBalloons();
     resultEl.classList.add('show');
@@ -543,7 +586,33 @@ function stopPanDrag(){ panDragging = false; }
 lensGlass.addEventListener('pointerup', stopPanDrag);
 lensGlass.addEventListener('pointercancel', stopPanDrag);
 
-// ---------- combined fallback: pan to the text and auto-focus ----------
+// ---------- zoom the slide in/out ----------
+let zoom = ZOOM_MIN; // start zoomed all the way out, so the whole slide is visible at once
+
+function applyZoom(){
+  zoomWrap.style.transform = `scale(${zoom})`;
+}
+applyZoom();
+
+const ZOOM_STEP = 0.16;
+zoomInBtn.addEventListener('click', ()=>{
+  if(done) return;
+  zoom = Math.min(ZOOM_MAX, zoom + ZOOM_STEP);
+  applyZoom();
+});
+zoomOutBtn.addEventListener('click', ()=>{
+  if(done) return;
+  zoom = Math.max(ZOOM_MIN, zoom - ZOOM_STEP);
+  applyZoom();
+});
+lensGlass.addEventListener('wheel', (e)=>{
+  if(done) return;
+  e.preventDefault();
+  zoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, zoom - e.deltaY * 0.0012));
+  applyZoom();
+}, { passive: false });
+
+// ---------- combined fallback: zoom in, pan to the text, and auto-focus ----------
 autoLink.addEventListener('click', ()=>{
   if(done) return;
   autoLink.hidden = true;
@@ -554,9 +623,10 @@ autoLink.addEventListener('click', ()=>{
   const targetPanX = Math.max(-maxOffset, Math.min(maxOffset, (0.5 - TEXT_FX) * specimenPx));
   const targetPanY = Math.max(-maxOffset, Math.min(maxOffset, (0.5 - TEXT_FY) * specimenPx));
   const startPanX = panX, startPanY = panY;
+  const startZoom = zoom;
   const startDeg = progressDeg;
   const remaining = MAX_ROTATION - startDeg;
-  const durationMs = 2800;
+  const durationMs = 3000;
   const startTime = performance.now();
 
   function step(now){
@@ -565,6 +635,8 @@ autoLink.addEventListener('click', ()=>{
     panX = startPanX + (targetPanX - startPanX) * eased;
     panY = startPanY + (targetPanY - startPanY) * eased;
     applyPan();
+    zoom = startZoom + (ZOOM_MAX - startZoom) * eased;
+    applyZoom();
     progressDeg = startDeg + remaining * eased;
     applyProgress();
     if(t < 1 && !done){ requestAnimationFrame(step); }
