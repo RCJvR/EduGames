@@ -823,7 +823,7 @@ function launchBalloons(){
       b.style.left = (Math.random()*90) + 'vw';
       const dur = 6 + Math.random()*4;
       b.style.setProperty('--drift', (Math.random()*80 - 40)+'px');
-      b.style.animation = `floatUp ${dur}s ease-in forwards`;
+      b.style.animation = `floatUp ${dur}s linear forwards`;
       document.body.appendChild(b);
       setTimeout(()=>b.remove(), dur*1000 + 200);
     }, i*220);
