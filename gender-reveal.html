@@ -285,6 +285,7 @@ const STATES = [
   { text: '💙 BOY?',  cls: 'boy'  },
   { text: '💗 GIRL?', cls: 'girl' }
 ];
+const MYSTERY = { text: '❔ ❔ ❔', cls: 'mystery' };
 
 function setLabel(state){
   reelLabel.textContent = state.text;
@@ -319,9 +320,13 @@ function spin(){
     step++;
 
     if(step >= delays.length){
-      // land explicitly on BOY
-      setLabel(STATES[0]);
-      finishReveal();
+      // brief suspense: duck back to the mystery placeholder, then reveal BOY
+      setLabel(MYSTERY);
+      hint.textContent = '';
+      setTimeout(()=>{
+        setLabel(STATES[0]);
+        finishReveal();
+      }, 900);
       return;
     }
 
