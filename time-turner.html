@@ -361,12 +361,17 @@ main{max-width:920px;margin:0 auto;padding:8px 24px 80px;}
     <div class="section-title">🧑‍🎓 Check on a learner</div>
     <div class="section-sub">Look up a specific learner's upcoming assessment load and, if they've used their own planner, a few wellbeing signals.</div>
     <div class="card">
-      <a class="btn-ghost" href="time-turner-checkin.html" style="text-decoration:none;"><i data-lucide="search" style="width:14px;height:14px;"></i>Open Check on a Learner</a>
+      <button class="btn-primary" id="checkin-toggle" type="button"><i data-lucide="search" style="width:14px;height:14px;"></i>Check on a learner</button>
+      <div id="checkin-panel" class="hidden" style="margin-top:16px;">
+        <a class="btn-ghost" href="time-turner-checkin.html" style="text-decoration:none;"><i data-lucide="search" style="width:14px;height:14px;"></i>Open Check on a Learner</a>
+      </div>
     </div>
 
     <div class="section-title">🗓️ Upload a class timetable</div>
     <div class="section-sub">One timetable per class you own — a different register class in the same grade (8A1, 8A2, ...) can have a completely different daily rotation, so this is per class, not per grade. Students who've joined that class can then import it into their own plan in one click instead of adding it by hand. One row per timetable day (1–10): the day number, then each period's subject, separated by commas — leave a period blank for a free period or break.</div>
     <div class="card">
+      <button class="btn-primary" id="tt-admin-toggle" type="button"><i data-lucide="upload" style="width:14px;height:14px;"></i>Upload a class timetable</button>
+      <div id="tt-admin-form" class="hidden" style="margin-top:16px;">
       <label class="form-label" for="tt-admin-class">Class</label>
       <select class="form-select" id="tt-admin-class" style="margin-bottom:12px;max-width:260px;">
         <option value="">Loading…</option>
@@ -378,6 +383,7 @@ main{max-width:920px;margin:0 auto;padding:8px 24px 80px;}
         <button class="btn-primary hidden" id="tt-admin-submit-btn"><i data-lucide="upload" style="width:14px;height:14px;"></i>Upload</button>
       </div>
       <div id="tt-admin-preview-box" style="margin-top:8px;"></div>
+      </div>
     </div>
 
     <div class="section-title">Class timetables on file</div>
@@ -429,6 +435,8 @@ main{max-width:920px;margin:0 auto;padding:8px 24px 80px;}
     <div class="section-title">Upload the assessment calendar</div>
     <div class="section-sub">One row per assessment: Grade, Subject, Type, Title, Due Date, Term, Description. Upload a .csv, or paste rows copied from a spreadsheet.</div>
     <div class="card">
+      <button class="btn-primary" id="aa-bulk-toggle" type="button"><i data-lucide="upload" style="width:14px;height:14px;"></i>Upload the assessment calendar</button>
+      <div id="aa-bulk-form" class="hidden" style="margin-top:16px;">
       <input type="file" id="aa-file" accept=".csv,text/csv" style="margin-bottom:10px;">
       <textarea class="form-textarea" id="aa-bulk-text" placeholder="8, Mathematics, test, Test 1: Algebra, 2026-03-12, 1, Chapters 1-3&#10;10, Physical Sciences, exam, June Exam, 2026-06-03, 2," style="min-height:110px;"></textarea>
       <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;">
@@ -436,6 +444,7 @@ main{max-width:920px;margin:0 auto;padding:8px 24px 80px;}
         <button class="btn-primary hidden" id="aa-bulk-submit"><i data-lucide="upload" style="width:14px;height:14px;"></i>Upload</button>
       </div>
       <div id="aa-bulk-preview" style="margin-top:8px;"></div>
+      </div>
     </div>
 
     <div class="section-title">Manage assessments</div>
@@ -643,7 +652,8 @@ main{max-width:920px;margin:0 auto;padding:8px 24px 80px;}
   <div class="no-print">
     <div class="section-title">📋 Everything you've added</div>
     <div class="card" id="entries-card">
-      <div id="entries-list"><div class="empty-hint">Nothing added yet.</div></div>
+      <button class="btn-primary" id="entries-toggle" type="button"><i data-lucide="list" style="width:14px;height:14px;"></i>Show everything you've added</button>
+      <div id="entries-list" class="hidden" style="margin-top:16px;"><div class="empty-hint">Nothing added yet.</div></div>
     </div>
   </div>
 

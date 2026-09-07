@@ -463,7 +463,27 @@
     window.lucide?.createIcons();
   }
 
+  /** Generic collapse-behind-a-button wiring, reused for every admin
+   * form on this page — one primary action visible at rest. */
+  function wireCollapsible(toggleId, panelId, openLabel, closeLabel) {
+    const toggle = document.getElementById(toggleId);
+    const panel = document.getElementById(panelId);
+    if (!toggle || !panel) return;
+    toggle.addEventListener('click', () => {
+      const nowHidden = panel.classList.toggle('hidden');
+      toggle.innerHTML = nowHidden ? openLabel : closeLabel;
+      window.lucide?.createIcons();
+    });
+  }
+
   function wireAdminForms() {
+    wireCollapsible('checkin-toggle', 'checkin-panel',
+      '<i data-lucide="search" style="width:14px;height:14px;"></i>Check on a learner',
+      '<i data-lucide="minus" style="width:14px;height:14px;"></i>Close');
+    wireCollapsible('aa-bulk-toggle', 'aa-bulk-form',
+      '<i data-lucide="upload" style="width:14px;height:14px;"></i>Upload the assessment calendar',
+      '<i data-lucide="minus" style="width:14px;height:14px;"></i>Close');
+
     const aaToggle = document.getElementById('aa-toggle');
     const aaForm = document.getElementById('aa-form');
     aaToggle.addEventListener('click', () => {
