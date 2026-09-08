@@ -252,6 +252,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:12px;}
 
   <div class="level-row">
     <span class="level-label">Level</span>
+    <button class="level-btn" data-level="A1">A1</button>
     <button class="level-btn" data-level="A2">A2</button>
     <button class="level-btn" data-level="B1">B1</button>
     <button class="level-btn" data-level="B2">B2</button>
@@ -259,6 +260,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:12px;}
 
   <div class="tabs">
     <button class="tab-btn" data-tab="units"><i data-lucide="map" style="width:15px;height:15px;"></i> Units</button>
+    <button class="tab-btn" data-tab="vocabulary"><i data-lucide="library" style="width:15px;height:15px;"></i> Vocabulary</button>
     <button class="tab-btn" data-tab="listening"><i data-lucide="headphones" style="width:15px;height:15px;"></i> Listening</button>
     <button class="tab-btn" data-tab="reading"><i data-lucide="book-open" style="width:15px;height:15px;"></i> Reading</button>
     <button class="tab-btn" data-tab="grammar"><i data-lucide="spell-check" style="width:15px;height:15px;"></i> Grammar</button>
@@ -270,6 +272,11 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:12px;}
 
   <div id="panel-units" class="tab-panel">
     <div id="units-content"></div>
+  </div>
+
+  <div id="panel-vocabulary" class="tab-panel">
+    <div id="vocabulary-chips" class="chip-row"></div>
+    <div id="vocabulary-content"></div>
   </div>
 
   <div id="panel-listening" class="tab-panel">
