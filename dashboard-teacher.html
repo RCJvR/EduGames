@@ -849,6 +849,7 @@
             </div>
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
               <div id="detail-invite-display" style="font-family:var(--mono);font-size:12px;color:#f5a623;background:rgba(245,166,35,0.10);border:1px solid rgba(245,166,35,0.25);padding:5px 12px;border-radius:var(--radius-xs);cursor:pointer;" title="Click to copy"></div>
+              <button class="back-btn" id="present-invite-btn" title="Open a large, projector-friendly view of the class code" onclick="presentInviteCode()"><i data-lucide="monitor" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px;"></i>Project code</button>
               <button class="back-btn" onclick="closeClassDetail()">← All classes</button>
             </div>
           </div>
@@ -7664,6 +7665,73 @@ function copyInvite(code, el) {
   const orig = el.textContent;
   el.textContent = '✓ Copied!';
   setTimeout(() => el.textContent = orig, 1500);
+}
+
+// Opens the current class's invite code in a new, projector-friendly window —
+// huge type so it reads from the back of a classroom, with a manual
+// fullscreen button since a script can't force fullscreen without a click
+// inside the new window itself.
+function presentInviteCode() {
+  const cls = _classes.find(c => c.id === _selectedClassId);
+  if (!cls) return;
+
+  // No 'noopener' feature here — per spec that makes window.open() always
+  // return null, even on success, which we need to write content into the
+  // popup. Sever the back-reference manually instead, for the same safety.
+  const win = window.open('', '_blank');
+  if (!win) { alert('Please allow pop-ups to project the class code.'); return; }
+  try { win.opener = null; } catch (_) {}
+
+  const name = (cls.name || 'Class').replace(/[<>&]/g, c => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;' }[c]));
+  const code = (cls.invite_code || '').replace(/[<>&]/g, c => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;' }[c]));
+
+  win.document.write(`<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${name} — Join Code — The Magic Lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+    min-height:100vh;background:#080c1a;color:#e4e8f8;
+    font-family:"Cabinet Grotesk","Segoe UI",sans-serif;text-align:center;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 5% 3%, rgba(6,182,212,0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 35% at 96% 6%, rgba(124,109,250,0.10) 0%, transparent 55%);
+    cursor:pointer;
+  }
+  .brand{font-size:clamp(14px,2vw,20px);font-weight:700;letter-spacing:0.02em;color:rgba(210,218,245,0.55);}
+  .cname{font-size:clamp(22px,4vw,40px);font-weight:800;letter-spacing:-0.02em;}
+  .label{font-family:"JetBrains Mono",monospace;font-size:clamp(12px,1.6vw,16px);font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#f5a623;}
+  .code{
+    font-family:"JetBrains Mono",monospace;font-weight:800;letter-spacing:0.12em;
+    font-size:clamp(64px,16vw,220px);line-height:1;
+    color:#fff;background:rgba(245,166,35,0.10);border:3px solid rgba(245,166,35,0.35);
+    border-radius:28px;padding:0.25em 0.5em;
+  }
+  .hint{font-size:clamp(13px,1.6vw,18px);color:rgba(210,218,245,0.55);max-width:32em;}
+  .fs-btn{
+    font-family:inherit;font-size:14px;font-weight:700;color:#e4e8f8;
+    background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);
+    padding:9px 20px;border-radius:99px;cursor:pointer;
+  }
+  .fs-btn:hover{background:rgba(255,255,255,0.10);}
+</style>
+</head>
+<body onclick="document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.().catch(()=>{})">
+  <div class="brand">🔮 The Magic Lab</div>
+  <div class="cname">${name}</div>
+  <div class="label">Join this class at themagiclab.co.za</div>
+  <div class="code">${code}</div>
+  <div class="hint">Click anywhere on this page for fullscreen — press Esc to exit.</div>
+  <button class="fs-btn" onclick="event.stopPropagation();document.documentElement.requestFullscreen?.().catch(()=>{})">⛶ Fullscreen</button>
+</body>
+</html>`);
+  win.document.close();
 }
 
 function _getLevelNum(xp) {

@@ -1,18 +1,20 @@
 // ============================================================
 // THE MAGIC LAB — time-turner-periods.js
-// The school's shared period schedule: a "regular" day (Mon-Thu), an
-// early-finish "friday", and a "test" day for test-series Tuesdays/
-// Thursdays (3 periods, break, 3 periods, break, then a 7th "test
-// period" slot). Requires the period_schedule table from
-// time-turner-periods-schema.sql. Teachers edit it; every student's
-// planner reads the same schedule — exactly like the assessment
-// calendar, this is a fact about the school, not something each
-// student should have to re-enter.
+// The school's shared period schedule: a "regular" day (the common
+// case — Guardian, then 6 periods, no Assembly/ROC), an early-finish
+// "friday", a "test" day for test-series Tuesdays/Thursdays (3
+// periods, break, 3 periods, break, then a 7th "test period" slot),
+// and two occasional variants — "monday_assembly" and "wednesday_roc" —
+// for the days Monday's Assembly or Wednesday's ROC actually happens.
+// Requires the period_schedule table from time-turner-periods-schema.sql.
+// Teachers edit it; every student's planner reads the same schedule —
+// exactly like the assessment calendar, this is a fact about the
+// school, not something each student should have to re-enter.
 //
-// Which specific upcoming Tuesdays/Thursdays are actually "in a test
-// series" is a temporary, per-grade fact that changes week to week —
-// deliberately NOT tracked here. A teacher or student just picks "Test
-// day" for the blocks that need it, same as picking Regular vs Friday.
+// Which specific upcoming days actually have a test series / Assembly /
+// ROC is temporary and changes week to week — deliberately NOT tracked
+// here. A teacher or student just picks the right day type for the
+// blocks that need it, the same manual way Regular vs Friday works.
 // Include after auth.js.
 // ============================================================
 
@@ -20,15 +22,17 @@
   const DAY_TYPES = [
     { key: 'regular', label: 'Regular day', periodCount: 6 },
     { key: 'friday', label: 'Friday', periodCount: 6 },
-    { key: 'test', label: 'Test day (Tue/Thu)', periodCount: 7 }
+    { key: 'test', label: 'Test day (Tue/Thu)', periodCount: 7 },
+    { key: 'monday_assembly', label: 'Monday (Assembly)', periodCount: 6 },
+    { key: 'wednesday_roc', label: 'Wednesday (ROC)', periodCount: 6 }
   ];
   const PERIOD_COUNT = 6; // kept for callers that only ever offer regular/friday
   function periodCountFor(dayType) { return DAY_TYPES.find(dt => dt.key === dayType)?.periodCount || PERIOD_COUNT; }
   function periodLabel(dayType, p) { return dayType === 'test' && p === 7 ? 'Test' : `P${p}`; }
 
   let profile = null;
-  // { regular: { 1: {start,end}, ... }, friday: { ... }, test: { ... } }
-  let schedule = { regular: {}, friday: {}, test: {} };
+  // { regular: { 1: {start,end}, ... }, friday: { ... }, ... one bucket per DAY_TYPES key }
+  let schedule = Object.fromEntries(DAY_TYPES.map(dt => [dt.key, {}]));
 
   function supabase() { return window.MagicLabAuth._supabase(); }
   function esc(s) {
@@ -50,8 +54,9 @@
   async function fetchSchedule() {
     const { data, error } = await supabase().from('period_schedule').select('*');
     if (error) { console.warn('[MagicLab] fetchSchedule error:', error.message); return; }
-    schedule = { regular: {}, friday: {}, test: {} };
+    schedule = Object.fromEntries(DAY_TYPES.map(dt => [dt.key, {}]));
     (data || []).forEach(row => {
+      if (!schedule[row.day_type]) schedule[row.day_type] = {};
       schedule[row.day_type][row.period] = { start: row.start_time.slice(0, 5), end: row.end_time.slice(0, 5) };
     });
   }

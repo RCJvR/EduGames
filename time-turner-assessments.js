@@ -454,7 +454,46 @@
     refreshManageList();
   }
 
+  // One primary action at rest: stays collapsed behind a single button
+  // until a teacher actually wants to add one, then folds back up once
+  // they've submitted — same pattern as Time Turner's own add-block form.
+  function collapseAddAssessmentForm() {
+    document.getElementById('aa-form').classList.add('hidden');
+    document.getElementById('aa-toggle').innerHTML = '<i data-lucide="plus" style="width:14px;height:14px;"></i>Add one assessment';
+    window.lucide?.createIcons();
+  }
+
+  /** Generic collapse-behind-a-button wiring, reused for every admin
+   * form on this page — one primary action visible at rest. */
+  function wireCollapsible(toggleId, panelId, openLabel, closeLabel) {
+    const toggle = document.getElementById(toggleId);
+    const panel = document.getElementById(panelId);
+    if (!toggle || !panel) return;
+    toggle.addEventListener('click', () => {
+      const nowHidden = panel.classList.toggle('hidden');
+      toggle.innerHTML = nowHidden ? openLabel : closeLabel;
+      window.lucide?.createIcons();
+    });
+  }
+
   function wireAdminForms() {
+    wireCollapsible('checkin-toggle', 'checkin-panel',
+      '<i data-lucide="search" style="width:14px;height:14px;"></i>Check on a learner',
+      '<i data-lucide="minus" style="width:14px;height:14px;"></i>Close');
+    wireCollapsible('aa-bulk-toggle', 'aa-bulk-form',
+      '<i data-lucide="upload" style="width:14px;height:14px;"></i>Upload the assessment calendar',
+      '<i data-lucide="minus" style="width:14px;height:14px;"></i>Close');
+
+    const aaToggle = document.getElementById('aa-toggle');
+    const aaForm = document.getElementById('aa-form');
+    aaToggle.addEventListener('click', () => {
+      const nowHidden = aaForm.classList.toggle('hidden');
+      aaToggle.innerHTML = nowHidden
+        ? '<i data-lucide="plus" style="width:14px;height:14px;"></i>Add one assessment'
+        : '<i data-lucide="minus" style="width:14px;height:14px;"></i>Close';
+      window.lucide?.createIcons();
+    });
+
     document.getElementById('aa-submit').addEventListener('click', async () => {
       const msg = document.getElementById('aa-msg');
       const grade = parseInt(document.getElementById('aa-grade').value, 10);
@@ -470,6 +509,7 @@
       if (error) { msg.textContent = error.message; msg.className = 'msg err'; return; }
       msg.textContent = 'Added.'; msg.className = 'msg ok';
       ['aa-subject', 'aa-title', 'aa-due', 'aa-term', 'aa-desc'].forEach(id => { document.getElementById(id).value = ''; });
+      collapseAddAssessmentForm();
       refreshManageList();
     });
 
