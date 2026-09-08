@@ -775,7 +775,7 @@ const CONTENT = {
 // author. Order matters: this is also the curriculum introduction order.
 const VOCAB_WORDS = {
   A1: [
-    ['bonjour','hello'],['bonsoir','good evening'],['salut','hi'],['au revoir','goodbye'],['merci','thank you'],
+    ['bonjour','hello'],['bonsoir','good evening'],['bonne nuit','good night'],['salut','hi'],['au revoir','goodbye'],['merci','thank you'],
     ['s’il vous plaît','please'],['pardon','sorry'],['excusez-moi','excuse me'],['oui','yes'],['non','no'],
     ['d’accord','okay'],['bienvenue','welcome'],
     ['un','one'],['deux','two'],['trois','three'],['quatre','four'],['cinq','five'],['six','six'],['sept','seven'],
@@ -1047,26 +1047,38 @@ function shuffle(arr) {
   return a;
 }
 
-/** Builds one lesson: 1-2 not-yet-introduced curriculum items, plus up
- * to 6 previously-introduced items that are due for review (falling
- * back to least-recently-seen if nothing is due yet). Returns an array
- * of generated exercise objects, each carrying its source itemId/type
- * so grading can feed the result back into the SRS store. */
+const LESSON_MIN_SIZE = 8;
+const LESSON_MAX_NEW = 2;
+
+/** Builds one lesson: normally 1-2 not-yet-introduced curriculum items
+ * plus up to 6 previously-introduced items that are due for review
+ * (falling back to least-recently-seen if nothing is due yet). Every
+ * lesson is topped up to at least LESSON_MIN_SIZE items — early on,
+ * before enough review history exists, that means pulling in a few
+ * extra new items rather than handing back a 2-item lesson. Returns an
+ * array of generated exercise objects, each carrying its source
+ * itemId/type so grading can feed the result back into the SRS store. */
 function buildLesson(level) {
   const curriculum = curriculumForLevel(level);
   const srs = loadSRS();
   const introduced = curriculum.filter(c => srs[c.item.id]);
   const notIntroduced = curriculum.filter(c => !srs[c.item.id]);
 
-  const newItems = notIntroduced.slice(0, 2);
+  let newItems = notIntroduced.slice(0, LESSON_MAX_NEW);
 
   const due = introduced.filter(c => isDue(srs[c.item.id]))
     .sort((a, b) => srs[a.item.id].dueAt - srs[b.item.id].dueAt);
-  let reviewItems = due.slice(0, 6);
-  if (reviewItems.length < 6) {
+  const reviewSlots = LESSON_MIN_SIZE - newItems.length;
+  let reviewItems = due.slice(0, reviewSlots);
+  if (reviewItems.length < reviewSlots) {
     const notDue = introduced.filter(c => !due.includes(c))
       .sort((a, b) => srs[a.item.id].lastSeen - srs[b.item.id].lastSeen);
-    reviewItems = reviewItems.concat(notDue.slice(0, 6 - reviewItems.length));
+    reviewItems = reviewItems.concat(notDue.slice(0, reviewSlots - reviewItems.length));
+  }
+
+  const shortfall = LESSON_MIN_SIZE - (newItems.length + reviewItems.length);
+  if (shortfall > 0) {
+    newItems = newItems.concat(notIntroduced.slice(LESSON_MAX_NEW, LESSON_MAX_NEW + shortfall));
   }
 
   const picked = shuffle([...newItems, ...reviewItems]);
@@ -1100,6 +1112,31 @@ function normalize(s) {
 function wordCount(s) {
   return normalize(s).split(' ').filter(Boolean).length;
 }
+/** normalize() plus stripping all spaces/hyphens, so "bon soir" and "bonsoir" compare equal. */
+function looseNormalize(s) {
+  return normalize(s).replace(/[\s-]+/g, '');
+}
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, (_, i) => [i, ...new Array(n).fill(0)]);
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] : 1 + Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+/** How many typo'd characters still count as "the same word" — scaled by length so a 1-letter slip on "un" isn't forgiven but one on "restaurant" is. */
+function typoTolerance(len) {
+  if (len <= 4) return 0;
+  if (len <= 8) return 1;
+  return 2;
+}
+function isCloseMatch(a, b) {
+  const na = looseNormalize(a), nb = looseNormalize(b);
+  return na === nb || levenshtein(na, nb) <= typoTolerance(Math.max(na.length, nb.length));
+}
 function containsPhrase(haystackNorm, phrase) {
   return haystackNorm.includes(normalize(phrase));
 }
@@ -1130,12 +1167,54 @@ function ltFailedMessage(level) {
 function noIssuesMessage(level) {
   return bi(level, 'Aucune erreur de grammaire ou d’orthographe trouvée. Bravo !', 'No grammar or spelling issues found. Well done!');
 }
-function lcsWordCount(a, b) {
+
+/**
+ * Grades a short typed answer (a grammar blank, a vocab word) in tiers
+ * instead of flat right/wrong: an exact match, a small typo (still
+ * counted correct — spelling isn't the point of a vocab drill), or —
+ * when checkNearMiss is on — a real word from the vocab bank that just
+ * isn't the one being tested (e.g. typing "bonne nuit" for "bonsoir":
+ * wrong for this item, but recognizably a real, related answer rather
+ * than a random guess). Only the exact/typo tiers count as "correct"
+ * for spaced-repetition purposes.
+ */
+function gradeTypedAnswer(userInput, accepted, level, { checkNearMiss = false } = {}) {
+  const raw = String(userInput ?? '').trim();
+  if (!raw) return { correct: false, score: 0, tier: 'empty' };
+
+  for (const a of accepted) {
+    if (looseNormalize(raw) === looseNormalize(a)) return { correct: true, score: 100, tier: 'exact' };
+  }
+  for (const a of accepted) {
+    if (isCloseMatch(raw, a)) return { correct: true, score: 90, tier: 'typo', matched: a };
+  }
+  if (checkNearMiss) {
+    const acceptedNorm = accepted.map(looseNormalize);
+    const nearMiss = VOCAB_BANK.find(w => !acceptedNorm.includes(looseNormalize(w.fr)) && isCloseMatch(raw, w.fr));
+    if (nearMiss) return { correct: false, score: 45, tier: 'near-miss', nearMiss, userInput: raw };
+  }
+  return { correct: false, score: 0, tier: 'miss' };
+}
+
+/** HTML feedback matching a gradeTypedAnswer() result — pair with scoreBadge(result.score). */
+function typedAnswerFeedback(result, accepted, level) {
+  if (result.tier === 'exact') return 'Correct !';
+  if (result.tier === 'typo') {
+    return bi(level,
+      `Presque ! Attention à l’orthographe : « ${esc(accepted[0])} ».`,
+      `Almost! Watch the spelling — it’s "${esc(accepted[0])}".`);
+  }
+  if (result.tier === 'near-miss') {
+    return `<div>${biLabel(level, 'Pas tout à fait :', 'Not quite:')} « ${esc(result.userInput)} » ${biLabel(level, 'veut dire', 'means')} « ${esc(result.nearMiss.en)} ». ${biLabel(level, 'Ici, il fallait :', 'Here we needed:')} <span class="correction-fix">${esc(accepted[0])}</span></div>`;
+  }
+  return `<div>${biLabel(level, 'Pas grave — retiens :', 'No worries — remember:')} <span class="correction-fix">${esc(accepted[0])}</span></div>`;
+}
+function lcsWordCount(a, b, eq = (x, y) => x === y) {
   const n = a.length, m = b.length;
   const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
   for (let i = 1; i <= n; i++) {
     for (let j = 1; j <= m; j++) {
-      dp[i][j] = a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);
+      dp[i][j] = eq(a[i - 1], b[j - 1]) ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);
     }
   }
   return dp[n][m];
@@ -1253,10 +1332,12 @@ async function gradeFreeText(text, opts = {}) {
 function gradeDictation(userText, targetText) {
   const targetWords = normalize(targetText).split(' ').filter(Boolean);
   const userWords = normalize(userText).split(' ').filter(Boolean);
-  const lcs = lcsWordCount(targetWords, userWords);
+  // Fuzzy word equality — a small typo on one word in a dictated sentence
+  // shouldn't cost the whole word, just like it wouldn't in the other exercises.
+  const fuzzyEq = (a, b) => a === b || levenshtein(a, b) <= typoTolerance(Math.max(a.length, b.length));
+  const lcs = lcsWordCount(targetWords, userWords, fuzzyEq);
   const score = targetWords.length ? Math.round((lcs / targetWords.length) * 100) : 0;
-  const userSet = new Set(userWords);
-  const highlight = targetWords.map(w => ({ word: w, hit: userSet.has(w) }));
+  const highlight = targetWords.map(w => ({ word: w, hit: userWords.some(uw => fuzzyEq(w, uw)) }));
   return { score, highlight };
 }
 
@@ -1328,8 +1409,27 @@ function renderDailyPractice() {
 
 function startLesson(level) {
   const exercises = buildLesson(level);
-  lessonState = { level, exercises, index: 0, results: [] };
+  lessonState = { level, exercises, index: 0, results: [], missed: [], retriesAdded: false };
   renderLessonStep();
+}
+
+/** Shown once, between the main pass and the retry round, when at
+ * least one item was missed — gives the learner one guaranteed chance
+ * to redo exactly what they got wrong before the lesson ends. */
+function renderRetryIntro() {
+  const box = document.getElementById('daily-content');
+  const n = lessonState.missed.length;
+  box.innerHTML = `
+    <div class="card" style="text-align:center;">
+      <div class="card-eyebrow">One more time</div>
+      <div class="card-title" style="font-size:20px;">${biLabel(lessonState.level, 'Reprenons ce qui a posé problème', "Let's revisit what tripped you up")}</div>
+      <div class="card-body">${n} item${n === 1 ? '' : 's'} to try again — you’ve got this.</div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-primary" id="retry-continue">Continue <i data-lucide="arrow-right" style="width:14px;height:14px;"></i></button>
+      </div>
+    </div>`;
+  window.lucide && window.lucide.createIcons();
+  document.getElementById('retry-continue').addEventListener('click', renderLessonStep);
 }
 
 function lessonHeader() {
@@ -1343,7 +1443,17 @@ function lessonHeader() {
 function renderLessonStep() {
   const box = document.getElementById('daily-content');
   const { exercises, index, level } = lessonState;
-  if (index >= exercises.length) { renderLessonComplete(); return; }
+  if (index >= exercises.length) {
+    if (!lessonState.retriesAdded && lessonState.missed.length > 0) {
+      lessonState.retriesAdded = true;
+      const retryExercises = shuffle(lessonState.missed).map(c => generateExercise(c, level));
+      lessonState.exercises = exercises.concat(retryExercises);
+      renderRetryIntro();
+      return;
+    }
+    renderLessonComplete();
+    return;
+  }
   const ex = exercises[index];
 
   if (ex.kind === 'grammar') {
@@ -1358,11 +1468,10 @@ function renderLessonStep() {
     window.lucide && window.lucide.createIcons();
     document.getElementById('lesson-check').addEventListener('click', () => {
       const val = document.getElementById('lesson-input').value;
-      const ok = ex.data.accepted.some(a => normalize(a) === normalize(val));
-      const html = scoreBadge(ok ? 100 : 0) +
-        (ok ? 'Correct !' : `<div>${biLabel(level, 'Réponse correcte :', 'Correct answer:')} <span class="correction-fix">${esc(ex.data.accepted[0])}</span></div>`) +
+      const result = gradeTypedAnswer(val, ex.data.accepted, level);
+      const html = scoreBadge(result.score) + typedAnswerFeedback(result, ex.data.accepted, level) +
         `<div style="margin-top:6px;">${bi(level, esc(ex.data.explanation), esc(ex.data.explanationEn))}</div>`;
-      finishStep(ok, html);
+      finishStep(result.correct, html);
     });
   } else if (ex.kind === 'vocab-recognition') {
     box.innerHTML = lessonHeader() + `
@@ -1407,11 +1516,10 @@ function renderLessonStep() {
     window.lucide && window.lucide.createIcons();
     document.getElementById('lesson-check').addEventListener('click', () => {
       const val = document.getElementById('lesson-input').value;
-      const ok = normalize(val) === normalize(ex.data.fr);
-      const html = scoreBadge(ok ? 100 : 0) +
-        (ok ? 'Correct !' : `<div>${biLabel(level, 'Réponse correcte :', 'Correct answer:')} <span class="correction-fix">${esc(ex.data.fr)}</span></div>`) +
+      const result = gradeTypedAnswer(val, [ex.data.fr], level, { checkNearMiss: true });
+      const html = scoreBadge(result.score) + typedAnswerFeedback(result, [ex.data.fr], level) +
         `<button class="speak-btn" id="lesson-play2" style="margin-top:8px;"><i data-lucide="volume-2" style="width:14px;height:14px;"></i> Hear it</button>`;
-      finishStep(ok, html);
+      finishStep(result.correct, html);
       const p2 = document.getElementById('lesson-play2');
       if (p2) { window.lucide && window.lucide.createIcons(); p2.addEventListener('click', () => speak(ex.data.fr)); }
     });
@@ -1423,6 +1531,9 @@ function finishStep(correct, feedbackHtml) {
   const ex = exercises[index];
   recordReview(ex.itemId, correct);
   lessonState.results.push(correct);
+  // Queued for a single guaranteed retry at the end of the lesson —
+  // see the retriesAdded check in renderLessonStep().
+  if (!correct) lessonState.missed.push({ type: ex.kind === 'grammar' ? 'grammar' : 'vocabulary', item: ex.data });
 
   const checkBtn = document.getElementById('lesson-check');
   if (checkBtn) checkBtn.disabled = true;
@@ -1686,14 +1797,12 @@ function renderGrammar() {
 
   document.getElementById('gr-check').addEventListener('click', () => {
     const val = document.getElementById('gr-input').value;
-    const ok = ex.accepted.some(a => normalize(a) === normalize(val));
-    const score = ok ? 100 : 0;
+    const result = gradeTypedAnswer(val, ex.accepted, ex.level);
     const fb = document.getElementById('gr-feedback');
-    fb.className = 'feedback show ' + feedbackClass(score);
-    const answerLine = ok ? 'Correct !' : `<div>${biLabel(ex.level, 'Réponse correcte :', 'Correct answer:')} <span class="correction-fix">${esc(ex.accepted[0])}</span></div>`;
-    fb.innerHTML = scoreBadge(score) + answerLine +
+    fb.className = 'feedback show ' + feedbackClass(result.score);
+    fb.innerHTML = scoreBadge(result.score) + typedAnswerFeedback(result, ex.accepted, ex.level) +
       `<div style="margin-top:6px;">${bi(ex.level, esc(ex.explanation), esc(ex.explanationEn))}</div>`;
-    saveAttempt({ skill: 'grammar', exerciseId: ex.id, level: ex.level, score });
+    saveAttempt({ skill: 'grammar', exerciseId: ex.id, level: ex.level, score: result.score });
     renderChips('grammar');
   });
 }
