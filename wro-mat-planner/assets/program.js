@@ -1032,11 +1032,21 @@ window.WRO_PROGRAM = (function() {
     function countIndent(line) {
       return line.match(/^[ \t]*/)[0].replace(/\t/g, '    ').length;
     }
+    // Simple top-level numeric constants this file names for readability
+    // (e.g. `line_center = 36.5`, `black_stop = 11 + 10`) and then passes
+    // BY NAME into a recognised call later on. Without resolving these,
+    // that argument would reach parseFloat() as the literal text
+    // "line_center" and silently become NaN.
+    const namedConstants = {};
+    function resolveConst(argText) {
+      const t = (argText || '').trim();
+      return Object.prototype.hasOwnProperty.call(namedConstants, t) ? String(namedConstants[t]) : argText;
+    }
     // A call, optionally with a trailing "# comment" this parser doesn't
     // need to read (arguments already carry everything it needs).
     function matchCall(codePart, fnName) {
       const m = codePart.match(new RegExp(`^${fnName}\\((.*)\\)$`));
-      return m ? splitArgs(m[1]) : null;
+      return m ? splitArgs(m[1]).map(resolveConst) : null;
     }
     // Resolves a raw splitArgs() list against the callee's OWN parameter
     // names, Python call semantics: positional args fill by order until
@@ -1555,6 +1565,20 @@ window.WRO_PROGRAM = (function() {
       if ((m = codePart.match(/^(\w+)\([^)]*\)$/)) && definedFunctions.has(m[1])) return null;
       if (/^print\(/.test(codePart)) return null;
 
+      // A named numeric constant (see namedConstants above) -- captured for
+      // later calls that reference it by name, not a motion of its own.
+      // Restricted to a tight arithmetic-only character class before
+      // evaluating, so this can never execute anything but +-*/() on
+      // numeric literals (never a match for Color.X = ..., voltage =
+      // hub.battery.voltage(), or anything else with a letter on the right).
+      if ((m = codePart.match(/^([A-Za-z_]\w*)\s*=\s*([\d.\s+\-*/()]+)$/))) {
+        try {
+          const value = Function(`"use strict"; return (${m[2]});`)();
+          if (typeof value === 'number' && isFinite(value)) namedConstants[m[1]] = value;
+        } catch { /* not a plain arithmetic expression -- ignore */ }
+        return null;
+      }
+
       // Boilerplate / setup safety net: imports, hub/sensor/motor
       // construction, plain variable assignments (Color.X = ..., voltage =
       // ..., acc_angle = 0, ...) -- none of these describe robot motion.
@@ -1602,7 +1626,7 @@ window.WRO_PROGRAM = (function() {
         if (started && depth === 0) { i++; break; }
       }
       const m = text.match(/multitask\(([\s\S]*)\)\s*$/);
-      return { args: m ? splitArgs(m[1].trim()) : [], nextIdx: i };
+      return { args: m ? splitArgs(m[1].trim()).map(resolveConst) : [], nextIdx: i };
     }
     // A bare zero-arg call to a captured def/async def -- resolves to that
     // function's own steps by re-parsing its captured body, instead of a
@@ -1701,6 +1725,31 @@ window.WRO_PROGRAM = (function() {
           const inlined = tryInlineUserFunctionCall(`${runTaskMatch[1]}()`);
           if (inlined) steps.push(...inlined);
           else warnings.push(`Could not parse line: "${trimmed}" -- run_task() target function body wasn't found`);
+          i++;
+          continue;
+        }
+
+        // run_with_arm(arm_motor, arm_speed, arm_target_angle,
+        // target_function, *args): this file's OTHER way of moving an
+        // attachment motor in the background while something else runs --
+        // same idea as multitask() above (arm move + one more call, both
+        // become sequential steps), just spelled as a single call with the
+        // "something else" passed in as a function reference instead of
+        // an async def. Rebuilds the two calls as plain text
+        // (arm_motor.run_target(...) and target_function(*args)) and
+        // resolves each exactly like a multitask() argument.
+        const runWithArmMatch = trimmed.match(/^run_with_arm\((.*)\)$/);
+        if (runWithArmMatch) {
+          const rawArgs = splitArgs(runWithArmMatch[1]).map(resolveConst);
+          const [armMotorVar, armSpeed, armAngle, fnName, ...fnArgs] = rawArgs;
+          const calls = [`${armMotorVar}.run_target(${armSpeed}, ${armAngle}, Stop.HOLD)`];
+          if (fnName) calls.push(`${fnName}(${fnArgs.join(', ')})`);
+          calls.forEach((cleaned) => {
+            const inlined = tryInlineUserFunctionCall(cleaned);
+            if (inlined) { steps.push(...inlined); return; }
+            const step = parseSingle(cleaned);
+            if (step) steps.push(step);
+          });
           i++;
           continue;
         }

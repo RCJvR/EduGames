@@ -652,32 +652,33 @@ nav.app-nav {
 .program-step[draggable="true"] { cursor: grab; }
 .program-step.dragging { opacity: 0.35; }
 
-/* A thin strip between every pair of steps (and above the first / below
-   the last): click it to say "add the next new step here", or drag a
-   step onto it to move that step here. Quiet until you need it. */
+/* A strip between every pair of steps (and above the first / below the
+   last): click it to say "add the next new step here", or drag a step
+   onto it to move that step here. Visible at rest -- not hidden until
+   hover -- since it's a real, always-available control, not decoration. */
 .program-insert-marker {
-  height: 8px; display: flex; align-items: center; justify-content: center;
+  height: 18px; display: flex; align-items: center; justify-content: center;
   cursor: pointer; position: relative; transition: height .12s ease;
 }
 .program-insert-marker::before {
   content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px;
-  background: transparent; transform: translateY(-50%);
+  background: var(--border); transform: translateY(-50%);
 }
 .program-insert-plus {
-  width: 16px; height: 16px; border-radius: 50%; font-size: 12px; line-height: 1;
+  width: 24px; height: 24px; border-radius: 50%; font-size: 17px; line-height: 1;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.06); color: var(--muted-2);
-  opacity: 0; transform: scale(0.7); transition: opacity .12s ease, transform .12s ease;
+  background: rgba(255,255,255,0.09); color: var(--muted);
+  opacity: 1; transform: scale(1); transition: background .12s ease, color .12s ease, transform .12s ease;
 }
-.program-insert-marker:hover .program-insert-plus { opacity: 1; transform: scale(1); background: rgba(255,255,255,0.12); color: var(--text); }
-.program-insert-marker:hover::before { background: var(--border); }
-.program-insert-marker.active { height: 22px; }
+.program-insert-marker:hover .program-insert-plus { transform: scale(1.15); background: rgba(255,255,255,0.16); color: var(--text); }
+.program-insert-marker:hover::before { background: var(--muted-2); }
+.program-insert-marker.active { height: 30px; }
 .program-insert-marker.active .program-insert-plus {
-  opacity: 1; transform: scale(1); background: var(--accent); color: #fff;
+  transform: scale(1.2); background: var(--accent); color: #fff;
 }
 .program-insert-marker.active::before { background: var(--accent); opacity: 0.5; }
-.program-insert-marker.drag-over { height: 22px; }
-.program-insert-marker.drag-over .program-insert-plus { opacity: 1; transform: scale(1.15); background: var(--accent-2); color: #fff; }
+.program-insert-marker.drag-over { height: 30px; }
+.program-insert-marker.drag-over .program-insert-plus { transform: scale(1.3); background: var(--accent-2); color: #fff; }
 .program-insert-marker.drag-over::before { background: var(--accent-2); }
 
 /* ---- mosaic frame pattern configurator ---- */
