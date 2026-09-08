@@ -1486,7 +1486,7 @@ function renderLessonStep() {
     window.lucide && window.lucide.createIcons();
     document.getElementById('lesson-play').addEventListener('click', () => speak(ex.data.fr));
     const wrap = document.getElementById('lesson-options');
-    wrap.innerHTML = ex.options.map((o, i) => `<div class="mcq-option" data-i="${i}">${esc(o)}</div>`).join('');
+    wrap.innerHTML = ex.options.map((o, i) => `<div class="mcq-option" data-i="${i}"><span class="mcq-num">${i + 1}</span>${esc(o)}</div>`).join('');
     wrap.querySelectorAll('.mcq-option').forEach(opt => {
       opt.addEventListener('click', () => {
         if (wrap.dataset.answered) return;
@@ -1588,7 +1588,7 @@ function renderVocabulary() {
       <div class="feedback" id="voc-feedback"></div>
     </div>`;
   const optWrap = document.getElementById('voc-options');
-  optWrap.innerHTML = ex.options.map((o, i) => `<div class="mcq-option" data-i="${i}">${esc(o)}</div>`).join('');
+  optWrap.innerHTML = ex.options.map((o, i) => `<div class="mcq-option" data-i="${i}"><span class="mcq-num">${i + 1}</span>${esc(o)}</div>`).join('');
   window.lucide && window.lucide.createIcons();
   document.getElementById('voc-play').addEventListener('click', () => speak(ex.word));
 
@@ -1655,7 +1655,7 @@ function renderListening() {
         <div class="feedback" id="lis-feedback"></div>
       </div>`;
     const optWrap = document.getElementById('lis-options');
-    optWrap.innerHTML = ex.options.map((o, i) => `<div class="mcq-option" data-i="${i}">${esc(o)}</div>`).join('');
+    optWrap.innerHTML = ex.options.map((o, i) => `<div class="mcq-option" data-i="${i}"><span class="mcq-num">${i + 1}</span>${esc(o)}</div>`).join('');
     window.lucide && window.lucide.createIcons();
     document.getElementById('lis-play').addEventListener('click', () => speak(ex.audioText));
     optWrap.querySelectorAll('.mcq-option').forEach(opt => {
@@ -1714,7 +1714,7 @@ function renderReading() {
     <div style="margin-bottom:16px;">
       <div class="card-body"><strong>${qi + 1}. ${esc(q.q)}</strong></div>
       <div class="q-options" data-qi="${qi}">
-        ${q.options.map((o, i) => `<div class="mcq-option" data-i="${i}">${esc(o)}</div>`).join('')}
+        ${q.options.map((o, i) => `<div class="mcq-option" data-i="${i}"><span class="mcq-num">${i + 1}</span>${esc(o)}</div>`).join('')}
       </div>
     </div>`).join('');
   window.lucide && window.lucide.createIcons();
@@ -2174,7 +2174,35 @@ function renderTab(tab) {
 function selectTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tab));
+  // Mobile bottom bar: Home/Progress map directly, everything else is "Practice".
+  const bbHome = document.getElementById('bb-home'), bbPractice = document.getElementById('bb-practice'), bbProgress = document.getElementById('bb-progress');
+  if (bbHome) bbHome.classList.toggle('active', tab === 'daily');
+  if (bbProgress) bbProgress.classList.toggle('active', tab === 'progress');
+  if (bbPractice) bbPractice.classList.toggle('active', tab !== 'daily' && tab !== 'progress');
   renderTab(tab);
+}
+
+// ── Mobile practice picker sheet ────────────────────────────────
+function openPracticeSheet() {
+  const rows = document.getElementById('sheet-rows');
+  rows.innerHTML = SKILL_ORDER.map(skill => `
+    <button class="sheet-row" data-skill="${skill}">
+      <i data-lucide="${SKILL_META[skill].icon}" style="width:19px;height:19px;"></i>
+      <span>${SKILL_META[skill].label}</span>
+    </button>`).join('');
+  window.lucide && window.lucide.createIcons();
+  rows.querySelectorAll('.sheet-row').forEach(row => {
+    row.addEventListener('click', () => {
+      selectTab(row.dataset.skill);
+      closePracticeSheet();
+    });
+  });
+  document.getElementById('sheet-backdrop').classList.add('open');
+  document.getElementById('practice-sheet').classList.add('open');
+}
+function closePracticeSheet() {
+  document.getElementById('sheet-backdrop').classList.remove('open');
+  document.getElementById('practice-sheet').classList.remove('open');
 }
 
 function selectLevel(level) {
@@ -2184,9 +2212,54 @@ function selectLevel(level) {
   renderTab(active ? active.dataset.tab : 'daily');
 }
 
+// ── Keyboard-only exercises ─────────────────────────────────────
+// One persistent listener (not re-attached per render) that reads
+// whatever's currently on screen in the active tab: Enter submits the
+// focused answer or advances past feedback, and — when no text input
+// is focused — number keys pick that numbered multiple-choice option.
+function handleKeyboardShortcut(e) {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const panel = document.querySelector('.tab-panel.active');
+  if (!panel) return;
+
+  if (e.key === 'Enter') {
+    const advanceBtn = panel.querySelector('#lesson-continue, #retry-continue, #next-lesson, #start-lesson');
+    if (advanceBtn) { e.preventDefault(); advanceBtn.click(); return; }
+
+    const active = document.activeElement;
+    if (active && active.tagName === 'INPUT' && panel.contains(active)) {
+      const checkBtn = panel.querySelector('#lesson-check, #gr-check');
+      if (checkBtn && !checkBtn.disabled) { e.preventDefault(); checkBtn.click(); return; }
+      if (active.id === 'convo-input') {
+        const sendBtn = panel.querySelector('#convo-send');
+        if (sendBtn) { e.preventDefault(); sendBtn.click(); }
+      }
+    }
+    return;
+  }
+
+  if (/^[1-9]$/.test(e.key)) {
+    const active = document.activeElement;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+    const idx = Number(e.key) - 1;
+    const group = panel.querySelector('#lesson-options, #voc-options, #lis-options') ||
+      [...panel.querySelectorAll('.q-options')].find(g => !g.querySelector('.selected'));
+    if (!group || group.dataset.answered) return;
+    const opt = group.children[idx];
+    if (opt && !opt.classList.contains('disabled')) { e.preventDefault(); opt.click(); }
+  }
+}
+
 function init() {
   document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => selectTab(btn.dataset.tab)));
   document.querySelectorAll('.level-btn').forEach(btn => btn.addEventListener('click', () => selectLevel(btn.dataset.level)));
+  document.addEventListener('keydown', handleKeyboardShortcut);
+
+  document.getElementById('bb-home').addEventListener('click', () => selectTab('daily'));
+  document.getElementById('bb-progress').addEventListener('click', () => selectTab('progress'));
+  document.getElementById('bb-practice').addEventListener('click', openPracticeSheet);
+  document.getElementById('sheet-backdrop').addEventListener('click', closePracticeSheet);
+
   selectLevel('A1');
   selectTab('daily');
 }
