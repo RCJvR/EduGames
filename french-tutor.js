@@ -14,166 +14,193 @@
 const CONTENT = {
 
   listening: [
-    { id:'lis-a2-1', level:'A2', type:'dictation', title:'Au marché',
+    { id:'lis-a2-1', level:'A2', unit:'a2-daily', type:'dictation', title:'Au marché',
       audioText:'Je vais au marché ce matin pour acheter des légumes.' },
-    { id:'lis-a2-2', level:'A2', type:'mcq', title:'Se présenter',
+    { id:'lis-a2-2', level:'A2', unit:'a2-greetings', type:'mcq', title:'Se présenter',
       audioText:'Bonjour, je m’appelle Claire. J’ai vingt-cinq ans et j’habite à Lyon avec mon frère.',
       question:'Où habite Claire ?',
       options:['À Paris','À Lyon','À Marseille','À Nice'], answer:1 },
-    { id:'lis-b1-1', level:'B1', type:'dictation', title:'Sortie au cinéma',
+    { id:'lis-b1-1', level:'B1', unit:'b1-travel', type:'dictation', title:'Sortie au cinéma',
       audioText:'Hier soir, nous sommes allés au cinéma pour voir le nouveau film français.' },
-    { id:'lis-b1-2', level:'B1', type:'mcq', title:'La météo',
+    { id:'lis-b1-2', level:'B1', unit:'b1-lifestyle', type:'mcq', title:'La météo',
       audioText:'La météo pour demain annonce du soleil le matin, mais des nuages arriveront l’après-midi avec un risque de pluie en soirée.',
       question:'Quel temps est prévu en soirée ?',
       options:['Du soleil','Des nuages','De la pluie','De la neige'], answer:2 },
-    { id:'lis-b2-1', level:'B2', type:'dictation', title:'La fête du village',
+    { id:'lis-b2-1', level:'B2', unit:'b2-culture', type:'dictation', title:'La fête du village',
       audioText:'Malgré la pluie, les habitants du village ont décidé de maintenir la fête organisée chaque année en été.' },
-    { id:'lis-b2-2', level:'B2', type:'mcq', title:'Une réforme',
+    { id:'lis-b2-2', level:'B2', unit:'b2-society', type:'mcq', title:'Une réforme',
       audioText:'Le gouvernement a annoncé hier une nouvelle réforme visant à réduire les émissions de carbone d’ici deux mille trente, ce qui a suscité des réactions mitigées parmi les experts.',
       question:'Que vise la réforme annoncée ?',
       options:['Augmenter les impôts','Réduire les émissions de carbone','Créer des emplois','Construire des routes'], answer:1 }
   ],
 
   reading: [
-    { id:'read-a2-1', level:'A2', title:'Le petit café',
+    { id:'read-a2-1', level:'A2', unit:'a2-daily', title:'Le petit café',
       passage:'Chaque matin, Marie va au petit café près de chez elle. Elle commande un croissant et un café au lait. Elle aime lire le journal en attendant le bus. Le café est calme le matin, mais très animé à midi.',
       questions:[
         { q:'Qu’est-ce que Marie commande ?', options:['Un thé et un croissant','Un café au lait et un croissant','Un jus d’orange','Un sandwich'], answer:1 },
         { q:'Quand le café est-il très animé ?', options:['Le matin','Le soir','À midi','La nuit'], answer:2 }
       ],
       written:{ prompt:'Décris en une ou deux phrases ce que fait Marie chaque matin.', keywords:['café','croissant','journal','bus','marie'] } },
-    { id:'read-a2-2', level:'A2', title:'Une journée de classe',
+    { id:'read-a2-2', level:'A2', unit:'a2-daily', title:'Une journée de classe',
       passage:'Léo se lève à sept heures. Il prend son petit-déjeuner, puis il va à l’école à pied avec sa sœur. Les cours commencent à huit heures et finissent à quinze heures trente. Après l’école, il fait ses devoirs avant de jouer au football.',
       questions:[
         { q:'Comment Léo va-t-il à l’école ?', options:['En voiture','En bus','À pied','À vélo'], answer:2 },
         { q:'Que fait Léo après l’école ?', options:['Il dort','Il fait ses devoirs','Il regarde la télévision','Il travaille'], answer:1 }
       ],
       written:{ prompt:'Résume la journée de Léo avec tes propres mots.', keywords:['école','devoirs','football','sœur','lève'] } },
-    { id:'read-b1-1', level:'B1', title:'Un voyage inoubliable',
+    { id:'read-b1-1', level:'B1', unit:'b1-travel', title:'Un voyage inoubliable',
       passage:'L’année dernière, Thomas a décidé de voyager seul en Italie pendant deux semaines. Il n’avait jamais voyagé sans sa famille auparavant, et il était à la fois excité et un peu nerveux. Finalement, ce voyage lui a appris à être plus indépendant et à faire confiance à ses propres décisions.',
       questions:[
         { q:'Pourquoi Thomas était-il nerveux ?', options:['Il n’aimait pas l’Italie','Il n’avait jamais voyagé seul','Il avait peur de l’avion','Il ne parlait pas italien'], answer:1 },
         { q:'Qu’est-ce que ce voyage lui a appris ?', options:['À cuisiner','À être plus indépendant','À parler anglais','À économiser de l’argent'], answer:1 }
       ],
       written:{ prompt:'Que penses-tu de la décision de Thomas de voyager seul ?', keywords:['pense','opinion','voyage','indépendant','courage'] } },
-    { id:'read-b1-2', level:'B1', title:'Changer de métier',
+    { id:'read-b1-2', level:'B1', unit:'b1-lifestyle', title:'Changer de métier',
       passage:'Après dix ans dans la finance, Sophie a quitté son emploi pour devenir professeure de yoga. Beaucoup de ses amis pensaient qu’elle prenait un grand risque, mais elle affirme n’avoir jamais regretté sa décision. Selon elle, gagner moins d’argent vaut la peine si le travail rend vraiment heureux.',
       questions:[
         { q:'Que faisait Sophie avant ?', options:['Professeure de yoga','Elle travaillait dans la finance','Médecin','Étudiante'], answer:1 },
         { q:'Que pense Sophie de sa décision ?', options:['Elle la regrette','Elle ne la regrette pas','Elle est indifférente','Elle veut recommencer dans la finance'], answer:1 }
       ],
       written:{ prompt:'Aurais-tu pris la même décision que Sophie ? Pourquoi ?', keywords:['décision','pense','argent','heureux','risque'] } },
-    { id:'read-b2-1', level:'B2', title:'Le télétravail en question',
+    { id:'read-b2-1', level:'B2', unit:'b2-society', title:'Le télétravail en question',
       passage:'Depuis quelques années, de plus en plus d’entreprises proposent le télétravail à leurs employés. Si cette flexibilité est appréciée par beaucoup, certains experts s’inquiètent de ses effets sur la collaboration entre collègues et sur la santé mentale des travailleurs isolés chez eux. Un équilibre entre présence au bureau et travail à distance semble donc être la solution privilégiée par de nombreuses entreprises aujourd’hui.',
       questions:[
         { q:'Que craignent certains experts à propos du télétravail ?', options:['Qu’il coûte trop cher','Ses effets sur la collaboration et la santé mentale','Qu’il soit interdit par la loi','Qu’il réduise les salaires'], answer:1 },
         { q:'Quelle solution est privilégiée par de nombreuses entreprises ?', options:['Le télétravail total','Le retour au bureau à temps plein','Un équilibre entre bureau et télétravail','La suppression du télétravail'], answer:2 }
       ],
       written:{ prompt:'Selon toi, quel est le meilleur équilibre entre bureau et télétravail ?', keywords:['équilibre','bureau','télétravail','pense','journée'] } },
-    { id:'read-b2-2', level:'B2', title:'L’intelligence artificielle au quotidien',
+    { id:'read-b2-2', level:'B2', unit:'b2-culture', title:'L’intelligence artificielle au quotidien',
       passage:'L’intelligence artificielle s’invite désormais dans des domaines aussi variés que la médecine, l’éducation et les transports. Si ses défenseurs vantent des gains d’efficacité considérables, d’autres redoutent une dépendance excessive à des systèmes dont les décisions restent parfois difficiles à expliquer. Le débat porte donc moins sur la technologie elle-même que sur la manière de l’encadrer.',
       questions:[
         { q:'Que redoutent certaines personnes à propos de l’IA ?', options:['Qu’elle coûte trop cher','Une dépendance excessive à des systèmes peu transparents','Qu’elle ne fonctionne pas','Qu’elle remplace les médecins uniquement'], answer:1 },
         { q:'Sur quoi porte vraiment le débat, selon le texte ?', options:['Sur l’interdiction totale de l’IA','Sur la manière d’encadrer la technologie','Sur son prix','Sur son invention'], answer:1 }
       ],
-      written:{ prompt:'Es-tu plutôt optimiste ou inquiet à propos de l’intelligence artificielle ? Explique.', keywords:['optimiste','inquiet','ia','intelligence','pense'] } }
+      written:{ prompt:'Es-tu plutôt optimiste ou inquiet à propos de l’intelligence artificielle ? Explique.', keywords:['optimiste','inquiet','ia','intelligence','pense'] } },
+    { id:'read-a2-3', level:'A2', unit:'a2-greetings', title:'Nouvel ami à l’école',
+      passage:'Aujourd’hui, c’est le premier jour de Léa dans sa nouvelle école. Dans la cour, un garçon s’approche et dit : « Salut, je m’appelle Hugo. Comment tu t’appelles ? » Léa sourit et répond : « Je m’appelle Léa. J’ai onze ans et je viens d’arriver en ville. » Hugo lui présente ensuite ses amis.',
+      questions:[
+        { q:'Comment s’appelle le garçon ?', options:['Léa','Hugo','Paul','Marc'], answer:1 },
+        { q:'Pourquoi Léa est-elle nouvelle à l’école ?', options:['Elle a changé de classe','Elle vient d’arriver en ville','Elle a raté le bus','Elle est malade'], answer:1 }
+      ],
+      written:{ prompt:'Imagine que tu rencontres un nouvel élève. Que lui dis-tu ?', keywords:['salut','bonjour','je m’appelle','comment','t’appelles'] } }
   ],
 
   grammar: [
-    { id:'gr-a2-1', level:'A2', title:'Le verbe « être »',
+    { id:'gr-a2-1', level:'A2', unit:'a2-greetings', title:'Le verbe « être »',
       before:'Je ', after:' étudiant.', accepted:['suis'],
-      explanation:'« Je suis » — première personne du singulier du verbe être.' },
-    { id:'gr-a2-2', level:'A2', title:'L’article défini',
+      explanation:'« Je suis » — première personne du singulier du verbe être.',
+      explanationEn:'"Je suis" — first person singular of the verb "être" (to be).' },
+    { id:'gr-a2-2', level:'A2', unit:'a2-daily', title:'L’article défini',
       before:'', after:' pomme est rouge.', accepted:['la'],
-      explanation:'« Pomme » est féminin singulier, donc l’article est « la ».' },
-    { id:'gr-b1-1', level:'B1', title:'Le passé composé',
+      explanation:'« Pomme » est féminin singulier, donc l’article est « la ».',
+      explanationEn:'"Pomme" (apple) is feminine singular, so the article is "la".' },
+    { id:'gr-b1-1', level:'B1', unit:'b1-travel', title:'Le passé composé',
       before:'Hier, nous ', after:' au cinéma. (aller)', accepted:['sommes allés','sommes allées','sommes allé','sommes allée'],
-      explanation:'« Aller » se conjugue avec « être » au passé composé : nous sommes allé(e)s.' },
-    { id:'gr-b1-2', level:'B1', title:'La préposition « à »',
+      explanation:'« Aller » se conjugue avec « être » au passé composé : nous sommes allé(e)s.',
+      explanationEn:'"Aller" (to go) takes "être" in the passé composé: "nous sommes allé(e)s".' },
+    { id:'gr-b1-2', level:'B1', unit:'b1-lifestyle', title:'La préposition « à »',
       before:'Je pense ', after:' toi tous les jours.', accepted:['à'],
-      explanation:'« Penser à quelqu’un » se construit avec la préposition « à ».' },
-    { id:'gr-b2-1', level:'B2', title:'Le subjonctif',
+      explanation:'« Penser à quelqu’un » se construit avec la préposition « à ».',
+      explanationEn:'"To think about someone" ("penser à quelqu’un") takes the preposition "à".' },
+    { id:'gr-b2-1', level:'B2', unit:'b2-society', title:'Le subjonctif',
       before:'Il faut que tu ', after:' tes devoirs. (faire)', accepted:['fasses'],
-      explanation:'Après « il faut que », le verbe se met au subjonctif : que tu fasses.' },
-    { id:'gr-b2-2', level:'B2', title:'Le pronom relatif',
+      explanation:'Après « il faut que », le verbe se met au subjonctif : que tu fasses.',
+      explanationEn:'After "il faut que" (it is necessary that), the verb takes the subjunctive: "que tu fasses".' },
+    { id:'gr-b2-2', level:'B2', unit:'b2-culture', title:'Le pronom relatif',
       before:'C’est la maison ', after:' j’ai grandi.', accepted:['où'],
-      explanation:'« Où » remplace un complément de lieu ou de temps dans une proposition relative.' }
+      explanation:'« Où » remplace un complément de lieu ou de temps dans une proposition relative.',
+      explanationEn:'"Où" (where) replaces a place or time complement in a relative clause.' }
   ],
 
   writing: [
-    { id:'wr-a2-1', level:'A2', title:'Ta journée typique', minWords:30,
+    { id:'wr-a2-1', level:'A2', unit:'a2-daily', title:'Ta journée typique', minWords:30,
       prompt:'Décris ta journée typique : à quelle heure te lèves-tu, qu’est-ce que tu manges, et que fais-tu le soir ?' },
-    { id:'wr-a2-2', level:'A2', title:'Présente-toi', minWords:25,
+    { id:'wr-a2-2', level:'A2', unit:'a2-greetings', title:'Présente-toi', minWords:25,
       prompt:'Présente-toi : quel est ton nom, quel âge as-tu, où habites-tu et quels sont tes loisirs ?' },
-    { id:'wr-b1-1', level:'B1', title:'Un souvenir de voyage', minWords:50,
+    { id:'wr-b1-1', level:'B1', unit:'b1-travel', title:'Un souvenir de voyage', minWords:50,
       prompt:'Raconte un voyage ou une sortie que tu as faite récemment. Où es-tu allé(e) et qu’est-ce que tu as aimé ?' },
-    { id:'wr-b1-2', level:'B1', title:'Ville ou campagne ?', minWords:50,
+    { id:'wr-b1-2', level:'B1', unit:'b1-lifestyle', title:'Ville ou campagne ?', minWords:50,
       prompt:'Donne ton opinion : préfères-tu vivre en ville ou à la campagne ? Explique pourquoi.' },
-    { id:'wr-b2-1', level:'B2', title:'Le télétravail', minWords:80,
+    { id:'wr-b2-1', level:'B2', unit:'b2-society', title:'Le télétravail', minWords:80,
       prompt:'Le télétravail devrait-il devenir la norme ? Donne ton opinion avec au moins deux arguments.' },
-    { id:'wr-b2-2', level:'B2', title:'Un enjeu environnemental', minWords:80,
-      prompt:'Décris un problème environnemental qui t’inquiète et propose une solution possible.' }
+    { id:'wr-b2-2', level:'B2', unit:'b2-society', title:'Un enjeu environnemental', minWords:80,
+      prompt:'Décris un problème environnemental qui t’inquiète et propose une solution possible.' },
+    { id:'wr-b2-3', level:'B2', unit:'b2-culture', title:'Les réseaux sociaux', minWords:80,
+      prompt:'Penses-tu que les réseaux sociaux ont plus d’avantages ou d’inconvénients ? Justifie ta réponse avec des exemples.' }
   ],
 
   speaking: [
-    { id:'sp-a2-1', level:'A2', title:'Ta famille',
+    { id:'sp-a2-1', level:'A2', unit:'a2-greetings', title:'Ta famille',
       prompt:'Décris ta famille en quelques phrases.',
       keywords:['famille','frère','soeur','sœur','parents','mère','père','fils','fille'] },
-    { id:'sp-a2-2', level:'A2', title:'Le week-end',
+    { id:'sp-a2-2', level:'A2', unit:'a2-daily', title:'Le week-end',
       prompt:'Que fais-tu le week-end ?',
       keywords:['week-end','weekend','samedi','dimanche','sport','amis','famille'] },
-    { id:'sp-b1-1', level:'B1', title:'Apprendre le français',
+    { id:'sp-b1-1', level:'B1', unit:'b1-lifestyle', title:'Apprendre le français',
       prompt:'Explique comment tu apprends le français.',
       keywords:['apprends','français','pratique','regarde','écoute','lis','parle','cours'] },
-    { id:'sp-b1-2', level:'B1', title:'Ton plat préféré',
+    { id:'sp-b1-2', level:'B1', unit:'b1-lifestyle', title:'Ton plat préféré',
       prompt:'Décris ton plat préféré et comment il est préparé.',
       keywords:['plat','préféré','préparé','ingrédients','cuisine','recette'] },
-    { id:'sp-b2-1', level:'B2', title:'L’intelligence artificielle',
+    { id:'sp-b1-3', level:'B1', unit:'b1-travel', title:'Un voyage de rêve',
+      prompt:'Décris un voyage que tu aimerais faire et explique pourquoi.',
+      keywords:['voyage','aimerais','pays','visiter','parce que','découvrir'] },
+    { id:'sp-b2-1', level:'B2', unit:'b2-culture', title:'L’intelligence artificielle',
       prompt:'Que penses-tu de l’intelligence artificielle dans notre société ?',
       keywords:['intelligence','artificielle','société','pense','avantages','inconvénients','opinion'] },
-    { id:'sp-b2-2', level:'B2', title:'Un défi surmonté',
+    { id:'sp-b2-2', level:'B2', unit:'b2-society', title:'Un défi surmonté',
       prompt:'Décris un défi que tu as surmonté récemment.',
       keywords:['défi','surmonté','difficile','réussi','problème','solution'] }
   ],
 
   conversation: [
-    { id:'conv-cafe', level:'A2', mode:'spoken', title:'Au café (spoken)', turns:[
+    { id:'conv-cafe', level:'A2', unit:'a2-daily', mode:'spoken', title:'Au café (spoken)', turns:[
       { app:'Bonjour ! Qu’est-ce que je vous sers ?',
         keywords:['je voudrais','je prends','un café','un thé','un chocolat','s’il vous plaît','svp'],
-        hint:'Essaie « Je voudrais un café, s’il vous plaît »' },
+        hint:'Essaie « Je voudrais un café, s’il vous plaît »',
+        hintEn:'Try "Je voudrais un café, s’il vous plaît" (I’d like a coffee, please)' },
       { app:'Très bien. Et avec ça, autre chose ?',
         keywords:['non merci','non','oui','un croissant','c’est tout'],
-        hint:'Essaie « Non merci, c’est tout » ou « Oui, un croissant aussi »' },
+        hint:'Essaie « Non merci, c’est tout » ou « Oui, un croissant aussi »',
+        hintEn:'Try "Non merci, c’est tout" (No thanks, that’s all) or "Oui, un croissant aussi" (Yes, a croissant too)' },
       { app:'D’accord, ça fait trois euros cinquante.',
         keywords:['voilà','merci','d’accord','tenez'],
-        hint:'Essaie « Voilà, merci ! »' },
+        hint:'Essaie « Voilà, merci ! »',
+        hintEn:'Try "Voilà, merci !" (Here you go, thanks!)' },
       { app:'Merci à vous, bonne journée !' }
     ] },
-    { id:'conv-party', level:'A2', mode:'spoken', title:'Se présenter à une fête (spoken)', turns:[
+    { id:'conv-party', level:'A2', unit:'a2-greetings', mode:'spoken', title:'Se présenter à une fête (spoken)', turns:[
       { app:'Salut ! Je ne crois pas qu’on se connaisse. Comment tu t’appelles ?',
         keywords:['je m’appelle','moi c’est','je suis'],
-        hint:'Essaie « Je m’appelle... » ou « Moi c’est... »' },
+        hint:'Essaie « Je m’appelle... » ou « Moi c’est... »',
+        hintEn:'Try "Je m’appelle..." or "Moi c’est..." (My name is...)' },
       { app:'Enchanté ! Qu’est-ce que tu fais dans la vie ?',
         keywords:['je suis','je travaille','étudiant','étudiante','j’étudie'],
-        hint:'Essaie « Je suis étudiant(e) » ou « Je travaille comme... »' },
+        hint:'Essaie « Je suis étudiant(e) » ou « Je travaille comme... »',
+        hintEn:'Try "Je suis étudiant(e)" (I’m a student) or "Je travaille comme..." (I work as...)' },
       { app:'Ah super ! Et tu habites dans le coin ?',
         keywords:['j’habite','oui','non','près','loin'],
-        hint:'Essaie « Oui, j’habite près d’ici »' },
+        hint:'Essaie « Oui, j’habite près d’ici »',
+        hintEn:'Try "Oui, j’habite près d’ici" (Yes, I live nearby)' },
       { app:'Génial, ravi d’avoir discuté avec toi !' }
     ] },
-    { id:'conv-directions', level:'B1', mode:'spoken', title:'Demander son chemin (spoken)', turns:[
+    { id:'conv-directions', level:'B1', unit:'b1-travel', mode:'spoken', title:'Demander son chemin (spoken)', turns:[
       { app:'Excusez-moi, pouvez-vous m’indiquer la direction de la gare, s’il vous plaît ?',
         keywords:['tout droit','à gauche','à droite','continuez','tournez','c’est'],
-        hint:'Essaie « Continuez tout droit, puis tournez à gauche »' },
+        hint:'Essaie « Continuez tout droit, puis tournez à gauche »',
+        hintEn:'Try "Continuez tout droit, puis tournez à gauche" (Keep going straight, then turn left)' },
       { app:'D’accord, merci. C’est loin d’ici ?',
         keywords:['minutes','loin','près','pied','non'],
-        hint:'Essaie « Non, c’est à cinq minutes à pied »' },
+        hint:'Essaie « Non, c’est à cinq minutes à pied »',
+        hintEn:'Try "Non, c’est à cinq minutes à pied" (No, it’s five minutes on foot)' },
       { app:'Merci beaucoup pour votre aide !',
         keywords:['de rien','je vous en prie','au revoir','bonne journée'],
-        hint:'Essaie « De rien, bonne journée ! »' },
+        hint:'Essaie « De rien, bonne journée ! »',
+        hintEn:'Try "De rien, bonne journée !" (You’re welcome, have a good day!)' },
       { app:'Au revoir !' }
     ] },
-    { id:'conv-work', level:'B2', mode:'spoken', title:'Discussion informelle au travail (spoken)', turns:[
+    { id:'conv-work', level:'B2', unit:'b2-society', mode:'spoken', title:'Discussion informelle au travail (spoken)', turns:[
       { app:'Salut ! Alors, comment se passe ce nouveau projet dont tu m’as parlé ?',
         keywords:['projet','bien','difficile','avance','compliqué','ça va'],
         hint:'Essaie « Ça avance bien, mais c’est assez difficile »' },
@@ -185,28 +212,43 @@ const CONTENT = {
         hint:'Essaie « J’espère qu’on va respecter les délais »' },
       { app:'Bon courage, j’espère que ça va bien se passer !' }
     ] },
-    { id:'conv-text-a2', level:'A2', mode:'written', title:'Message entre amis (written)', turns:[
+    { id:'conv-b2-culture', level:'B2', unit:'b2-culture', mode:'spoken', title:'Parler d’un film (spoken)', turns:[
+      { app:'Tu as vu le nouveau film dont tout le monde parle ?',
+        keywords:['oui','non','pas encore','j’ai vu','je ne l’ai pas vu'] },
+      { app:'Ah bon ? Et qu’est-ce que tu en penses ?',
+        keywords:['pense','trouve','excellent','intéressant','ennuyeux','pas mal'] },
+      { app:'Intéressant ! Tu me le recommandes alors ?',
+        keywords:['oui','non','recommande','je te le recommande','pas vraiment'] },
+      { app:'D’accord, je le regarderai ce week-end alors, merci !' }
+    ] },
+    { id:'conv-text-a2', level:'A2', unit:'a2-daily', mode:'written', title:'Message entre amis (written)', turns:[
       { app:'Salut ! Ça te dit d’aller au cinéma samedi ?',
         keywords:['oui','non','d’accord','pourquoi pas','samedi','envie'],
-        hint:'Essaie « Oui, pourquoi pas ! » ou « D’accord, avec plaisir »' },
+        hint:'Essaie « Oui, pourquoi pas ! » ou « D’accord, avec plaisir »',
+        hintEn:'Try "Oui, pourquoi pas !" (Yes, why not!) or "D’accord, avec plaisir" (Sure, gladly)' },
       { app:'Super ! Quel film tu veux voir ?',
         keywords:['film','comédie','action','veux','aimerais','regarder'],
-        hint:'Essaie « J’aimerais bien voir une comédie »' },
+        hint:'Essaie « J’aimerais bien voir une comédie »',
+        hintEn:'Try "J’aimerais bien voir une comédie" (I’d like to see a comedy)' },
       { app:'Parfait, on se retrouve à quelle heure ?',
         keywords:['heure','à','vers','heures'],
-        hint:'Essaie « Vers dix-neuf heures ? »' },
+        hint:'Essaie « Vers dix-neuf heures ? »',
+        hintEn:'Try "Vers dix-neuf heures ?" (Around 7pm?)' },
       { app:'D’accord, à samedi !' }
     ] },
-    { id:'conv-text-b1', level:'B1', mode:'written', title:'E-mail à un professeur (written)', turns:[
+    { id:'conv-text-b1', level:'B1', unit:'b1-lifestyle', mode:'written', title:'E-mail à un professeur (written)', turns:[
       { app:'Bonjour, j’ai lu votre dernier devoir. Pouvez-vous m’expliquer votre méthode ?',
         keywords:['méthode','ai utilisé','pense','parce que','j’ai'],
-        hint:'Essaie « J’ai utilisé un plan en trois parties parce que... »' },
+        hint:'Essaie « J’ai utilisé un plan en trois parties parce que... »',
+        hintEn:'Try "J’ai utilisé un plan en trois parties parce que..." (I used a three-part structure because...)' },
       { app:'Je vois. Et combien de temps y avez-vous consacré ?',
         keywords:['heures','temps','jours','environ','passé'],
-        hint:'Essaie « J’y ai passé environ trois heures »' },
+        hint:'Essaie « J’y ai passé environ trois heures »',
+        hintEn:'Try "J’y ai passé environ trois heures" (I spent about three hours on it)' },
       { app:'Merci beaucoup pour ces précisions, bonne continuation.',
         keywords:['merci','au revoir','bonne journée','professeur'],
-        hint:'Essaie « Merci à vous, bonne journée ! »' },
+        hint:'Essaie « Merci à vous, bonne journée ! »',
+        hintEn:'Try "Merci à vous, bonne journée !" (Thank you, have a good day!)' },
       { app:'À bientôt !' }
     ] }
   ]
@@ -214,6 +256,33 @@ const CONTENT = {
 
 const LEVELS = ['A2','B1','B2'];
 const STORAGE_KEY = 'frenchTutorProgress_v1';
+
+// Themed units — every skill's exercises for a unit share the same topic,
+// so vocab reinforces across listening/reading/grammar/writing/speaking
+// instead of each skill being a disconnected list.
+const UNITS = {
+  A2: [
+    { id:'a2-greetings', title:'Se présenter', icon:'👋' },
+    { id:'a2-daily', title:'La vie quotidienne & le café', icon:'☕' }
+  ],
+  B1: [
+    { id:'b1-travel', title:'Sorties & voyages', icon:'🧳' },
+    { id:'b1-lifestyle', title:'Style de vie & travail', icon:'💼' }
+  ],
+  B2: [
+    { id:'b2-society', title:'Société & environnement', icon:'🌍' },
+    { id:'b2-culture', title:'Technologie & culture', icon:'🎭' }
+  ]
+};
+const SKILL_ORDER = ['listening','reading','grammar','writing','speaking','conversation'];
+const SKILL_META = {
+  listening:{ label:'Listening', icon:'headphones' },
+  reading:{ label:'Reading', icon:'book-open' },
+  grammar:{ label:'Grammar', icon:'spell-check' },
+  writing:{ label:'Writing', icon:'pencil' },
+  speaking:{ label:'Speaking', icon:'mic' },
+  conversation:{ label:'Conversation', icon:'message-circle' }
+};
 
 // ── Progress storage (localStorage only — no account) ──────────
 function loadProgress() {
@@ -258,6 +327,27 @@ function keywordCoverage(text, keywords) {
   const n = normalize(text);
   const hits = keywords.filter(k => containsPhrase(n, k));
   return { hits, ratio: hits.length / keywords.length };
+}
+/**
+ * French feedback for every level, plus an English line underneath for
+ * A2/B1 — B2 learners get French only, so the training wheels come off
+ * as they progress. frHtml/enHtml may contain markup; callers are
+ * responsible for escaping any dynamic text they interpolate into them.
+ */
+function bi(level, frHtml, enHtml) {
+  if (level === 'B2' || !enHtml) return `<div>${frHtml}</div>`;
+  return `<div>${frHtml}</div><div class="feedback-en">${enHtml}</div>`;
+}
+/** Same idea as bi(), but for a short label that continues on the same line as French content (e.g. a label followed by the actual sentence/number) instead of standing alone. */
+function biLabel(level, frLabel, enLabel) {
+  if (level === 'B2' || !enLabel) return frLabel;
+  return `${frLabel} <span class="feedback-en-inline">(${enLabel})</span>`;
+}
+function ltFailedMessage(level) {
+  return bi(level, 'La vérification grammaticale n’est pas disponible pour le moment — voici un score de base.', 'Grammar check is unavailable right now — this is a basic score.');
+}
+function noIssuesMessage(level) {
+  return bi(level, 'Aucune erreur de grammaire ou d’orthographe trouvée. Bravo !', 'No grammar or spelling issues found. Well done!');
 }
 function lcsWordCount(a, b) {
   const n = a.length, m = b.length;
@@ -427,6 +517,57 @@ function renderChips(skill) {
 function feedbackClass(score) { return score >= 75 ? 'good' : (score >= 45 ? 'mid' : 'bad'); }
 function scoreBadge(score) { return `<div class="score-badge">Score: ${score}/100</div>`; }
 
+// ── Units overview ───────────────────────────────────────────
+function renderUnits() {
+  const box = document.getElementById('units-content');
+  const units = UNITS[state.level] || [];
+
+  const unitStats = units.map(u => {
+    const items = SKILL_ORDER.flatMap(skill =>
+      CONTENT[skill].filter(x => x.level === state.level && x.unit === u.id).map(x => ({ skill, ex: x }))
+    );
+    const done = items.filter(it => attemptsFor(it.ex.id).length > 0).length;
+    const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+    return { unit: u, items, pct };
+  });
+  // Soft nudge only — nothing below is ever locked or unclickable.
+  const nudge = unitStats.find(s => s.pct < 100);
+
+  box.innerHTML = unitStats.map(({ unit, items, pct }) => `
+    <div class="unit-card">
+      <div class="unit-head">
+        <div class="unit-icon">${unit.icon}</div>
+        <div class="unit-title-wrap">
+          <div class="unit-title">${esc(unit.title)}</div>
+          ${nudge && unit.id === nudge.unit.id ? '<div class="unit-nudge">Continue here</div>' : ''}
+        </div>
+        <div class="unit-ring-outer" style="background:conic-gradient(#4d8dff ${pct}%, rgba(255,255,255,0.10) 0)">
+          <div class="unit-ring-inner">${pct}%</div>
+        </div>
+      </div>
+      <div class="unit-rows">
+        ${items.map(({ skill, ex: x }) => {
+          const done = attemptsFor(x.id).length > 0;
+          return `<button class="unit-row" data-skill="${skill}" data-id="${x.id}">
+            <i data-lucide="${SKILL_META[skill].icon}" style="width:15px;height:15px;"></i>
+            <span class="unit-row-label">${SKILL_META[skill].label}</span>
+            <span class="unit-row-title">${esc(x.title)}</span>
+            ${done ? '<span class="unit-row-check">✓</span>' : ''}
+          </button>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
+
+  window.lucide && window.lucide.createIcons();
+  box.querySelectorAll('.unit-row').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const skill = btn.dataset.skill, id = btn.dataset.id;
+      state.currentId[skill] = id;
+      selectTab(skill);
+    });
+  });
+}
+
 // ── Listening tab ────────────────────────────────────────────
 function renderListening() {
   renderChips('listening');
@@ -454,8 +595,8 @@ function renderListening() {
       const { score, highlight } = gradeDictation(val, ex.audioText);
       const fb = document.getElementById('lis-feedback');
       fb.className = 'feedback show ' + feedbackClass(score);
-      fb.innerHTML = scoreBadge(score) +
-        `<div>Correct sentence: ${highlight.map(h => `<span style="color:${h.hit ? '#8ff0cf' : '#fca5a5'}">${esc(h.word)}</span>`).join(' ')}</div>`;
+      const words = highlight.map(h => `<span style="color:${h.hit ? '#8ff0cf' : '#fca5a5'}">${esc(h.word)}</span>`).join(' ');
+      fb.innerHTML = scoreBadge(score) + `<div>${biLabel(ex.level, 'Phrase correcte :', 'Correct sentence:')} ${words}</div>`;
       saveAttempt({ skill: 'listening', exerciseId: ex.id, level: ex.level, score });
       renderChips('listening');
     });
@@ -484,7 +625,9 @@ function renderListening() {
         const score = i === ex.answer ? 100 : 0;
         const fb = document.getElementById('lis-feedback');
         fb.className = 'feedback show ' + feedbackClass(score);
-        fb.innerHTML = scoreBadge(score) + (score === 100 ? 'Correct !' : `The correct answer was "${esc(ex.options[ex.answer])}".`);
+        fb.innerHTML = scoreBadge(score) + (score === 100
+          ? 'Correct !'
+          : bi(ex.level, `La bonne réponse était « ${esc(ex.options[ex.answer])} ».`, `The correct answer was "${esc(ex.options[ex.answer])}".`));
         saveAttempt({ skill: 'listening', exerciseId: ex.id, level: ex.level, score });
         renderChips('listening');
       });
@@ -557,7 +700,7 @@ function renderReading() {
     const score = Math.round((correct / ex.questions.length) * 100);
     const fb = document.getElementById('read-feedback');
     fb.className = 'feedback show ' + feedbackClass(score);
-    fb.innerHTML = scoreBadge(score) + `${correct} of ${ex.questions.length} correct.`;
+    fb.innerHTML = scoreBadge(score) + bi(ex.level, `${correct} sur ${ex.questions.length} bonnes réponses.`, `${correct} of ${ex.questions.length} correct.`);
     saveAttempt({ skill: 'reading', exerciseId: ex.id, level: ex.level, score });
     renderChips('reading');
   });
@@ -575,13 +718,13 @@ function renderReading() {
       const fb = document.getElementById('read-written-feedback');
       fb.className = 'feedback show ' + feedbackClass(result.score);
       let html = scoreBadge(result.score);
-      if (result.ltFailed) html += `<div>Grammar check is unavailable right now — this is a basic score.</div>`;
+      if (result.ltFailed) html += ltFailedMessage(ex.level);
       else if (result.corrections.length) {
         html += `<ul class="correction-list">` +
           result.corrections.map(c => `<li>${esc(c.message)}${c.suggestion ? ` — try <span class="correction-fix">${esc(c.suggestion)}</span>` : ''}</li>`).join('') +
           `</ul>`;
       } else {
-        html += `<div>No grammar or spelling issues found.</div>`;
+        html += noIssuesMessage(ex.level);
       }
       fb.innerHTML = html;
       saveAttempt({ skill: 'reading', exerciseId: ex.id + '-written', level: ex.level, score: result.score });
@@ -614,9 +757,9 @@ function renderGrammar() {
     const score = ok ? 100 : 0;
     const fb = document.getElementById('gr-feedback');
     fb.className = 'feedback show ' + feedbackClass(score);
-    fb.innerHTML = scoreBadge(score) +
-      (ok ? 'Correct !' : `Correct answer: <span class="correction-fix">${esc(ex.accepted[0])}</span>`) +
-      `<div style="margin-top:6px;">${esc(ex.explanation)}</div>`;
+    const answerLine = ok ? 'Correct !' : `<div>${biLabel(ex.level, 'Réponse correcte :', 'Correct answer:')} <span class="correction-fix">${esc(ex.accepted[0])}</span></div>`;
+    fb.innerHTML = scoreBadge(score) + answerLine +
+      `<div style="margin-top:6px;">${bi(ex.level, esc(ex.explanation), esc(ex.explanationEn))}</div>`;
     saveAttempt({ skill: 'grammar', exerciseId: ex.id, level: ex.level, score });
     renderChips('grammar');
   });
@@ -658,15 +801,19 @@ function renderWriting() {
     const fb = document.getElementById('wr-feedback');
     fb.className = 'feedback show ' + feedbackClass(result.score);
     let html = scoreBadge(result.score);
-    if (result.ltFailed) html += `<div>Grammar check is unavailable right now — this is a basic length-based score.</div>`;
+    if (result.ltFailed) html += ltFailedMessage(ex.level);
     else if (result.corrections.length) {
-      html += `<div>${result.matches} thing${result.matches === 1 ? '' : 's'} to look at:</div><ul class="correction-list">` +
+      html += `<div>${biLabel(ex.level, `${result.matches} chose${result.matches === 1 ? '' : 's'} à vérifier :`, `${result.matches} thing${result.matches === 1 ? '' : 's'} to look at:`)}</div><ul class="correction-list">` +
         result.corrections.map(c => `<li>${esc(c.message)}${c.suggestion ? ` — try <span class="correction-fix">${esc(c.suggestion)}</span>` : ''}</li>`).join('') +
         `</ul>`;
     } else {
-      html += `<div>No grammar or spelling issues found. Well done !</div>`;
+      html += noIssuesMessage(ex.level);
     }
-    if (result.words < ex.minWords) html += `<div style="margin-top:8px;">Try writing at least ${ex.minWords} words for fuller practice (you wrote ${result.words}).</div>`;
+    if (result.words < ex.minWords) {
+      html += `<div style="margin-top:8px;">${bi(ex.level,
+        `Essaie d’écrire au moins ${ex.minWords} mots pour une pratique plus complète (tu as écrit ${result.words}).`,
+        `Try writing at least ${ex.minWords} words for fuller practice (you wrote ${result.words}).`)}</div>`;
+    }
     fb.innerHTML = html;
 
     saveAttempt({ skill: 'writing', exerciseId: ex.id, level: ex.level, score: result.score });
@@ -754,8 +901,12 @@ function renderSpeaking() {
 
     const fb = document.getElementById('sp-feedback');
     fb.className = 'feedback show ' + feedbackClass(result.score);
-    let html = scoreBadge(result.score) + `<div>What you said: “${esc(text)}”</div>`;
-    if (result.coverage) html += `<div style="margin-top:6px;">Covered ${result.coverage.hits.length}/${ex.keywords.length} key ideas.</div>`;
+    let html = scoreBadge(result.score) + `<div>${biLabel(ex.level, 'Ce que tu as dit :', 'What you said:')} “${esc(text)}”</div>`;
+    if (result.coverage) {
+      html += `<div style="margin-top:6px;">${bi(ex.level,
+        `${result.coverage.hits.length}/${ex.keywords.length} idées clés couvertes.`,
+        `Covered ${result.coverage.hits.length}/${ex.keywords.length} key ideas.`)}</div>`;
+    }
     if (result.corrections.length) {
       html += `<ul class="correction-list">` +
         result.corrections.map(c => `<li>${esc(c.message)}${c.suggestion ? ` — try <span class="correction-fix">${esc(c.suggestion)}</span>` : ''}</li>`).join('') +
@@ -801,6 +952,13 @@ function renderConversation() {
     log.appendChild(div);
     return div;
   }
+  function addBubbleHtml(cls, html) {
+    const div = document.createElement('div');
+    div.className = 'convo-bubble ' + cls;
+    div.innerHTML = html;
+    log.appendChild(div);
+    return div;
+  }
 
   function playAppTurn() {
     const turn = ex.turns[turnIndex];
@@ -808,7 +966,7 @@ function renderConversation() {
     if (ex.mode !== 'written') speak(turn.app);
     window.lucide && window.lucide.createIcons();
     if (!turn.keywords) {
-      controls.innerHTML = `<div class="feedback show good">${scoreBadge(Math.round(scores.reduce((a, b) => a + b, 0) / Math.max(scores.length, 1)) || 100)}Conversation complete !</div>`;
+      controls.innerHTML = `<div class="feedback show good">${scoreBadge(Math.round(scores.reduce((a, b) => a + b, 0) / Math.max(scores.length, 1)) || 100)}${bi(ex.level, 'Conversation terminée !', 'Conversation complete!')}</div>`;
       const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 100;
       saveAttempt({ skill: 'conversation', exerciseId: ex.id, level: ex.level, score: avg });
       renderChips('conversation');
@@ -885,7 +1043,9 @@ function renderConversation() {
         setTimeout(playAppTurn, 500);
       } else {
         retries++;
-        addBubble('hint', turn.hint || 'Try again — listen to the line again if you need to.');
+        const hintFr = turn.hint || 'Réessaie — réécoute la ligne si tu en as besoin.';
+        const hintEn = turn.hintEn || 'Try again — listen to the line again if you need to.';
+        addBubbleHtml('hint', bi(ex.level, esc(hintFr), esc(hintEn)));
         renderUserControls(turn);
       }
     });
@@ -961,7 +1121,7 @@ function renderProgress() {
 }
 
 // ── Tab / level wiring ───────────────────────────────────────
-const RENDERERS = { listening: renderListening, reading: renderReading, grammar: renderGrammar, writing: renderWriting, speaking: renderSpeaking, conversation: renderConversation, progress: renderProgress };
+const RENDERERS = { units: renderUnits, listening: renderListening, reading: renderReading, grammar: renderGrammar, writing: renderWriting, speaking: renderSpeaking, conversation: renderConversation, progress: renderProgress };
 
 function renderTab(tab) {
   window.speechSynthesis && window.speechSynthesis.cancel();
@@ -978,14 +1138,14 @@ function selectLevel(level) {
   state.level = level;
   document.querySelectorAll('.level-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
   const active = document.querySelector('.tab-btn.active');
-  renderTab(active ? active.dataset.tab : 'listening');
+  renderTab(active ? active.dataset.tab : 'units');
 }
 
 function init() {
   document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => selectTab(btn.dataset.tab)));
   document.querySelectorAll('.level-btn').forEach(btn => btn.addEventListener('click', () => selectLevel(btn.dataset.level)));
   selectLevel('A2');
-  selectTab('listening');
+  selectTab('units');
 }
 
 window.FrenchTutor = { init };
