@@ -1966,12 +1966,80 @@ window.WRO_PROGRAM = (function() {
 
     const stepsList = document.getElementById('programSteps');
     const actionsBox = document.getElementById('programActions');
+    const stepAddBtn = document.getElementById('stepAddBtn');
+
+    // Where the NEXT "+ Add step" click inserts -- null means "append to
+    // the end" (the old, only behaviour). Set by clicking an insert marker
+    // between two existing steps, so a step can be added at the position
+    // being looked at instead of always at the bottom of a long list.
+    let insertAtIndex = null;
+    let dragSrcIndex = null; // index currently being dragged, or null
+
+    // Small status readout next to the (sticky) Add-step button, so it's
+    // obvious where the next step will land -- created once, not on every
+    // render, since it never needs to move.
+    const insertStatus = h('span', { class: 'program-insert-status' }, null);
+    stepAddBtn.parentElement.insertBefore(insertStatus, stepAddBtn);
+    function updateInsertStatus() {
+      if (insertAtIndex == null) { insertStatus.textContent = ''; insertStatus.style.display = 'none'; return; }
+      insertStatus.style.display = '';
+      insertStatus.textContent = `Inserting at step ${insertAtIndex + 1} — `;
+      const cancel = h('a', { href: '#', text: 'add to end instead' }, insertStatus);
+      cancel.addEventListener('click', (e) => { e.preventDefault(); insertAtIndex = null; render(); });
+    }
+
+    function moveStep(fromIndex, toIndex) {
+      // toIndex is a marker position (0..length), i.e. "insert before the
+      // step currently at this index" -- dropping a step next to itself
+      // (either side) is a no-op, not a delete-and-reinsert.
+      if (toIndex === fromIndex || toIndex === fromIndex + 1) return;
+      pushHistory();
+      const [moved] = state.steps.splice(fromIndex, 1);
+      const adjusted = fromIndex < toIndex ? toIndex - 1 : toIndex;
+      state.steps.splice(adjusted, 0, moved);
+      insertAtIndex = null;
+      persist(state); render();
+    }
+
+    // The thin strip between rows (and one above the first / below the
+    // last) doubles as both an insert-position picker (click) and a drop
+    // target for dragged rows -- one control, two ways to use it.
+    function renderInsertMarker(atIndex) {
+      const marker = h('li', {
+        class: 'program-insert-marker' + (insertAtIndex === atIndex ? ' active' : ''),
+        title: 'Click: add the next new step here. Or drag a step onto this line to move it here.',
+      }, stepsList);
+      h('span', { class: 'program-insert-plus', text: '+' }, marker);
+      marker.addEventListener('click', () => {
+        insertAtIndex = (insertAtIndex === atIndex) ? null : atIndex;
+        render();
+      });
+      marker.addEventListener('dragover', (e) => { e.preventDefault(); marker.classList.add('drag-over'); });
+      marker.addEventListener('dragleave', () => marker.classList.remove('drag-over'));
+      marker.addEventListener('drop', (e) => {
+        e.preventDefault();
+        marker.classList.remove('drag-over');
+        if (dragSrcIndex == null) return;
+        moveStep(dragSrcIndex, atIndex);
+      });
+    }
 
     function render() {
       stepsList.innerHTML = '';
       actionsBox.style.display = state.steps.length ? '' : 'none';
+      updateInsertStatus();
+      renderInsertMarker(0);
       state.steps.forEach((step, idx) => {
         const li = h('li', { class: 'program-step' }, stepsList);
+        li.draggable = true;
+        li.addEventListener('dragstart', (e) => {
+          dragSrcIndex = idx;
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', String(idx)); // Firefox won't start a drag without data set
+          requestAnimationFrame(() => li.classList.add('dragging')); // after the drag ghost image is captured
+        });
+        li.addEventListener('dragend', () => { li.classList.remove('dragging'); dragSrcIndex = null; });
+
         h('span', { class: 'program-step-num', text: String(idx + 1) }, li);
         h('span', { class: 'program-step-desc', text: describeStep(step) }, li);
         const actions = h('span', { class: 'program-step-actions' }, li);
@@ -1982,6 +2050,7 @@ window.WRO_PROGRAM = (function() {
         up.addEventListener('click', () => {
           pushHistory();
           [state.steps[idx - 1], state.steps[idx]] = [state.steps[idx], state.steps[idx - 1]];
+          insertAtIndex = null;
           persist(state); render();
         });
 
@@ -1991,6 +2060,7 @@ window.WRO_PROGRAM = (function() {
         down.addEventListener('click', () => {
           pushHistory();
           [state.steps[idx + 1], state.steps[idx]] = [state.steps[idx], state.steps[idx + 1]];
+          insertAtIndex = null;
           persist(state); render();
         });
 
@@ -1999,14 +2069,17 @@ window.WRO_PROGRAM = (function() {
         del.addEventListener('click', () => {
           pushHistory();
           state.steps.splice(idx, 1);
+          insertAtIndex = null;
           persist(state); render();
         });
+
+        renderInsertMarker(idx + 1);
       });
       renderWalker();
     }
     render();
 
-    document.getElementById('stepAddBtn').addEventListener('click', () => {
+    stepAddBtn.addEventListener('click', () => {
       const t = typeSel.value;
       const step = { type: t };
       if (t === 'drive' || t === 'lineFollow') {
@@ -2073,7 +2146,13 @@ window.WRO_PROGRAM = (function() {
         commentInput.value = '';
       }
       pushHistory();
-      state.steps.push(step);
+      if (insertAtIndex != null) {
+        const at = Math.max(0, Math.min(insertAtIndex, state.steps.length));
+        state.steps.splice(at, 0, step);
+        insertAtIndex = at + 1; // stay put so the next add continues right after this one
+      } else {
+        state.steps.push(step);
+      }
       persist(state);
       render();
     });
