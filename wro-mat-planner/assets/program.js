@@ -2768,6 +2768,13 @@ window.WRO_PROGRAM = (function() {
         if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'y' || e.key === 'Z' || e.key === 'Y')) {
           pausePlayback();
         }
+        // Space toggles Play/Pause -- skipped while typing or focused on a
+        // control (same guard tools.js uses for its own shortcuts), so
+        // space still types a space or activates that control as normal.
+        if (e.key === ' ' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'SELECT') {
+          e.preventDefault();
+          if (!playBtn.disabled) { playing ? pausePlayback() : startPlayback(); }
+        }
       });
 
       resetBtn.addEventListener('click', () => {
