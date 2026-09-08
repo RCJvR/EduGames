@@ -178,34 +178,9 @@ textarea:focus, input[type=text]:focus{outline:none;border-color:rgba(77,141,255
 .blank-input:focus{outline:none;border-color:rgba(77,141,255,0.5);}
 .blank-sentence{font-size:15.5px;line-height:2.1;color:var(--text);}
 
-.unit-card{
-  background:var(--surface2);border:1px solid var(--border2);border-radius:16px;
-  padding:20px 22px;margin-bottom:16px;
-}
-.unit-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
-.unit-icon{font-size:26px;line-height:1;flex-shrink:0;}
-.unit-title-wrap{flex:1;min-width:0;}
-.unit-title{font-size:16px;font-weight:800;letter-spacing:-0.01em;}
-.unit-nudge{
-  display:inline-block;margin-top:3px;font-family:var(--mono);font-size:10px;font-weight:700;
-  letter-spacing:0.06em;text-transform:uppercase;color:#a9c6ff;
-  background:rgba(77,141,255,0.14);border:1px solid rgba(77,141,255,0.32);border-radius:99px;padding:2px 9px;
-}
-.unit-ring-outer{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.unit-ring-inner{
-  width:34px;height:34px;border-radius:50%;background:var(--bg2);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text2);
-}
-.unit-rows{display:flex;flex-direction:column;gap:6px;}
-.unit-row{
-  display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;border-radius:10px;
-  background:var(--bg2);border:1px solid var(--border);color:var(--text);cursor:pointer;transition:all 150ms;
-}
-.unit-row:hover{border-color:var(--border2);background:var(--surface2);}
-.unit-row-label{font-family:var(--mono);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);flex-shrink:0;width:78px;}
-.unit-row-title{flex:1;font-size:13.5px;}
-.unit-row-check{color:var(--good);font-weight:700;flex-shrink:0;}
+.lesson-progress{height:6px;border-radius:99px;background:rgba(255,255,255,0.08);overflow:hidden;margin-bottom:8px;}
+.lesson-progress-bar{height:100%;background:linear-gradient(120deg,var(--accent-1),#3a6fe0);transition:width 250ms ease;}
+.lesson-step-label{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;margin-bottom:16px;}
 
 .speak-btn{
   display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;
@@ -259,7 +234,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:12px;}
   </div>
 
   <div class="tabs">
-    <button class="tab-btn" data-tab="units"><i data-lucide="map" style="width:15px;height:15px;"></i> Units</button>
+    <button class="tab-btn" data-tab="daily"><i data-lucide="zap" style="width:15px;height:15px;"></i> Daily Practice</button>
     <button class="tab-btn" data-tab="vocabulary"><i data-lucide="library" style="width:15px;height:15px;"></i> Vocabulary</button>
     <button class="tab-btn" data-tab="listening"><i data-lucide="headphones" style="width:15px;height:15px;"></i> Listening</button>
     <button class="tab-btn" data-tab="reading"><i data-lucide="book-open" style="width:15px;height:15px;"></i> Reading</button>
@@ -270,8 +245,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:12px;}
     <button class="tab-btn" data-tab="progress"><i data-lucide="bar-chart-3" style="width:15px;height:15px;"></i> My Progress</button>
   </div>
 
-  <div id="panel-units" class="tab-panel">
-    <div id="units-content"></div>
+  <div id="panel-daily" class="tab-panel">
+    <div id="daily-content"></div>
   </div>
 
   <div id="panel-vocabulary" class="tab-panel">

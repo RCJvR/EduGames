@@ -768,6 +768,164 @@ const CONTENT = {
   ]
 };
 
+// ── Vocabulary bank (feeds the spaced-repetition lesson generator) ─
+// Word pairs only — kept lightweight on purpose. MCQ distractors are
+// generated at runtime by sampling other translations from the same
+// level, not hand-picked per word, so a large bank stays low-risk to
+// author. Order matters: this is also the curriculum introduction order.
+const VOCAB_WORDS = {
+  A1: [
+    ['bonjour','hello'],['bonsoir','good evening'],['salut','hi'],['au revoir','goodbye'],['merci','thank you'],
+    ['s’il vous plaît','please'],['pardon','sorry'],['excusez-moi','excuse me'],['oui','yes'],['non','no'],
+    ['d’accord','okay'],['bienvenue','welcome'],
+    ['un','one'],['deux','two'],['trois','three'],['quatre','four'],['cinq','five'],['six','six'],['sept','seven'],
+    ['huit','eight'],['neuf','nine'],['dix','ten'],['onze','eleven'],['douze','twelve'],['treize','thirteen'],
+    ['quatorze','fourteen'],['quinze','fifteen'],['seize','sixteen'],['vingt','twenty'],['trente','thirty'],
+    ['quarante','forty'],['cinquante','fifty'],
+    ['lundi','Monday'],['mardi','Tuesday'],['mercredi','Wednesday'],['jeudi','Thursday'],['vendredi','Friday'],
+    ['samedi','Saturday'],['dimanche','Sunday'],
+    ['janvier','January'],['février','February'],['mars','March'],['avril','April'],['mai','May'],['juin','June'],
+    ['juillet','July'],['août','August'],['septembre','September'],['octobre','October'],['novembre','November'],['décembre','December'],
+    ['rouge','red'],['bleu','blue'],['vert','green'],['jaune','yellow'],['noir','black'],['blanc','white'],['gris','grey'],['orange','orange'],
+    ['la mère','mother'],['le père','father'],['le frère','brother'],['la sœur','sister'],['le fils','son'],
+    ['la fille','daughter'],['les parents','parents'],['le grand-père','grandfather'],['la grand-mère','grandmother'],['l’enfant','child'],
+    ['la tête','head'],['la main','hand'],['le pied','foot'],['les yeux','eyes'],['la bouche','mouth'],['le nez','nose'],
+    ['le bras','arm'],['la jambe','leg'],['le ventre','stomach'],['le dos','back'],
+    ['la table','table'],['la chaise','chair'],['le livre','book'],['le stylo','pen'],['le sac','bag'],['la porte','door'],
+    ['la fenêtre','window'],['le téléphone','phone'],['l’ordinateur','computer'],['la clé','key'],['le lit','bed'],
+    ['la lampe','lamp'],['le miroir','mirror'],['l’horloge','clock'],
+    ['le pain','bread'],['l’eau','water'],['le lait','milk'],['le café','coffee'],['le thé','tea'],['le fromage','cheese'],
+    ['la viande','meat'],['le poisson','fish'],['le riz','rice'],['les légumes','vegetables'],['les fruits','fruit'],
+    ['la pomme','apple'],['la banane','banana'],['le sucre','sugar'],['le sel','salt'],['l’œuf','egg'],['le beurre','butter'],['le jus','juice'],
+    ['la maison','house'],['l’école','school'],['le magasin','shop'],['la rue','street'],['la ville','city'],
+    ['le pays','country'],['le restaurant','restaurant'],['l’hôpital','hospital'],['la gare','train station'],['l’aéroport','airport'],
+    ['la robe','dress'],['le pantalon','trousers'],['la chemise','shirt'],['les chaussures','shoes'],['le manteau','coat'],
+    ['le chapeau','hat'],['les chaussettes','socks'],['la veste','jacket'],
+    ['être','to be'],['avoir','to have'],['aller','to go'],['faire','to do'],['vouloir','to want'],['pouvoir','to be able to'],
+    ['devoir','to have to'],['aimer','to like'],['habiter','to live'],['parler','to speak'],['manger','to eat'],['boire','to drink'],
+    ['dormir','to sleep'],['travailler','to work'],['étudier','to study'],['jouer','to play'],['regarder','to watch'],
+    ['écouter','to listen'],['acheter','to buy'],['donner','to give'],['prendre','to take'],['venir','to come'],
+    ['grand','big'],['petit','small'],['bon','good'],['mauvais','bad'],['beau','beautiful'],['nouveau','new'],
+    ['vieux','old'],['jeune','young'],['facile','easy'],['difficile','difficult'],['content','happy'],['fatigué','tired'],
+    ['chaud','hot'],['froid','cold'],
+    ['aujourd’hui','today'],['demain','tomorrow'],['hier','yesterday'],['maintenant','now'],['toujours','always'],
+    ['jamais','never'],['souvent','often'],['tôt','early'],['tard','late'],['bientôt','soon'],
+    ['qui','who'],['quoi','what'],['où','where'],['quand','when'],['comment','how'],['pourquoi','why'],
+    ['dans','in'],['sur','on'],['sous','under'],['avec','with'],['sans','without'],['pour','for'],['chez','at (someone’s place)'],
+    ['je','I'],['tu','you'],['il','he'],['elle','she'],['nous','we'],['vous','you (formal/plural)'],['ils','they']
+  ],
+  A2: [
+    ['le prix','price'],['cher','expensive'],['pas cher','cheap'],['payer','to pay'],['la caisse','checkout'],
+    ['la carte bancaire','bank card'],['l’argent','money'],['la monnaie','change'],['le reçu','receipt'],
+    ['la réduction','discount'],['le client','customer'],['vendre','to sell'],['essayer','to try on'],['la taille','size'],
+    ['le bus','bus'],['le train','train'],['le métro','subway'],['la voiture','car'],['le vélo','bicycle'],
+    ['l’avion','plane'],['le taxi','taxi'],['conduire','to drive'],['le billet','ticket'],['l’arrêt','stop'],
+    ['la route','road'],['le parking','car park'],
+    ['malade','sick'],['le médecin','doctor'],['la pharmacie','pharmacy'],['le médicament','medicine'],['la fièvre','fever'],
+    ['la douleur','pain'],['tousser','to cough'],['se sentir','to feel'],['guérir','to heal'],['l’infirmier','nurse'],
+    ['le rendez-vous','appointment'],['se reposer','to rest'],['en bonne santé','healthy'],
+    ['il pleut','it’s raining'],['il neige','it’s snowing'],['le soleil','sun'],['le nuage','cloud'],['le vent','wind'],
+    ['la température','temperature'],['l’orage','storm'],['le parapluie','umbrella'],
+    ['la cuisine','kitchen'],['la chambre','bedroom'],['la salle de bain','bathroom'],['le salon','living room'],
+    ['le jardin','garden'],['le garage','garage'],['l’escalier','staircase'],['le toit','roof'],['le mur','wall'],
+    ['le sol','floor'],['la climatisation','air conditioning'],['le chauffage','heating'],
+    ['le professeur','teacher'],['l’ingénieur','engineer'],['l’avocat','lawyer'],['le secrétaire','secretary'],
+    ['le cuisinier','cook'],['le vendeur','salesperson'],['le policier','police officer'],['le pompier','firefighter'],
+    ['l’employé','employee'],['le patron','boss'],
+    ['le sport','sport'],['la musique','music'],['le cinéma','cinema'],['la lecture','reading'],['la danse','dance'],
+    ['la peinture','painting'],['le jardinage','gardening'],['la pêche','fishing'],['le bricolage','DIY'],
+    ['se promener','to walk'],['voyager','to travel'],['cuisiner','to cook'],
+    ['se lever','to get up'],['se laver','to wash oneself'],['se coucher','to go to bed'],['s’habiller','to get dressed'],
+    ['se réveiller','to wake up'],['se dépêcher','to hurry'],['s’amuser','to have fun'],['s’appeler','to be called'],
+    ['triste','sad'],['en colère','angry'],['inquiet','worried'],['surpris','surprised'],['stressé','stressed'],
+    ['détendu','relaxed'],['fier','proud'],['jaloux','jealous'],['déçu','disappointed'],['gêné','embarrassed'],
+    ['le menu','menu'],['l’addition','bill'],['commander','to order'],['le serveur','waiter'],['la réservation','reservation'],
+    ['l’entrée','starter'],['le plat principal','main course'],['le dessert','dessert'],['délicieux','delicious'],
+    ['la spécialité','specialty'],['le petit-déjeuner','breakfast'],['le déjeuner','lunch'],['le dîner','dinner'],['l’appétit','appetite'],
+    ['tout droit','straight ahead'],['à gauche','left'],['à droite','right'],['le carrefour','crossroads'],
+    ['le feu rouge','traffic light'],['le trottoir','pavement'],['le pont','bridge'],['la place','square'],
+    ['le quartier','neighbourhood'],['proche','nearby'],
+    ['rapide','fast'],['lent','slow'],['gratuit','free'],['propre','clean'],['sale','dirty'],['plein','full'],
+    ['vide','empty'],['ouvert','open'],['fermé','closed']
+  ],
+  B1: [
+    ['l’amitié','friendship'],['la confiance','trust'],['se disputer','to argue'],['se réconcilier','to make up'],
+    ['soutenir','to support'],['partager','to share'],['la relation','relationship'],['tomber amoureux','to fall in love'],
+    ['le couple','couple'],['se marier','to marry'],['divorcer','to divorce'],['manquer à quelqu’un','to be missed by someone'],
+    ['la déception','disappointment'],['l’inquiétude','worry'],['le soulagement','relief'],['la fierté','pride'],
+    ['la honte','shame'],['la jalousie','jealousy'],['l’enthousiasme','enthusiasm'],['la confiance en soi','self-confidence'],
+    ['le doute','doubt'],['l’espoir','hope'],
+    ['les réseaux sociaux','social media'],['le smartphone','smartphone'],['l’application','app'],['télécharger','to download'],
+    ['publier','to post'],['le mot de passe','password'],['la connexion','connection'],['l’écran','screen'],
+    ['en ligne','online'],['le message','message'],['l’abonné','subscriber'],
+    ['l’environnement','environment'],['le recyclage','recycling'],['la pollution','pollution'],['protéger','to protect'],
+    ['gaspiller','to waste'],['économiser','to save'],['les déchets','waste'],['durable','sustainable'],
+    ['le réchauffement climatique','global warming'],['renouvelable','renewable'],
+    ['le diplôme','diploma'],['l’examen','exam'],['réussir','to succeed'],['échouer','to fail'],['la note','grade'],
+    ['le devoir','homework'],['la matière','subject'],['la bourse','scholarship'],['l’université','university'],
+    ['le stage','internship'],['apprendre par cœur','to learn by heart'],['s’inscrire','to enrol'],
+    ['l’hébergement','accommodation'],['réserver','to book'],['l’itinéraire','itinerary'],['le décalage horaire','jet lag'],
+    ['le passeport','passport'],['la douane','customs'],['l’auberge de jeunesse','hostel'],['explorer','to explore'],['le souvenir','souvenir'],
+    ['cependant','however'],['parce que','because'],['donc','so'],['par contre','on the other hand'],['d’ailleurs','moreover'],
+    ['en effet','indeed'],['malgré','despite'],['pourtant','yet'],['puisque','since'],['alors que','whereas'],
+    ['c’est-à-dire','that is to say'],['en général','in general'],
+    ['si','if'],['peut-être','maybe'],['probablement','probably'],['éventuellement','possibly'],['à l’avenir','in the future'],
+    ['envisager','to consider'],['prévoir','to plan'],['supposer','to suppose'],
+    ['l’entrepreneur','entrepreneur'],['le comptable','accountant'],['le journaliste','journalist'],['l’architecte','architect'],
+    ['le chercheur','researcher'],['le psychologue','psychologist'],['le traducteur','translator'],['le designer','designer'],
+    ['le consultant','consultant'],['le fonctionnaire','civil servant'],
+    ['sociable','sociable'],['timide','shy'],['ambitieux','ambitious'],['paresseux','lazy'],['généreux','generous'],
+    ['égoïste','selfish'],['patient','patient'],['impatient','impatient'],['curieux','curious'],['honnête','honest'],
+    ['têtu','stubborn'],['optimiste','optimistic'],
+    ['penser','to think'],['croire','to believe'],['espérer','to hope'],['décider','to decide'],['choisir','to choose'],
+    ['changer','to change'],['continuer','to continue'],['arrêter','to stop'],['accepter','to accept'],['refuser','to refuse'],
+    ['le paysage','landscape'],['la forêt','forest'],['la montagne','mountain'],['la rivière','river'],['le lac','lake'],
+    ['la côte','coast'],['la vallée','valley'],['le désert','desert'],
+    ['le rythme de vie','pace of life'],['la routine','routine'],['l’équilibre','balance'],['la priorité','priority'],
+    ['l’objectif','goal'],['le défi','challenge'],['la solution','solution'],['le problème','problem']
+  ],
+  B2: [
+    ['la société','society'],['le gouvernement','government'],['la loi','law'],['le citoyen','citizen'],['les droits','rights'],
+    ['l’égalité','equality'],['la justice','justice'],['le débat','debate'],['l’opinion publique','public opinion'],
+    ['voter','to vote'],['la démocratie','democracy'],['la réforme','reform'],['manifester','to protest'],['le pouvoir','power'],
+    ['l’économie','economy'],['le salaire','salary'],['l’inflation','inflation'],['le chômage','unemployment'],
+    ['l’entreprise','company'],['investir','to invest'],['le marché','market'],['la concurrence','competition'],
+    ['la croissance','growth'],['la crise','crisis'],['le budget','budget'],['rentable','profitable'],
+    ['l’empreinte carbone','carbon footprint'],['les énergies fossiles','fossil fuels'],['la biodiversité','biodiversity'],
+    ['la déforestation','deforestation'],['l’écosystème','ecosystem'],['la sécheresse','drought'],
+    ['la catastrophe naturelle','natural disaster'],['préserver','to preserve'],['l’impact','impact'],['menacé','threatened'],
+    ['l’intelligence artificielle','artificial intelligence'],['l’algorithme','algorithm'],['les données','data'],
+    ['la vie privée','privacy'],['automatiser','to automate'],['l’innovation','innovation'],['le robot','robot'],
+    ['numérique','digital'],['la cybersécurité','cybersecurity'],['la réalité virtuelle','virtual reality'],
+    ['le logiciel','software'],['connecté','connected'],
+    ['l’œuvre','artwork'],['l’artiste','artist'],['l’exposition','exhibition'],['le roman','novel'],['l’auteur','author'],
+    ['le réalisateur','director'],['la critique','review'],['inspirer','to inspire'],['le patrimoine','heritage'],
+    ['la sculpture','sculpture'],['le spectacle','show'],['talentueux','talented'],
+    ['néanmoins','nevertheless'],['par conséquent','consequently'],['en revanche','on the other hand'],
+    ['bien que','although'],['il s’agit de','it is about'],['démontrer','to demonstrate'],['souligner','to emphasize'],
+    ['nuancer','to qualify'],['remettre en question','to question'],['convaincre','to convince'],
+    ['contredire','to contradict'],['une controverse','controversy'],['un point de vue','point of view'],
+    ['le développement','development'],['la conséquence','consequence'],['l’enjeu','stake / issue'],['la mesure','measure'],
+    ['le phénomène','phenomenon'],['la tendance','trend'],['le contexte','context'],['le facteur','factor'],
+    ['l’hypothèse','hypothesis'],['la perspective','perspective'],['l’ampleur','scale / extent'],['la nuance','nuance'],
+    ['le paradoxe','paradox'],['la complexité','complexity'],
+    ['percevoir','to perceive'],['concevoir','to conceive'],['évoluer','to evolve'],['influencer','to influence'],
+    ['favoriser','to favour'],['limiter','to limit'],['renforcer','to reinforce'],['remettre en cause','to challenge'],
+    ['s’interroger','to wonder'],['négliger','to neglect'],['privilégier','to prioritize'],['confronter','to confront'],
+    ['le bien-être','well-being'],['la santé mentale','mental health'],['l’épuisement','exhaustion'],['prévenir','to prevent'],
+    ['le traitement','treatment'],['la maladie chronique','chronic illness'],['gérer le stress','to manage stress'],
+    ['l’équilibre de vie','work-life balance'],
+    ['la reconversion','career change'],['les compétences','skills'],['le télétravail','remote work'],
+    ['la hiérarchie','hierarchy'],['la promotion','promotion'],['négocier','to negotiate'],['démissionner','to resign'],['recruter','to recruit'],
+    ['la mondialisation','globalization'],['l’immigration','immigration'],['la diversité','diversity'],['l’identité','identity'],
+    ['la frontière','border'],['international','international'],['la coopération','cooperation'],['le conflit','conflict'],
+    ['la paix','peace'],['l’humanitaire','humanitarian']
+  ]
+};
+const VOCAB_BANK = Object.entries(VOCAB_WORDS).flatMap(([level, words]) =>
+  words.map(([fr, en], i) => ({ id: `vb-${level.toLowerCase()}-${i + 1}`, level, fr, en }))
+);
+
 const LEVELS = ['A1','A2','B1','B2'];
 const STORAGE_KEY = 'frenchTutorProgress_v1';
 
@@ -832,6 +990,96 @@ function attemptsFor(exerciseId) {
 }
 function clearProgress() {
   try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+// ── Spaced repetition (Daily Practice) ──────────────────────────
+const SRS_KEY = 'frenchTutorSRS_v1';
+const SRS_INTERVALS = [1, 2, 4, 7, 14, 30, 60]; // days, indexed by streak
+
+function loadSRS() {
+  try {
+    const raw = localStorage.getItem(SRS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+function saveSRS(srs) {
+  try { localStorage.setItem(SRS_KEY, JSON.stringify(srs)); } catch (e) {}
+}
+function isDue(record) {
+  return !record || record.dueAt <= Date.now();
+}
+/** Records one review result for a curriculum item id, updating its next-due date. */
+function recordReview(itemId, correct) {
+  const srs = loadSRS();
+  const prev = srs[itemId] || { streak: 0 };
+  const streak = correct ? Math.min(prev.streak + 1, SRS_INTERVALS.length - 1) : 0;
+  const intervalDays = SRS_INTERVALS[streak];
+  srs[itemId] = {
+    streak,
+    intervalDays,
+    lastSeen: Date.now(),
+    dueAt: Date.now() + intervalDays * 24 * 60 * 60 * 1000
+  };
+  saveSRS(srs);
+}
+
+/** Ordered curriculum for a level: vocab from VOCAB_BANK with a grammar
+ * concept from CONTENT.grammar interleaved roughly every 10 words. */
+function curriculumForLevel(level) {
+  const vocab = VOCAB_BANK.filter(v => v.level === level).map(v => ({ type: 'vocabulary', item: v }));
+  const grammar = CONTENT.grammar.filter(g => g.level === level).map(g => ({ type: 'grammar', item: g }));
+  const curriculum = [];
+  let gi = 0;
+  vocab.forEach((v, i) => {
+    curriculum.push(v);
+    if ((i + 1) % 10 === 0 && gi < grammar.length) curriculum.push(grammar[gi++]);
+  });
+  while (gi < grammar.length) curriculum.push(grammar[gi++]);
+  return curriculum;
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/** Builds one lesson: 1-2 not-yet-introduced curriculum items, plus up
+ * to 6 previously-introduced items that are due for review (falling
+ * back to least-recently-seen if nothing is due yet). Returns an array
+ * of generated exercise objects, each carrying its source itemId/type
+ * so grading can feed the result back into the SRS store. */
+function buildLesson(level) {
+  const curriculum = curriculumForLevel(level);
+  const srs = loadSRS();
+  const introduced = curriculum.filter(c => srs[c.item.id]);
+  const notIntroduced = curriculum.filter(c => !srs[c.item.id]);
+
+  const newItems = notIntroduced.slice(0, 2);
+
+  const due = introduced.filter(c => isDue(srs[c.item.id]))
+    .sort((a, b) => srs[a.item.id].dueAt - srs[b.item.id].dueAt);
+  let reviewItems = due.slice(0, 6);
+  if (reviewItems.length < 6) {
+    const notDue = introduced.filter(c => !due.includes(c))
+      .sort((a, b) => srs[a.item.id].lastSeen - srs[b.item.id].lastSeen);
+    reviewItems = reviewItems.concat(notDue.slice(0, 6 - reviewItems.length));
+  }
+
+  const picked = shuffle([...newItems, ...reviewItems]);
+  return picked.map(c => generateExercise(c, level));
+}
+
+function generateExercise(c, level) {
+  if (c.type === 'grammar') return { kind: 'grammar', itemId: c.item.id, data: c.item };
+  const kind = Math.random() < 0.5 ? 'vocab-recognition' : 'vocab-recall';
+  const pool = VOCAB_BANK.filter(v => v.level === level && v.id !== c.item.id);
+  const distractors = shuffle(pool).slice(0, 3).map(v => v.en);
+  const options = shuffle([c.item.en, ...distractors]);
+  return { kind, itemId: c.item.id, data: c.item, options };
 }
 
 // ── Text helpers ─────────────────────────────────────────────
@@ -1050,55 +1298,166 @@ function renderChips(skill) {
 function feedbackClass(score) { return score >= 75 ? 'good' : (score >= 45 ? 'mid' : 'bad'); }
 function scoreBadge(score) { return `<div class="score-badge">Score: ${score}/100</div>`; }
 
-// ── Units overview ───────────────────────────────────────────
-function renderUnits() {
-  const box = document.getElementById('units-content');
-  const units = UNITS[state.level] || [];
+// ── Daily Practice (spaced-repetition lesson generator) ────────
+let lessonState = null; // { level, exercises, index, results }
 
-  const unitStats = units.map(u => {
-    const items = SKILL_ORDER.flatMap(skill =>
-      CONTENT[skill].filter(x => x.level === state.level && x.unit === u.id).map(x => ({ skill, ex: x }))
-    );
-    const done = items.filter(it => attemptsFor(it.ex.id).length > 0).length;
-    const pct = items.length ? Math.round((done / items.length) * 100) : 0;
-    return { unit: u, items, pct };
-  });
-  // Soft nudge only — nothing below is ever locked or unclickable.
-  const nudge = unitStats.find(s => s.pct < 100);
+function renderDailyPractice() {
+  lessonState = null;
+  const box = document.getElementById('daily-content');
+  const level = state.level;
+  const curriculum = curriculumForLevel(level);
+  const srs = loadSRS();
+  const introducedCount = curriculum.filter(c => srs[c.item.id]).length;
+  const totalCount = curriculum.length;
+  const dueCount = curriculum.filter(c => srs[c.item.id] && isDue(srs[c.item.id])).length;
 
-  box.innerHTML = unitStats.map(({ unit, items, pct }) => `
-    <div class="unit-card">
-      <div class="unit-head">
-        <div class="unit-icon">${unit.icon}</div>
-        <div class="unit-title-wrap">
-          <div class="unit-title">${esc(unit.title)}</div>
-          ${nudge && unit.id === nudge.unit.id ? '<div class="unit-nudge">Continue here</div>' : ''}
-        </div>
-        <div class="unit-ring-outer" style="background:conic-gradient(#4d8dff ${pct}%, rgba(255,255,255,0.10) 0)">
-          <div class="unit-ring-inner">${pct}%</div>
-        </div>
+  box.innerHTML = `
+    <div class="card" style="text-align:center;">
+      <div class="card-eyebrow">Daily Practice · ${level}</div>
+      <div class="card-title" style="font-size:22px;">Ready for your next lesson?</div>
+      <div class="card-body">${introducedCount} of ${totalCount} words &amp; grammar points learned${dueCount ? `, ${dueCount} due for review` : ''}.</div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-primary" id="start-lesson" style="font-size:15px;padding:14px 28px;">
+          <i data-lucide="play" style="width:16px;height:16px;"></i> Start next lesson
+        </button>
       </div>
-      <div class="unit-rows">
-        ${items.map(({ skill, ex: x }) => {
-          const done = attemptsFor(x.id).length > 0;
-          return `<button class="unit-row" data-skill="${skill}" data-id="${x.id}">
-            <i data-lucide="${SKILL_META[skill].icon}" style="width:15px;height:15px;"></i>
-            <span class="unit-row-label">${SKILL_META[skill].label}</span>
-            <span class="unit-row-title">${esc(x.title)}</span>
-            ${done ? '<span class="unit-row-check">✓</span>' : ''}
-          </button>`;
-        }).join('')}
-      </div>
-    </div>`).join('');
-
+    </div>`;
   window.lucide && window.lucide.createIcons();
-  box.querySelectorAll('.unit-row').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const skill = btn.dataset.skill, id = btn.dataset.id;
-      state.currentId[skill] = id;
-      selectTab(skill);
+  document.getElementById('start-lesson').addEventListener('click', () => startLesson(level));
+}
+
+function startLesson(level) {
+  const exercises = buildLesson(level);
+  lessonState = { level, exercises, index: 0, results: [] };
+  renderLessonStep();
+}
+
+function lessonHeader() {
+  const { exercises, index } = lessonState;
+  const pct = Math.round((index / exercises.length) * 100);
+  return `
+    <div class="lesson-progress"><div class="lesson-progress-bar" style="width:${pct}%"></div></div>
+    <div class="lesson-step-label">${index + 1} / ${exercises.length}</div>`;
+}
+
+function renderLessonStep() {
+  const box = document.getElementById('daily-content');
+  const { exercises, index, level } = lessonState;
+  if (index >= exercises.length) { renderLessonComplete(); return; }
+  const ex = exercises[index];
+
+  if (ex.kind === 'grammar') {
+    box.innerHTML = lessonHeader() + `
+      <div class="card">
+        <div class="card-eyebrow">Grammar · ${level}</div>
+        <div class="card-title">${esc(ex.data.title)}</div>
+        <div class="blank-sentence">${esc(ex.data.before)}<input type="text" class="blank-input" id="lesson-input" autocomplete="off">${esc(ex.data.after)}</div>
+        <div class="btn-row"><button class="btn btn-primary" id="lesson-check"><i data-lucide="check" style="width:14px;height:14px;"></i> Check</button></div>
+        <div class="feedback" id="lesson-feedback"></div>
+      </div>`;
+    window.lucide && window.lucide.createIcons();
+    document.getElementById('lesson-check').addEventListener('click', () => {
+      const val = document.getElementById('lesson-input').value;
+      const ok = ex.data.accepted.some(a => normalize(a) === normalize(val));
+      const html = scoreBadge(ok ? 100 : 0) +
+        (ok ? 'Correct !' : `<div>${biLabel(level, 'Réponse correcte :', 'Correct answer:')} <span class="correction-fix">${esc(ex.data.accepted[0])}</span></div>`) +
+        `<div style="margin-top:6px;">${bi(level, esc(ex.data.explanation), esc(ex.data.explanationEn))}</div>`;
+      finishStep(ok, html);
     });
+  } else if (ex.kind === 'vocab-recognition') {
+    box.innerHTML = lessonHeader() + `
+      <div class="card">
+        <div class="card-eyebrow">Vocabulary · ${level}</div>
+        <div class="card-title french" style="font-size:26px;">« ${esc(ex.data.fr)} »</div>
+        <button class="speak-btn" id="lesson-play"><i data-lucide="volume-2" style="width:14px;height:14px;"></i> Play word</button>
+        <div class="card-body"><strong>${biLabel(level, 'Que veut dire ce mot ?', 'What does this word mean?')}</strong></div>
+        <div id="lesson-options"></div>
+        <div class="feedback" id="lesson-feedback"></div>
+      </div>`;
+    window.lucide && window.lucide.createIcons();
+    document.getElementById('lesson-play').addEventListener('click', () => speak(ex.data.fr));
+    const wrap = document.getElementById('lesson-options');
+    wrap.innerHTML = ex.options.map((o, i) => `<div class="mcq-option" data-i="${i}">${esc(o)}</div>`).join('');
+    wrap.querySelectorAll('.mcq-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        if (wrap.dataset.answered) return;
+        wrap.dataset.answered = '1';
+        const i = Number(opt.dataset.i);
+        const correctI = ex.options.indexOf(ex.data.en);
+        wrap.querySelectorAll('.mcq-option').forEach(o => o.classList.add('disabled'));
+        opt.classList.add(i === correctI ? 'correct' : 'wrong');
+        if (i !== correctI) wrap.children[correctI].classList.add('correct');
+        const ok = i === correctI;
+        const html = scoreBadge(ok ? 100 : 0) + (ok
+          ? 'Correct !'
+          : bi(level, `« ${esc(ex.data.fr)} » veut dire « ${esc(ex.data.en)} ».`, `"${esc(ex.data.fr)}" means "${esc(ex.data.en)}".`));
+        finishStep(ok, html);
+      });
+    });
+  } else { // vocab-recall
+    box.innerHTML = lessonHeader() + `
+      <div class="card">
+        <div class="card-eyebrow">Vocabulary · ${level}</div>
+        <div class="card-title" style="font-size:22px;">« ${esc(ex.data.en)} »</div>
+        <div class="card-body">${biLabel(level, 'Écris ce mot en français.', 'Type this word in French.')}</div>
+        <input type="text" id="lesson-input" placeholder="…" autocomplete="off">
+        <div class="btn-row"><button class="btn btn-primary" id="lesson-check"><i data-lucide="check" style="width:14px;height:14px;"></i> Check</button></div>
+        <div class="feedback" id="lesson-feedback"></div>
+      </div>`;
+    window.lucide && window.lucide.createIcons();
+    document.getElementById('lesson-check').addEventListener('click', () => {
+      const val = document.getElementById('lesson-input').value;
+      const ok = normalize(val) === normalize(ex.data.fr);
+      const html = scoreBadge(ok ? 100 : 0) +
+        (ok ? 'Correct !' : `<div>${biLabel(level, 'Réponse correcte :', 'Correct answer:')} <span class="correction-fix">${esc(ex.data.fr)}</span></div>`) +
+        `<button class="speak-btn" id="lesson-play2" style="margin-top:8px;"><i data-lucide="volume-2" style="width:14px;height:14px;"></i> Hear it</button>`;
+      finishStep(ok, html);
+      const p2 = document.getElementById('lesson-play2');
+      if (p2) { window.lucide && window.lucide.createIcons(); p2.addEventListener('click', () => speak(ex.data.fr)); }
+    });
+  }
+}
+
+function finishStep(correct, feedbackHtml) {
+  const { exercises, index } = lessonState;
+  const ex = exercises[index];
+  recordReview(ex.itemId, correct);
+  lessonState.results.push(correct);
+
+  const checkBtn = document.getElementById('lesson-check');
+  if (checkBtn) checkBtn.disabled = true;
+  const optWrap = document.getElementById('lesson-options');
+  if (optWrap) optWrap.querySelectorAll('.mcq-option').forEach(o => o.classList.add('disabled'));
+
+  const fb = document.getElementById('lesson-feedback');
+  fb.className = 'feedback show ' + (correct ? 'good' : 'bad');
+  fb.innerHTML = feedbackHtml + `<div class="btn-row"><button class="btn btn-primary" id="lesson-continue">Continue <i data-lucide="arrow-right" style="width:14px;height:14px;"></i></button></div>`;
+  window.lucide && window.lucide.createIcons();
+  document.getElementById('lesson-continue').addEventListener('click', () => {
+    lessonState.index++;
+    renderLessonStep();
   });
+}
+
+function renderLessonComplete() {
+  const box = document.getElementById('daily-content');
+  const { results, level } = lessonState;
+  const correct = results.filter(Boolean).length;
+  const total = results.length;
+  saveAttempt({ skill: 'daily', exerciseId: 'lesson-' + Date.now(), level, score: Math.round((correct / total) * 100) });
+
+  box.innerHTML = `
+    <div class="card" style="text-align:center;">
+      <div class="card-eyebrow">Lesson complete · ${level}</div>
+      <div class="card-title" style="font-size:22px;">${correct} / ${total} correct</div>
+      <div class="card-body">Nice work — those items are now scheduled for review later.</div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn btn-primary" id="next-lesson"><i data-lucide="arrow-right" style="width:15px;height:15px;"></i> Start next lesson</button>
+      </div>
+    </div>`;
+  window.lucide && window.lucide.createIcons();
+  document.getElementById('next-lesson').addEventListener('click', () => startLesson(level));
+  lessonState = null;
 }
 
 // ── Vocabulary tab ───────────────────────────────────────────
@@ -1656,7 +2015,7 @@ function renderProgress() {
     if (dates.has(d.toDateString())) streak++; else break;
   }
 
-  const skillLabels = { vocabulary:'Vocabulary', listening:'Listening', reading:'Reading', grammar:'Grammar', writing:'Writing', speaking:'Speaking', conversation:'Conversation' };
+  const skillLabels = { daily:'Daily lesson', vocabulary:'Vocabulary', listening:'Listening', reading:'Reading', grammar:'Grammar', writing:'Writing', speaking:'Speaking', conversation:'Conversation' };
 
   box.innerHTML = `
     <div class="stats-grid">
@@ -1679,7 +2038,7 @@ function renderProgress() {
     const isWritten = a.exerciseId.endsWith('-written');
     const baseId = isWritten ? a.exerciseId.slice(0, -8) : a.exerciseId;
     const ex = CONTENT[a.skill] ? CONTENT[a.skill].find(x => x.id === baseId) : null;
-    const exLabel = ex ? (ex.title || (ex.word ? `« ${ex.word} »` : a.exerciseId)) : a.exerciseId;
+    const exLabel = a.skill === 'daily' ? 'Lesson' : ex ? (ex.title || (ex.word ? `« ${ex.word} »` : a.exerciseId)) : a.exerciseId;
     const label = exLabel + (isWritten ? ' (written response)' : '');
     return `<div class="history-row">
       <span><span class="history-skill">${skillLabels[a.skill] || a.skill}</span> ${esc(label)}</span>
@@ -1696,7 +2055,7 @@ function renderProgress() {
 }
 
 // ── Tab / level wiring ───────────────────────────────────────
-const RENDERERS = { units: renderUnits, vocabulary: renderVocabulary, listening: renderListening, reading: renderReading, grammar: renderGrammar, writing: renderWriting, speaking: renderSpeaking, conversation: renderConversation, progress: renderProgress };
+const RENDERERS = { daily: renderDailyPractice, vocabulary: renderVocabulary, listening: renderListening, reading: renderReading, grammar: renderGrammar, writing: renderWriting, speaking: renderSpeaking, conversation: renderConversation, progress: renderProgress };
 
 function renderTab(tab) {
   window.speechSynthesis && window.speechSynthesis.cancel();
@@ -1713,14 +2072,14 @@ function selectLevel(level) {
   state.level = level;
   document.querySelectorAll('.level-btn').forEach(b => b.classList.toggle('active', b.dataset.level === level));
   const active = document.querySelector('.tab-btn.active');
-  renderTab(active ? active.dataset.tab : 'units');
+  renderTab(active ? active.dataset.tab : 'daily');
 }
 
 function init() {
   document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => selectTab(btn.dataset.tab)));
   document.querySelectorAll('.level-btn').forEach(btn => btn.addEventListener('click', () => selectLevel(btn.dataset.level)));
-  selectLevel('A2');
-  selectTab('units');
+  selectLevel('A1');
+  selectTab('daily');
 }
 
 window.FrenchTutor = { init };
