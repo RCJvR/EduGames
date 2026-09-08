@@ -1,0 +1,285 @@
+<!doctype html>
+<!-- © 2026 Ruhan Janse van Rensburg. All rights reserved. -->
+<html lang="en">
+<head>
+<script>document.documentElement.style.visibility='hidden';</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080c1a">
+<title>French Tutor — The Magic Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --bg:#080c1a; --bg2:#0d1226;
+  --surface:rgba(255,255,255,0.048); --surface2:rgba(255,255,255,0.032);
+  --border:rgba(255,255,255,0.085); --border2:rgba(255,255,255,0.055);
+  --text:#e4e8f8; --text2:rgba(210,218,245,0.65); --muted:rgba(210,218,245,0.38);
+  --accent-1:#4d8dff; --accent-2:#ef4763; --accent-3:#f5a623;
+  --good:#11d98f; --bad:#ef4444;
+  --font:"Cabinet Grotesk",sans-serif; --mono:"JetBrains Mono",monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--text);
+  min-height:100vh;-webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 5% 3%, rgba(77,141,255,0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 96% 6%, rgba(239,71,99,0.10) 0%, transparent 55%);
+}
+a{color:inherit;text-decoration:none;}
+.hidden{display:none !important;}
+button{font-family:inherit;}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;flex-wrap:wrap;gap:10px;}
+.nav-logo{font-weight:900;font-size:16px;letter-spacing:-0.03em;color:var(--text2);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.nav-pill{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;
+  background:var(--surface);border:1px solid var(--border);color:var(--text2);
+  font-size:12.5px;font-weight:700;text-decoration:none;cursor:pointer;transition:all 150ms;
+}
+.nav-pill:hover{background:var(--surface2);border-color:var(--border2);}
+
+main{max-width:880px;margin:0 auto;padding:8px 24px 100px;}
+
+.hero{text-align:center;margin:24px auto 30px;max-width:600px;}
+.hero-icon{font-size:34px;margin-bottom:8px;}
+.hero-title{
+  font-weight:900;font-size:32px;letter-spacing:-0.03em;margin-bottom:10px;
+  background:linear-gradient(120deg,#fff 0%,#a9c6ff 50%,#ff9fb3 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{font-size:14px;color:var(--muted);line-height:1.6;}
+
+.level-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.level-label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-right:4px;}
+.level-btn{
+  padding:6px 14px;border-radius:99px;background:var(--surface);border:1px solid var(--border);
+  color:var(--text2);font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;transition:all 150ms;
+}
+.level-btn.active{background:rgba(77,141,255,0.16);border-color:rgba(77,141,255,0.45);color:#a9c6ff;}
+
+.tabs{display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap;}
+.tab-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 16px;border-radius:99px;background:var(--surface);border:1px solid var(--border);
+  color:var(--text2);font-family:var(--font);font-size:13px;font-weight:800;cursor:pointer;transition:all 150ms;
+}
+.tab-btn:hover{border-color:var(--border2);}
+.tab-btn.active{background:linear-gradient(120deg,rgba(77,141,255,0.22),rgba(239,71,99,0.14));border-color:rgba(77,141,255,0.45);color:#fff;}
+
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadein 220ms ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+.chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.chip{
+  padding:7px 13px;border-radius:10px;background:var(--surface);border:1px solid var(--border);
+  color:var(--text2);font-size:12.5px;font-weight:700;cursor:pointer;transition:all 150ms;
+}
+.chip:hover{border-color:var(--border2);}
+.chip.active{background:rgba(77,141,255,0.16);border-color:rgba(77,141,255,0.45);color:#a9c6ff;}
+.chip.done::after{content:' ✓';color:var(--good);}
+
+.card{
+  background:var(--surface2);border:1px solid var(--border2);border-radius:16px;
+  padding:24px 26px;margin-bottom:20px;
+}
+.card-eyebrow{
+  font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:0.09em;
+  text-transform:uppercase;color:var(--accent-1);margin-bottom:8px;
+}
+.card-title{font-size:18px;font-weight:800;margin-bottom:12px;letter-spacing:-0.01em;}
+.card-body{font-size:14.5px;line-height:1.75;color:var(--text2);}
+.card-body.french{color:var(--text);font-size:15.5px;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:11px;
+  background:var(--surface);border:1px solid var(--border);color:var(--text);
+  font-family:var(--font);font-size:13.5px;font-weight:700;cursor:pointer;transition:all 150ms;
+}
+.btn:hover{border-color:var(--border2);background:var(--surface2);}
+.btn-primary{background:linear-gradient(120deg,var(--accent-1),#3a6fe0);border:none;color:#fff;}
+.btn-primary:hover{filter:brightness(1.08);}
+.btn-danger{background:rgba(239,71,99,0.14);border:1px solid rgba(239,71,99,0.35);color:#ff9fb3;}
+.btn:disabled{opacity:0.45;cursor:not-allowed;}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+
+textarea, input[type=text]{
+  width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-family:var(--font);font-size:14px;padding:12px 14px;line-height:1.6;
+  resize:vertical;
+}
+textarea:focus, input[type=text]:focus{outline:none;border-color:rgba(77,141,255,0.5);}
+.word-count{font-size:11.5px;color:var(--muted);margin-top:6px;font-family:var(--mono);}
+
+.mcq-option{
+  display:flex;align-items:center;gap:10px;padding:11px 14px;margin-bottom:8px;border-radius:10px;
+  background:var(--bg2);border:1px solid var(--border);cursor:pointer;transition:all 150ms;font-size:14px;
+}
+.mcq-option:hover{border-color:var(--border2);}
+.mcq-option.selected{border-color:rgba(77,141,255,0.5);background:rgba(77,141,255,0.08);}
+.mcq-option.correct{border-color:rgba(17,217,143,0.5);background:rgba(17,217,143,0.10);}
+.mcq-option.wrong{border-color:rgba(239,68,68,0.5);background:rgba(239,68,68,0.10);}
+.mcq-option.disabled{cursor:default;}
+
+.feedback{
+  margin-top:16px;padding:14px 16px;border-radius:12px;font-size:13.5px;line-height:1.7;display:none;
+}
+.feedback.show{display:block;}
+.feedback.good{background:rgba(17,217,143,0.10);border:1px solid rgba(17,217,143,0.28);color:#8ff0cf;}
+.feedback.mid{background:rgba(245,166,35,0.10);border:1px solid rgba(245,166,35,0.28);color:#fcd34d;}
+.feedback.bad{background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.28);color:#fca5a5;}
+.score-badge{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-weight:700;font-size:13px;
+  padding:4px 10px;border-radius:99px;background:rgba(255,255,255,0.06);margin-bottom:8px;
+}
+.correction-list{list-style:none;margin-top:8px;}
+.correction-list li{padding:6px 0;border-top:1px solid rgba(255,255,255,0.08);}
+.correction-list li:first-child{border-top:none;}
+.correction-fix{font-family:var(--mono);color:#a9c6ff;}
+
+.mic-row{display:flex;align-items:center;gap:12px;margin:14px 0;flex-wrap:wrap;}
+.mic-btn{
+  display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(120deg,var(--accent-2),#c23350);border:none;color:#fff;cursor:pointer;
+  transition:all 150ms;box-shadow:0 0 0 0 rgba(239,71,99,0.5);
+}
+.mic-btn:hover{filter:brightness(1.1);}
+.mic-btn.recording{animation:pulse 1.4s infinite;}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(239,71,99,0.45);}
+  70%{box-shadow:0 0 0 14px rgba(239,71,99,0);}
+  100%{box-shadow:0 0 0 0 rgba(239,71,99,0);}
+}
+.mic-status{font-size:12.5px;color:var(--muted);font-family:var(--mono);}
+.transcript-box{
+  min-height:44px;padding:12px 14px;border-radius:10px;background:var(--bg2);border:1px solid var(--border);
+  font-size:14px;color:var(--text2);margin-top:8px;
+}
+.transcript-box:empty::before{content:'Your transcript will appear here…';color:var(--muted);}
+
+.convo-log{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.convo-bubble{max-width:80%;padding:11px 15px;border-radius:14px;font-size:14px;line-height:1.55;}
+.convo-bubble.app{align-self:flex-start;background:var(--bg2);border:1px solid var(--border);border-bottom-left-radius:4px;}
+.convo-bubble.user{align-self:flex-end;background:rgba(77,141,255,0.16);border:1px solid rgba(77,141,255,0.35);border-bottom-right-radius:4px;}
+.convo-bubble.hint{align-self:flex-start;background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.22);color:#fcd34d;font-size:12.5px;}
+
+.blank-input{
+  display:inline-block;width:auto;min-width:110px;max-width:220px;
+  padding:6px 10px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);
+  color:var(--text);font-family:var(--mono);font-size:14.5px;margin:0 4px;
+}
+.blank-input:focus{outline:none;border-color:rgba(77,141,255,0.5);}
+.blank-sentence{font-size:15.5px;line-height:2.1;color:var(--text);}
+
+.speak-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;
+  background:var(--surface);border:1px solid var(--border);color:var(--text2);font-size:12px;font-weight:700;
+  cursor:pointer;margin-bottom:10px;
+}
+.speak-btn:hover{border-color:var(--border2);}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:22px;}
+.stat-card{background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:16px 18px;text-align:center;}
+.stat-num{font-family:var(--mono);font-size:26px;font-weight:800;color:#a9c6ff;}
+.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;}
+
+.history-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 4px;
+  border-top:1px solid rgba(255,255,255,0.06);font-size:13px;
+}
+.history-row:first-child{border-top:none;}
+.history-skill{font-family:var(--mono);font-size:10.5px;padding:2px 8px;border-radius:99px;background:var(--surface);color:var(--text2);text-transform:uppercase;}
+.history-score{font-family:var(--mono);font-weight:700;}
+.empty-note{color:var(--muted);font-size:13.5px;padding:20px 0;text-align:center;}
+.unsupported-note{
+  background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.22);color:#fcd34d;
+  border-radius:10px;padding:12px 14px;font-size:13px;margin-bottom:14px;line-height:1.6;
+}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:12px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><i data-lucide="arrow-left" style="width:15px;height:15px;"></i> The Magic Lab</a>
+  <div class="nav-right">
+    <span class="nav-pill"><i data-lucide="hard-drive" style="width:13px;height:13px;"></i> Saved on this device</span>
+  </div>
+</nav>
+
+<main>
+  <div class="hero">
+    <div class="hero-icon">🇫🇷</div>
+    <div class="hero-title">French Tutor</div>
+    <div class="hero-sub">Listening, reading, writing and speaking practice — with real corrections, and a conversation partner whenever you don't have one.</div>
+  </div>
+
+  <div class="level-row">
+    <span class="level-label">Level</span>
+    <button class="level-btn" data-level="A2">A2</button>
+    <button class="level-btn" data-level="B1">B1</button>
+    <button class="level-btn" data-level="B2">B2</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn" data-tab="listening"><i data-lucide="headphones" style="width:15px;height:15px;"></i> Listening</button>
+    <button class="tab-btn" data-tab="reading"><i data-lucide="book-open" style="width:15px;height:15px;"></i> Reading</button>
+    <button class="tab-btn" data-tab="grammar"><i data-lucide="spell-check" style="width:15px;height:15px;"></i> Grammar</button>
+    <button class="tab-btn" data-tab="writing"><i data-lucide="pencil" style="width:15px;height:15px;"></i> Writing</button>
+    <button class="tab-btn" data-tab="speaking"><i data-lucide="mic" style="width:15px;height:15px;"></i> Speaking</button>
+    <button class="tab-btn" data-tab="conversation"><i data-lucide="message-circle" style="width:15px;height:15px;"></i> Conversation</button>
+    <button class="tab-btn" data-tab="progress"><i data-lucide="bar-chart-3" style="width:15px;height:15px;"></i> My Progress</button>
+  </div>
+
+  <div id="panel-listening" class="tab-panel">
+    <div id="listening-chips" class="chip-row"></div>
+    <div id="listening-content"></div>
+  </div>
+
+  <div id="panel-reading" class="tab-panel">
+    <div id="reading-chips" class="chip-row"></div>
+    <div id="reading-content"></div>
+  </div>
+
+  <div id="panel-grammar" class="tab-panel">
+    <div id="grammar-chips" class="chip-row"></div>
+    <div id="grammar-content"></div>
+  </div>
+
+  <div id="panel-writing" class="tab-panel">
+    <div id="writing-chips" class="chip-row"></div>
+    <div id="writing-content"></div>
+  </div>
+
+  <div id="panel-speaking" class="tab-panel">
+    <div id="speaking-chips" class="chip-row"></div>
+    <div id="speaking-content"></div>
+  </div>
+
+  <div id="panel-conversation" class="tab-panel">
+    <div id="conversation-chips" class="chip-row"></div>
+    <div id="conversation-content"></div>
+  </div>
+
+  <div id="panel-progress" class="tab-panel">
+    <div id="progress-content"></div>
+  </div>
+</main>
+
+<footer>Grammar checks powered by LanguageTool. Speech powered by your browser. Nothing you say or write leaves your device except the text sent for grammar checking.</footer>
+
+<script src="french-tutor.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  window.lucide?.createIcons();
+  window.FrenchTutor.init();
+  document.documentElement.style.visibility = 'visible';
+});
+</script>
+</body>
+</html>
